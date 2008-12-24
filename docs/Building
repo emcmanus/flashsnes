@@ -1,0 +1,20 @@
+* ==============================================
+* C
+* ==============================================
+
+CONFIGURE:
+alc-on; HAVE_MEMORY_H=0; export HAVE_MEMORY_H; DISABLE_PEDANTIC=1; export DISABLE_PEDANTIC;
+./configure --prefix=$ALCHEMY_HOME/usr/local --includedir=$ALCHEMY_HOME/avm2-libc/include --libdir=$ALCHEMY_HOME/avm2-libc/lib --without-assembler --without-joystick --without-sdd1-decomp --without-jma-decomp --without-screenshot --without-sound --without-png --without-zlib --with-extra-opt="-DOSX -I$ALCHEMY_HOME/usr/local/include -L$ALCHEMY_HOME/usr/local/lib"
+
+BUILD:
+make clean; make;
+
+
+
+* ==============================================
+* AS3
+* ==============================================
+
+Build the C library.
+
+Build the Actionscript project in FlexBuilder.

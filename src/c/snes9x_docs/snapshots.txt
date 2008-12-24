@@ -1,0 +1,82 @@
+  snes9x snapshot file format: (may be gzip-compressed)
+
+  Begins with variable length signature, consisting of a string, ':', a 4-digit
+  decimal version, and a '\n'.
+
+#!snes9x:0001   <-- '\n' after the 1
+
+  Then we have various blocks. The block format is: 3-character block name,
+  ':', 6-digit length, ':', then the data. Blocks are written in a defined
+  order. Structs are written packed with their members in a defined order, in
+  big-endian order where applicable.
+
+NAM:000019:Chrono Trigger.zip
+
+  Currently defined blocks (in order) are:
+    NAM - ROM filename, from Memory.ROMFilename. 0-terminated string.
+    CPU - struct SCPUState, CPU internal state variables
+    REG - struct SRegisters, emulated CPU registers
+    PPU - struct PPU, PPU internal variables. Note that IPPU is never saved.
+    DMA - struct SDMA, DMA/HDMA state variables
+    VRA - Memory.VRAM, 0x10000 bytes
+    RAM - Memory.RAM, 0x20000 bytes (WRAM)
+    SRA - ::SRAM, 0x20000 bytes
+    FIL - Memory.FillRAM, 0x8000 bytes (register backing store)
+  These next 4 are optional, either all must be present or all absent. If
+  absent, audio emulation will be disabled.
+    APU - struct SAPU. SPC700 internal state variables.
+    ARE - struct SAPURegisters. SPC700 emulated registers.
+    ARA - IAPU.RAM, 0x10000 bytes.
+    SOU - SSoundData, DSP register values and such.
+  This next was added in version 2, and is required:
+    CTL - struct SControlSnapshot. Controller emulation.
+  Next 2 optional, either both present or both absent.
+    SA1 - struct SSA1. SA1 internal state variables.
+    SAR - struct SSA1Registers. SA1 emulated registers.
+  This is also optional. If absent and Settings.SPC7110 is set, snapshot load
+  fails.
+    SP7 - struct SPC7110EmuVars. SPC7110 emulation.
+  This is also optional. If absent and Settings.SPC7110RTC is set, snapshot
+  load fails.
+    RTC - struct SPC7110RTC.
+  These 2 are required if a movie is active.
+    MOV - struct SnapshotMovieInfo.
+    MID - Some block of data the movie subsystem returns from S9xMovieFreeze().
+
+==================
+
+A major goal is backwards compatibility. Ideally, even snes96 savestates
+should always be loadable in some nammer or another.
+
+Without changing the snapshot version number:
+---------------------------------------------
+
+Blocks may be safely added at the END of the file, as anything after the last
+block is ignored. Blocks may not be moved or removed.
+
+Blocks may not decrease in size. Say you decrease from 10 bytes to 5. Then
+later you increase back to 8. The only way you could safely do this is if
+bytes 5-7 still mean the same thing they meant when the block was 10 bytes
+long.
+
+Blocks may increase in size as you wish, as long as you can handle old
+savestates with the old shorter size.
+
+Struct members may not change in interpretation. New struct members may be
+added (at the END!) only if you can cope with them being binary-0 in older
+savestates. Struct members may not be removed or changed in size/type.
+
+With changing the snapshot version number:
+------------------------------------------
+
+Blocks may be added, moved, or removed at will.
+
+Blocks may decrease in size.
+
+Struct members may be added, moved, or deleted, and their
+interpretations/types may be changed. Use the 'debuted_in' and 'deleted_in'
+fields to indicate when the new member debuted or the old member went away.
+
+*** You must be able to translate data loaded from the old savestate version
+to the new! Do so after the translations from even earlier versions, and
+ideally that will let you go all the way back to snes96 savestates.

@@ -1,0 +1,25 @@
+* ==============================================
+* Building Snes9x
+* ==============================================
+
+First attempt to build snes9x was to enter the source directory, add alchemy to $PATH and run ./configure with --prefix=$MY_ALCHEMY_USR_LOCAL
+
+Obviously this doesn't work. I redirect ./configure --help into a local file and search for any optional components which can be disabled. Disable all assembly, joystick support, sdd1/jma decompression, screenshot support, sound, png support, and zlib support (but it turns out zlib isn't optional so I later compiled zlib to $alchemy/usr/local).
+
+Configure isn't noticing that memory.h doesn't exist, so I manually disable that by setting HAVE_MEMORY_H=0, and exporting.
+
+Dependency failures. Add avm2-libc/include & lib as compiler params. More failures. Add $alchemy/usr/local include & lib to the path, after building zlib. Yet more failures. Notice that gcc isn't getting the -DOSX param, so I specify that in --with-extra-opt. More problems with iso C and type long long, so I remove the "pedantic" switch by adding another IF to configure, and exporting DISABLE_PEDANTIC=1 before configuring. At some point I clear ./dependencies.
+
+Now the app builds further, but still fails when we get to x11.cpp. As expected. Add some preprocessor directives to remove the bodies of all methods in x11.cpp.
+
+Ok now the app builds with the default Makefile. Next change the makefile to output the app as an SWC.
+
+Break up main() in unix.cpp to run iteratively.
+
+
+
+* ==============================================
+* Todo
+* ==============================================
+
+- Add support for RGB888 Color

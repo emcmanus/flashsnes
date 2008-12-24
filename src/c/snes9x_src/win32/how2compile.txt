@@ -1,0 +1,80 @@
+Various software and tools are required to compile Snes9x on Windows:
+
+- Microsoft Visual C++ 7.1 or Microsoft Visual C++ 6.0 SP5 with the
+  latest Platform SDK, to compile all the C++ source code.
+  OR
+- MinGW. Compiling with MinGW is supported but currently mostly undocumented.
+
+- nasm. I use version 0.97. Used to assemble portions of the ZSNES source
+  code included in Snes9x, Anti Res' sample decode method and Kreed's image
+  filtering code. Download from www.web-sites.co.uk/nasm
+
+- zlib(optional) - There's an included as source version, but the release binaries
+  are built against a static zlib instead. zlibmt.lib is simply zlib compiled
+  against VC's multi-threaded C runtime, to avoid linker conflicts, and renamed
+  to avoid conflicts with the single threaded version I use elsewhere.
+  removing ZLIB from the preprocessor definitions and zlibmt.lib from the library
+  listing will disable zip support, or you can enable the zlib folder in VC, instead
+  of building your own library.
+  (the zlib directory should reside at win32/../../zlib, i.e. 2 directories up)
+
+- libpng(optional) - Like zlib, this is a renamed libpng.lib, built against the same
+  C runtime for the same reasons. Building your own is as simple as changing the runtime
+  used by libpng's own project files, compiling, renaming the result to libpngmt.lib
+  HAVE_LIBPNG is the define used to include this code, used for screenshots.
+  (the libpng directory should reside at win32/../../libpng, i.e. 2 directories up)
+
+- fmod(optional) - Versions 3.20 and above. Used to provide extra sound output
+  options that increases hardware compatibility with some PC hardware.
+  Version 3.33 broke A3D support on some hardware so I reverted back to
+  version 3.20. However, I'm told 3.40, just released at time of writing,  fixes the problem.
+  Download from www.fmod.org Unpack into a temp folder and copy the API
+  sub-folder contents into snes9xr\fmod. Disable fmod support by removing the
+  FMOD_SUPPORT from the Projects->Settings->C/C++->Preprocessor->Preprocessor
+  Definitions text box and fmodvc.lib from the Projects->Settings->C/C++->
+  Link->Object/library modules text box.
+  (the FMOD directory should reside at win32/../../FMOD, i.e. 2 directories up)
+
+- Glide SDK(optional) - Used to provide a 3dfx Glide image filtering and
+  scaling output option. The software development kit was originally available
+  from www.3dfx.com but now its not there anymore. If you don't already have
+  the SDK or you don't want to compile with 3dfx support, remove the USE_GLIDE
+  define from the Preprocessor Definitions and remove glide2x.lib from the
+  Object/library modules text box.
+
+- OpenGL SDK(optional) - used to provide an OpenGL hardware accelerated output
+  image filtering and scaling option. I'm currently investigating adding an
+  OpenGL SNES screen rendering mode as well. Disable by removing USE_OPENGL
+  from the Preprocessor Definitions and remove opengl32.lib and glu32.lib from
+  the Object/library modules text box.
+
+- To compile Snes9x:
+    cd snes9xr\snes9x
+    Run the MAKEASM.BAT script. nasmw will need to be on your path
+      for the script to work.
+    Start up Visual C++.
+    Load the Snes9x workspace file, snes9xr\snes9x\win32\snes9x.dsw.
+    Compile Snes9x by selecting Build->Rebuild All.
+    The Release configuration may build significantly slower than Debug.
+    Then you can run it.
+
+  Alternatively(?)
+  Either Start up Borland C++ Builder 4 (or above?) and then
+  Open Project->snes9xr\gui\snes9xw.bpr followed by Project->Build All Projects
+  and then copy snes9xr\gui\snes9xw.dll to snes9xr\Release or just copy the DLL
+  from the pre-built, released copy of Snes9x.Start Snes9x by running snes9xr\Release\snes9xw
+
+  Also:
+  To compile the Unix version on a Windows machine (for Windows?), you can use Cygwin.
+    run cygwin.bat
+    cd to the snes9x directory (1 up from win32)
+    autoconf
+    ./configure --without-zsnesc4 --without-zsnesfx --without-assembler
+    make
+  You'll need to have installed autoconf, g++, make, x11*, etc. in the Cygwin setup first.
+  You may also need to %define __DJGPP__ for bilinear.asm and 2XSAIMMX.ASM
+
+
+- To compile with MinGW: make -f Makefile.mingw
+  If from a cross enviroment, append CROSS=yes
+  If you want debug build, append DEBUG=yes

@@ -1,0 +1,5 @@
+Alchemy projects have both C and AS3 components. You'll see this separation in the src directory. In the case of SNES9x I've modified the source as little as possible to allow the application to build as a C library. The C source file libSNES9x.c contains AS3 hooks for the main emulation loop, and as a stand-alone application does not do anything.
+
+The AS3 portion of this app contains most controlling logic for SNES9x video, sound and events. There are future plans to build a netplay component, which will exist in the net package.
+
+I've exposed a basic SNES interface in the libSNES9x class.

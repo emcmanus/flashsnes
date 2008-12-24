@@ -1,0 +1,16 @@
+LIBRARY SNES9XW
+EXPORTS
+  _OpenROM
+  _JoypadConfig
+  _InitDLL
+  _DirectXConfig
+  _CheatCodeEntry
+  _SearchForCheats
+  _GUIVersion
+  _AboutDialog
+  _SettingsDialog
+  _NetPlayConnect
+  _NetPlayOptions
+  _ProgressDialog
+  _MainWindow
+  _SoundOptions

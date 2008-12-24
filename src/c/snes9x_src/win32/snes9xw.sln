@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Snes9X", "snes9xw.vcproj", "{B86059D8-C9A6-46BE-8FBA-3170C54F1DFD}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 1
+		SccProjectUniqueName0 = snes9xw.vcproj
+		SccProjectName0 = snes9xw
+		SccLocalPath0 = ..\\..
+		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		SccProjectFilePathRelativizedFromConnection0 = snes9x_1_43_wip1_source\\snes9x-1.43-dev-src\\
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		C core = C core
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{B86059D8-C9A6-46BE-8FBA-3170C54F1DFD}.C core.ActiveCfg = C core|Win32
+		{B86059D8-C9A6-46BE-8FBA-3170C54F1DFD}.C core.Build.0 = C core|Win32
+		{B86059D8-C9A6-46BE-8FBA-3170C54F1DFD}.Debug.ActiveCfg = Debug|Win32
+		{B86059D8-C9A6-46BE-8FBA-3170C54F1DFD}.Debug.Build.0 = Debug|Win32
+		{B86059D8-C9A6-46BE-8FBA-3170C54F1DFD}.Release.ActiveCfg = Release|Win32
+		{B86059D8-C9A6-46BE-8FBA-3170C54F1DFD}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
