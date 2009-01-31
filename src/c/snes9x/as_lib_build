@@ -1,0 +1,3 @@
+alc-asc libSNES9x.as lib_test.swc
+mv lib_test.swc ../../../libs/lib_test.swc
+echo "Done!"

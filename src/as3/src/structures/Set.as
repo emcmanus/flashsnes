@@ -19,7 +19,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.polygonal.ds 
+package structures 
 {
 	import flash.utils.Dictionary;
 	
@@ -162,8 +162,8 @@ package de.polygonal.ds
 	}
 }
 
-import de.polygonal.ds.Iterator;
-import de.polygonal.ds.Set;
+import structures.Iterator;
+import structures.Set;
 
 internal class SetIterator implements Iterator
 {

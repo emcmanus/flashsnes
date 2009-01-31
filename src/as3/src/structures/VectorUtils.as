@@ -1,4 +1,4 @@
-package de.polygonal.ds 
+package structures 
 {
 	public class VectorUtils 
 	{

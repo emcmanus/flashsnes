@@ -1,0 +1,20 @@
+
+build information:
+cc................ gcc
+cxx............... g++
+options...........  -O2 -fomit-frame-pointer -fno-exceptions -Wall -W -Wno-unused-parameter -pipe -DOSX -I/Users/edmcmanus/alchemy/v0.5/../usr/local/include -L/Users/edmcmanus/alchemy/v0.5/../usr/local/lib
+libs..............  -lXxf86dga -lXxf86vm -lsocket -lnsl 
+defines...........  -DNOASM -DNEW_COLOUR_BLENDING -DHAVE_MKSTEMP -DUSE_DGA_EXTENSION -DUSE_VIDMODE_EXTENSION -DHAVE_STRINGS_H -DHAVE_SYS_IOCTL_H -DHAVE_STDINT_H '-DACCEPT_SIZE_T=socklen_t' -DNOSOUND
+
+features:
+new colour blender.. yes
+sound support....... no
+display system...... X11
+joystick support.... no
+netplay support..... no
+SDD1 decompression.. no
+JMA decompression... no
+debugger............ no
+DGA, vidmode........ yes
+using asm cores..... no (forced without)
+

@@ -19,7 +19,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.polygonal.ds
+package structures
 {
 	/**
 	 * A three-dimensional array.
@@ -391,8 +391,8 @@ package de.polygonal.ds
 	}
 }
 
-import de.polygonal.ds.Array3;
-import de.polygonal.ds.Iterator;
+import structures.Array3;
+import structures.Iterator;
 
 internal class Array3Iterator implements Iterator
 {

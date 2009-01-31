@@ -19,9 +19,9 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.polygonal.ds.sort 
+package structures.sort 
 {
-	import de.polygonal.ds.SListNode;	
+	import structures.SListNode;	
 	public function sLinkedInsertionSortCmp(node:SListNode, cmp:Function, descending:Boolean = false):SListNode
 	{
 		var a:Array = [];

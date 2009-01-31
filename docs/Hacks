@@ -16,6 +16,9 @@ Ok now the app builds with the default Makefile. Next change the makefile to out
 
 Break up main() in unix.cpp to run iteratively.
 
+Continue reading porting.html, you broke up the wrong main function! Instead, actually examine whether it's best to create an *actual* flash port -- not just a hack of the Unix port.
+
+TODO TOMORROW: EXAMINE BUILD ERRORS - FIGURE OUT HOW TO ADD AS3 CALLBACKS IN C++!
 
 
 * ==============================================

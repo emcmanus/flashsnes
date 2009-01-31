@@ -1,0 +1,275 @@
+What's using the CSystemBridge?
+
+Left on line 1296, looking for gstate.cf
+
+The more I play around with Alchemy the more I find myself reaching the same conclusion: Alchemy is really fucking beautiful software.
+
+Hidden away in the source are a few undocumented gems, like almost-complete SDL support and a pretty awesome GDB client, which allows you to keep from breaking out of your standard C toolchain.
+
+Perhaps more importantly, the C Virtual Machine (the Machine class in the AS source) is pretty elegantly architected.
+
+
+
+Some notes on the VM architecture:
+
+gstate is an instance of MState
+
+gstate.syms contains a lookup of symbol names to their memory offsets. This lookup is built by calls to exportSym.
+
+AS3 functions are mapped to C by defining a const using a naming convention, such that AS3_Release, which returns an int, defines the constant i_AS3_Release like so:
+
+i_AS3_Release:int = exportSym("_AS3_Release", new CProcTypemap(CTypemap.VoidType, [CTypemap.PtrType])).createC(CTypeMap.AS3ValType.valueTracker.release)[0]);
+
+CProcTypemap is created by specifying, as parameters, the return type and an array of all argument types. createC, which is called on the resulting CProcTypemap process, returns the memory offset to the resulting function after it's registered.
+
+C functions map directly to Machine sub-classes and all use the prefix FSM. Before every class definition, Alchemy defines the original method name (without the FSM prefix) to be a constant int which points to the function offset in C memory.
+
+
+
+CLASS CRunner
+==========================
+
+Responsible for incrementing machine states, and yielding to the parent application if the current "thread" has
+been executing for more than 10 secods. (Alchemy checks this condition every 1,000 work iterations, so it's still 
+possible to hit the 15 second flash timeout if your C application consists of a few long-running methods.)
+
+It also means you should avoid calling long-running C methods on EnterFrame, as you could be queuing method calls
+faster than CRunner can pop them!
+
+
+Key Methods
+--------------------------
+work	// Executes queued worker methods until timing out or completing
+
+
+
+
+CLASS CLibInit
+==========================
+
+The main C interface. Contains the beloved supplyFile, setEnv, and init methods.
+
+
+Key Methods
+--------------------------
+init	// Instantiates the CRunner and begins execution
+
+
+
+
+INSTANCE mstate/gstate (Global State?)
+==========================
+
+Encapsulates the C Machine state.
+
+
+Key Properties - most of these are register names -- look further into assembly to understand what's going on here
+--------------------------
+sp		// state position?
+ds		// 
+
+esp		//
+ebp		//
+eax		// Method execution register -- when you "mov" a value into this register, you're telling the system what function it'll
+ 		// execute next (we pass in the function's associated constant -- typically this is followed by a call to the VM signalling it 
+		// should execute the specified function. On linux, you'd then call interrupt with the kernel value as an operand.) Of course, 
+		// Alchemy doesn't need to deal with such low-level details. Check the bodies of the defined methods to get an idea of what 
+		// Alchemy outputs.
+edx		//
+st0		//
+cf		//
+
+
+
+
+INSTANCE gstaticInitter (Instance of Static Initter)
+==========================
+
+Responsible for writting functions to memory
+
+Key Methods
+--------------------------
+Getters/Setters of various types
+
+
+
+
+CLASS CProcTypemap
+==========================
+
+Provides type mapping for C-AS3 communication, encapsulating methods
+
+
+Key Methods
+--------------------------
+createC		// Registers the AS3 function in C memory, defines a lambda which is the AS3 representation of the
+			// C function and returns its memory address.
+fromC		// "Unboxes" C values for AS3 consumption
+
+
+
+
+
+
+C Function Organization
+==========================
+
+Most C functions follow a similar pattern.
+
+Set up the Finate State Machine (FSM):
+First we define the various states of the C VM. That's the __asm( push(state), switchjump( ... All the FSM states ... ) ).
+
+Define the various FSM states:
+We define an asm label with (for example) __asm(lbl("__Z10Flash_tickPvP8_AS3_Val_state0"))
+
+
+Other
+
+RegFunc consists of:
+mstate.funcs.push()
+
+Is there some way we can wrap these functions to allow direct (non-sampling) profiling?
+
+
+
+
+
+
+
+
+
+
+
+
+==============================================================================
+A REALLY SIMPLE ALCHEMY PROGRAM -- STRING ECHO
+==============================================================================
+
+The generated source (the important part, from line 27,126) for stringecho.c looks like this:
+
+
+
+/*
+ * C SOURCE
+ */
+
+static AS3_Val echo(void* self, AS3_Val args)
+{
+	//initialize string to null
+	char* val = NULL;
+	
+	//parse the arguments. Expect 1.
+	//pass in val to hold the first argument, which
+	//should be a string
+	AS3_ArrayValue( args, "StrType", &val );
+	
+	//if no argument is specified
+	if(val == NULL)
+	{
+		char* nullString = "null";
+		//return the string "null"
+		return AS3_String(nullString);
+	}
+	
+	//otherwise, return the string that was passed in
+	return AS3_String(val);
+}
+
+
+
+/*
+ * GENERATED AS3
+ */
+
+// Async
+public const _echo:int = regFunc(FSM_echo.start)
+
+public final class FSM_echo extends Machine {
+
+	public static function start():void {
+			var result:FSM_echo = new FSM_echo
+		gstate.gworker = result
+	}
+
+	public var i0:int, i1:int, i2:int
+
+	public static const intRegCount:int = 3
+
+	public static const NumberRegCount:int = 0
+	public final override function work():void {
+		Alchemy::SetjmpAbuse { freezeCache = 0; }
+		__asm(label, lbl("_echo_entry"))
+		__asm(push(state), switchjump(
+			"_echo_errState",
+			"_echo_state0",
+			"_echo_state1",
+			"_echo_state2"))
+	__asm(lbl("_echo_state0"))
+	__asm(lbl("_echo__XprivateX__BB75_0_F"))
+		mstate.esp -= 4; __asm(push(mstate.ebp), push(mstate.esp), op(0x3c))
+		mstate.ebp = mstate.esp
+		mstate.esp -= 4
+		i0 =  (0)
+		__asm(push(i0), push((mstate.ebp+-4)), op(0x3c))
+		mstate.esp -= 12
+		i0 =  ((__xasm<int>(push((mstate.ebp+12)), op(0x37))))
+		i1 =  (__2E_str99)
+		i2 =  ((mstate.ebp+-4))
+		__asm(push(i0), push(mstate.esp), op(0x3c))
+		__asm(push(i1), push((mstate.esp+4)), op(0x3c))
+		__asm(push(i2), push((mstate.esp+8)), op(0x3c))
+		state = 1
+		mstate.esp -= 4;(mstate.funcs[_AS3_ArrayValue])()
+		return
+	__asm(lbl("_echo_state1"))
+		mstate.esp += 12
+		i0 =  ((__xasm<int>(push((mstate.ebp+-4)), op(0x37))))
+		__asm(push(i0!=0), iftrue, target("_echo__XprivateX__BB75_2_F"))
+	__asm(lbl("_echo__XprivateX__BB75_1_F"))
+		i0 =  (__2E_str1100)
+	__asm(lbl("_echo__XprivateX__BB75_2_F"))
+		mstate.esp -= 4
+		__asm(push(i0), push(mstate.esp), op(0x3c))
+		state = 2
+		mstate.esp -= 4;(mstate.funcs[_AS3_String])()
+		return
+	__asm(lbl("_echo_state2"))
+		i0 = mstate.eax
+		mstate.esp += 4
+		mstate.eax = i0
+		mstate.esp = mstate.ebp
+		mstate.ebp = __xasm<int>(push(mstate.esp), op(0x37)); mstate.esp += 4
+		//RETL
+		mstate.esp += 4
+		mstate.gworker = caller
+		return
+	__asm(lbl("_echo_errState"))
+		throw("Invalid state in _echo")
+	}
+}
+
+
+
+
+i0, i1, i2 are all variables to hold function parameters, as we see in the following code:
+
+
+C:
+	AS3_ArrayValue( args, "StrType", &val );
+
+
+Unwraps to this AS3:
+
+	i0 =  ((__xasm<int>(push((mstate.ebp+12)), op(0x37))))      // Args from the C echo function -- vector of ints?
+	i1 =  (__2E_str99)                                          // Constant string
+	i2 =  ((mstate.ebp+-4))                                     // Pointer to &val
+	__asm(push(i0), push(mstate.esp), op(0x3c))                 // set
+	__asm(push(i1), push((mstate.esp+4)), op(0x3c))             // set
+	__asm(push(i2), push((mstate.esp+8)), op(0x3c))             // set
+	state = 1                                                   // Move to next state
+	mstate.esp -= 4;                                            // Reset "executing state position" to neutral state
+	(mstate.funcs[_AS3_ArrayValue])()                           // Call _AS3_ArrayValue
+	
+	
+	
+	

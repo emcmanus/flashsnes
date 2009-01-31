@@ -19,7 +19,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.polygonal.ds.sort 
+package structures.sort 
 {
 	public class SortOptions
 	{
@@ -27,8 +27,8 @@ package de.polygonal.ds.sort
 		 * A flag that specifies the insertion sort algorithm. You can use this
 		 * constant for the options parameter in the sort() method.
 		 *
-		 * @see de.polygonal.ds.SLinkedList#sort()
-		 * @see de.polygonal.ds.DLinkedList#sort()
+		 * @see structures.SLinkedList#sort()
+		 * @see structures.DLinkedList#sort()
 		 */
 		public static const INSERTION_SORT:int   = 1 << 1;
 		
@@ -36,8 +36,8 @@ package de.polygonal.ds.sort
 		 * A flag that Specifies character-string sorting. You can use this
 		 * constant for the options parameter in the sort() method.
 		 * 
-		 * @see de.polygonal.ds.SLinkedList#sort()
-		 * @see de.polygonal.ds.DLinkedList#sort()
+		 * @see structures.SLinkedList#sort()
+		 * @see structures.DLinkedList#sort()
 		 */
 		public static const CHARACTER_STRING:int = 1 << 2;
 		
@@ -45,7 +45,7 @@ package de.polygonal.ds.sort
 		 * A flag that specifies case-insensitive sorting. You can use this
 		 * constant for the options parameter in the sort() method.
 		 *
-		 * @see de.polygonal.ds.SLinkedList#sort()		 * @see de.polygonal.ds.DLinkedList#sort()
+		 * @see structures.SLinkedList#sort()		 * @see structures.DLinkedList#sort()
 		 */
 		public static const CASEINSENSITIVE:int = 1 << 3;
 		
@@ -53,8 +53,8 @@ package de.polygonal.ds.sort
 		 * A flag that specifies descending sorting. You can use this
 		 * constant for the options parameter in the sort() method.
 		 *
- 		 * @see de.polygonal.ds.SLinkedList#sort()
-		 * @see de.polygonal.ds.DLinkedList#sort()
+ 		 * @see structures.SLinkedList#sort()
+		 * @see structures.DLinkedList#sort()
 		 */
 		public static const DESCENDING:int = 1 << 4;
 	}

@@ -1,0 +1,1076 @@
+Nach's SNES ROM Tools
+http://nsrt.edgeemu.com
+                               NSRT Version 3.4
+                               May 2007
+                               Copyright (C) 2003-2007
+
+
+--------------------------------------------------------------------------------
+Disclaimer
+--------------------------------------------------------------------------------
+
+We, the development team for NSRT, take no responsibility for any results of the
+use of this program, nor for any damage that it may cause to your hardware or
+software. Even though the chance is rare with all the testing we do, please make
+sure to back up your software to prevent any damage to it. The NSRT development
+team is in no way, shape, or form affiliated with Nintendo or any other company.
+
+
+--------------------------------------------------------------------------------
+Table of Contents
+--------------------------------------------------------------------------------
+
+1) Introduction
+2) Version History
+3) Features
+4) Command Line Options
+5) GUI Options
+6) NSRT Header Info
+7) IPSEDIT Info
+8) RAR and 7-Zip Support
+9) More Info
+10) Future Plans
+11) Project Thoughts
+12) Contact Info
+13) Credits
+14) License
+
+
+--------------------------------------------------------------------------------
+1) Introduction
+--------------------------------------------------------------------------------
+
+      Thank you all for trying Nach's SNES ROM Tools (NSRT for short). For those
+of you that actually read program documentation, you shall be rewarded with a 3
+course dinner, or just some lint from your belly button, whichever is cheaper.
+You all may be wondering "Why should I use this program over my favorite ROM
+checking and editing tools?". Well, NSRT offers and combines features of most of
+your favorite tools, like GoodSNES, SMC.COM, SNESTool, and others into one
+program. Not only that, but we have also improved upon those tools, making
+detections more accurate, and the chances of inadvertently destroying a ROM
+much, much less than with other tools. Also with our head programmer and
+researcher Nach, you can be sure that you are on the bleeding edge of SNES
+emulation.
+
+
+--------------------------------------------------------------------------------
+2) Version History
+--------------------------------------------------------------------------------
+
+Version 3.4
+- Updated checksum calculation. Now it handles every case. (Nach, grinvader)
+- Redid the publishing company code, should be 100% accurate now. (Nach)
+- Minor update to chip detection to detect beta SA-1 games. (Nach)
+- Added more publishing companies. (Nach, grinvader)
+- Redid the code behind -modint. (Nach)
+- Output system completely redone, including fixes for CSV and HTML output.
+  (Nach)
+- Added -infoxml. (Nach)
+- Info output now lists game code and has a hashes section. (Nach)
+- Added a bunch of new hash systems, should be enough for even the most paranoid
+  individual. (Nach, zones)
+- Verified output now shows parent names too, and has a total. (Nach)
+- Text files generated now list NSRT version. (Nach)
+- Pesky () in renaming issue fixed. (Nach)
+- File locking is now in a better place, you should be able to Ctrl+C while
+  doing a file compare now. (Nach)
+- Cut out a lot of junk, binary should be a bit smaller. (Nach)
+- Sped up unzipping and gunzipping and crc32'ing. (Nach)
+- BZip2 and zlib libraries updated, fixes some bugs. (Nach)
+- DB Updates. (NGEfreak, zidanax, FitzRoy, Nach)
+- Some features added to make NSRT work better with frontends. (Nach)
+
+
+Version 3.3 Final
+- Fixed bugs with -infohtml (Nach)
+- Added support for UTF-8 output via -utf8, requires UTF-8 compatible
+  console (Nach)
+- Removed dead code (Nach)
+- DB Updates (hydr0x, JohnDie, NGEfreak, Nach, Overload, Zidanax, zones)
+- Mac Intel support (Nach, zones)
+- Save renaming now works on *nix with new "nren" utility
+
+
+Version 3.3 Release Candidate 3
+- Updated JMA support (Nach, zones)
+- zlib and BZip2 libraries update (Nach)
+- Improved checksum calculation (Nach)
+- RAR 2.x reading support (Nach)
+- RAR 3.x reading IFF (if and only if) unrar.exe (3.x+) is in your path.
+  (Bisqwit, Nach, zones)
+- 7z (7-Zip) reading support IFF 7za.exe (4.x+) is in your path. (Nach)
+- Fixed a bug in -control causing it to miss a few. (Nach)
+- Alphabetized -control. (Nach)
+- Added -renext (rename option to change extensions without rest of filename).
+  (Nach)
+- Added -sortdir (option to specify where to sort to). (Nach)
+- Updated country abbreviations. (hydr0x)
+- New and improved overdump detection. (grinvader, Nach)
+- Some small bug fixes, and tweaks for better performance and usability. (Nach)
+- Greatly updated Genres for ROMs. (hydr0x, Nach)
+- DB Updates (grinvader, hydr0x, Nach, Overload, Zidanax)
+
+Note on JMA:
+SNEeSe, bsnes and UOSNES are now supporting JMA files. UOSNES' JMA support was
+not tested by our team, and may not support the archives produced by this
+version of NSRT.
+
+
+Version 3.3 Release Candidate 2
+- JMA compression support
+  (Nach, Lord Nightmare, Igor Pavlov, Andrea Mazzoleni, grinvader, CL, malcster)
+- Comma Separated Value output for spreadsheet manipulation (malcster)
+- More DB updates, as usual, some new verified dumps
+  (hydr0x, JohnDie, malcster, MKendora, Nach, NGEfreak, Overload)
+- Each file will never be scanned more than once (Nach, Bisqwit)
+- Genre database (Evan G, Nach, malcster, Phil Cote, Lord Nightmare, CL)
+- Renaming will not overwrite a file (Nach)
+- Outputting list of fixable ROMs (malcster)
+- Option to replace spaces in filenames with underscores (malcster)
+- Merge capability, to put together split ROMs (Nach)
+- Unzip and Gunzip code now using x86 Assembly where appropriate, so a bit
+  faster (Nach)
+- Unix only: symlink support (Nach)
+- Multisort, sort into nested folders of your choice (Nach)
+- More sorting possibilities (Nach, CL)
+- Unrecognized ROMs have collision resolution in sorting (Nach)
+- BS ROM detection updated again (Nach)
+- Support for ROMs up to 64 Megabit in size (malcster, Nach)
+- ROM Revision numbers now much more accurate (Nach, TRAC)
+- New option to list verified dumps (Nach)
+- Sort failing is now very unlikely, but informative when it happens (Nach)
+- Checksum and CRC32 calculation should now be slightly faster (Nach)
+- Fixed a few minor but long standing bugs (Nach)
+
+Note on JMA:
+
+This is an archive format designed by Nach based on LZMA.
+When used on SNES ROMs it is faster, and creates smaller files than 7Zip.
+ZSNES v1.40+ and Snes9x v1.43+ can load JMA files, and support is expected to be
+added to the other major SNES emulators soon.
+
+
+Version 3.3 Release Candidate 1
+- Disabled Ctrl+C and Ctrl+Break in critical segments (Nach)
+- Typos fixed in HTML output (Nach)
+- Modification of internal ROM name (Nach, malcster)
+- 8.3 filenames now included for every ROM in the database (malcster)
+- NSRT header adding (malcster)
+- NSRT header adding for special controller games only (malcster)
+- File compare for ROMs (malcster)
+- File compare with -fix code output (malcster)
+- More games that can be fixed with -fix (Nach, malcster)
+- More database updates as usual (malcster, NGEfreak, Nach, Overload, Evan G)
+- Small GZip loading fixed (Nach)
+- Save in compression format of your choice (Nach)
+- Fixed -lowext on GD3 files (Nach)
+- BS detection update (Nach)
+- Modified -info2 output (Nach)
+- Option to not rely on extension to determine how to open file
+  (Nach, zones, Lord_Nightmare)
+- Major core work (Nach, CL)
+
+
+Version 3.2
+- Added another form of interleave detection (thanks manliodp)
+- MD5 support (thanks manliodp)
+- Output special controller list (thanks Ichinisan for the idea)
+- Fixed bug in split code (thanks malcster)
+- Fixed bug in UNIX permissions (thanks zinx)
+- Added another game in -fix
+- Database updates (thanks alcoatjez, dbjh, Evan G, JohnDie, malcster,
+  manliodp, and NGEfreak)
+- -region (thanks Overload for the idea, evilant for showing a cool trick to
+  make the code neat)
+- Added ROM padding option
+- Inclusion of IPSEDIT
+
+Notes on New Features.
+
+a) The controller list in NSRT is lacking many games with special controllers.
+   We need your help! You can by sending in info as follows:
+   parent name : possible controls for port 1 : possible controls for port 2
+
+b) The region list is created by the link ups you see when you output a list
+   with NSRT. If two games should be linked and aren't, feel free to inform us.
+
+Due to problems in the life of our GUI coder, the GUI versions on all
+platforms will only have updated Databases, and improved features.
+
+
+Version 3.1
+- Major DB updates -Special thanks to FitzRoy, malcster, manliodp, MKendora,
+  NGEfreak
+- Numerous bug fixes
+- New sorting options!
+- Even Better overdump detection -Special thanks MKendora
+- Benchmarking as well as more speed improvements :)
+- Better size detection (kb if the ROM is smaller than 1Mb)
+- More games in -fix
+- Switch to ask NSRT to rename with lowercase extensions
+- More command line features into the GUI version (not all of them though)
+- Splitting support for Sufami Turbo, SD Gundam G-Next and Same Game
+- Overhauled permissions system on UNIX based operating systems
+
+
+Version 3.0 (Final)
+- Major DB updates -Special thanks to manliodp, FitzRoy, NGEfreak, Malcster
+- GUI version now available to all supported platforms,
+  needs work, see Future Plans for details
+- New command line options (like -safetrim and more)
+- Lots of changes under the hood, and new info shown.
+- More fixes to some hacks/bad dumps, see More Info to see what's new.
+- Better overdump detection.
+- New Interleave detection, now supporting all known formats (multiple
+  interleaving is not).
+- Save State renaming added (does not work on Linux yet, sorry)
+- Output to HTML added
+- Many other changes that we even lost track of, check
+  it out yourself to see for sure.
+
+Yes it's finally out :0
+
+And of course, all features from the Release Candidates are available
+
+I (Nach) am sorry for features missing from 2.2, I hope to bring them
+back in the upcoming release. I'm also sorry for all the delays involved.
+This version should be much better than previous versions.
+
+
+Version 3.0 Release Candidate 2
+- Overdump detection added
+- Major DB updates - Special thanks to manliodp, dbjh, and FitzRoy
+- SA-1 deinterleaving added
+- Improved BS detection
+- BS Add-On ROM detection added
+- BS deinterleaving added
+- Noticeable speed improvements - Special thanks to TRAC
+- Specific copier header detection added - Special thanks to dbjh
+- More ROMs are now readable, ROMs under 2Mbit can now be read.
+
+
+Version 3.0 Release Candidate 1
+- Complete re-write of the code into C++ and ASM
+- Not all features implemented yet, but they
+  will be added to a later version
+- Command-line only at the moment, GUI version
+  in the works
+- Now available to *nix users
+
+
+Version 2.2
+Bug fixes from new features in v2.1
+Added Support for Extended HiROMs
+Added Real Time Clock to chip info
+NSRT Header has been updated
+Fixed some BS ROM detection (thanks DBJH of uCON64)
+
+Notes on New Features.
+a) Dai Kaiju Monogatari 2 & Tales of Phantasia are now
+   worked with correctly due to Extended HiROM support.
+b) The new Header contains info on this format.
+
+
+Version 2.1
+Bug fixes from new features in v2.0
+Rewrote HiROM/LoROM Detector and can detect:
+-Interleaved ROMs
+-BS ROMs
+-ROMs with weird Japanese Characters in the Cart Name
+Added Checksum calculation for BS ROMs (thanks DBJH of uCON64)
+Fixed Video type for Korea (thanks Matthew Kendora)
+Many updates to the Database
+Added Gameboy & BS to chip info
+Removed support for SMC file checker
+Added support for BS ROMs for all special features in NSRT
+
+Notes on New Features.
+a) The new HiROM/LoROM detection should be extremely accurate.
+   It should be able to detect any ROM thrown at it, unless
+   the ROM is hacked. The only ROMs we found not to be
+   worked with accurately are Dai Kaiju Monogatari 2 & Tales
+   of Phantasia due to their unique ROM settings. We shall
+   add support for these two in our upcoming release.
+b) Please let us know if there is any ROM that can't be
+   detected properly by NSRT.
+c) Since we found the new Detector very accurate, we have
+   removed support for SMC File Checker.
+
+
+Version 2.0
+Added Database Support (limited for now)
+Pad Type now appears on the screen
+Many Bugs Fixed for new features from v1.5
+Moved Fix for Metal Combat to the Database
+Added Fix for Hacked version of Tales of Phantasia
+
+Notes on New Features.
+a) The Database has very sensitive detection so it can not be fooled.
+   None of the slight modifications that trick GoodSNES will trick our
+   Database. Although if you just changed the internal name of a ROM,
+   it will still detect it fine. We plan to add the ability to insert the
+   correct name into such a ROM.
+b) Currently the Database only has a couple of ROMs in it. The main idea
+   in this release was to allow users to add the pad info to the ROM via
+   the Database - a feature first enabled in V1.5, In this version we
+   really only have ROMs in the Database that don't use the standard
+   controller settings.
+c) The only features of the Database currently is to detect a ROM,
+   add controller info, and fix Hacked ROMs. In future versions we will
+   improve it to truly rival GoodSNES.
+d) In this version, pad detection starts working so be sure to ask your
+   EMU author to add support for it. And also thank JB a second time.
+   Please see our website for the latest pad information.
+e) The fix for Tales of Phantasia was only tested on the non interleaved
+   version, it may produce unwanted results on the interleaved one.
+
+
+Version 1.5 - Only Released Privately
+We changed the name from NSNESRT to NSRT (Biggest new feature)
+The file size appears right away
+Checksum calculation is faster
+NSRT Header has been updated
+Header detection should now be 100% accurate (unless the ROM is overdumped)
+DSP chip info now shows the version number
+
+Notes on New Features.
+a) Please see our website for information on why we changed the name.
+b) We still need an overhaul to our checksum code, we also need info on
+   how to calculate the checksum for BS ROMs.
+c) NSRT Header now contains controller data. Please thank JB.
+d) Our new header detection code is based on ideas from JohnDie and
+   Neviksti. We check the ROM file size and MOD 1024, if the remainder
+   is 0 then there is no header, if it's 512, there is a header, if it's a
+   different number, the old header detection is used. Note, if your ROM
+   has been hacked with, or overdumped by an odd multiple of 512, then
+   this new method will fail. The same applies to a ROM where part of the
+   file is missing.
+e) The new DSP detection is not an official method, merely a pattern we
+   found. We are not 100% certain about the exact version of the DSP
+   chip found in certain ROMs, it is possible that on maybe 3/25 DSP ROMs
+   the number might be wrong. If you have info on a certain DSP ROM being
+   detected wrong, or about a newly dumped DSP ROM, let us know.
+f) On more testing, we found our LFN code to be incompatible with
+   Win XP, sorry.
+g) ROM info detection is now very accurate, it should not have a problem
+   unless your ROM is interleaved or BS.
+
+
+Version 1.2
+Added support for another version of the SPC7100 chip
+Fixed OBC1 detection to match CaitSith2's data
+Improved Checksum calculation for 40Mb/5MB ROMs
+Added Checksum calculation routine for Momotarou Dentetsu Happy
+Added ability to automatically fix the hacked version of Metal Combat
+Slightly modified the LFN code
+
+Notes on New Features.
+a) We would like to thank CaitSith2 for recent data he's sent us,
+   especially the MDH routine. Half of the improvements in this version
+   was from his info.
+b) SPC7110 detection should be 100% accurate now.
+c) We are the only tool that can calculate the MDH checksum
+   (not even ZSNES 1.36 can calculate it)
+d) Starting with this version, NSRT will automatically
+   fix the hacked Metal Combat on opening of the ROM.
+   The correct version of the ROM will only run on ZSNES 1.36 and higher
+   so make sure to update your emulator.
+e) The new LFN code may or may not work on your version of Windows XP
+   please E-Mail us about which version you are using, and if it works or
+   not.
+
+
+Version 1.1
+Several Bug Fixes
+Added Chip Info (DSP/Super FX/SA-1/SDD-1/C4/SETA/OBC1/SPC7110)
+More Accurate ROM info detection
+Checksum code modified a bit
+Added Long File Name Support
+
+Notes on New Features.
+a) The DSP info cannot detect which version of the DSP Chip it is
+b) Super FX & SA-1 detection is more accurate than any other tool we've seen
+c) SPC7110 detection has only been tested on FEoEZ, please report results
+   of the other SPC7100 ROMs
+d) The only 40Mb/5MB ROM Checksum tested was on FEoEZ, please report results
+   of other 40Mb/5MB ROMs
+e) LFN Support works in Win9X/Me while in Windows, LFN Support has not been
+   tested on NT/2000, LFN Does not work on XP
+f) LFN Support only displays the first 65 Characters of the name, should be
+   more than enough
+g) Some BS-Satellaview ROMs can be worked with, but most can not
+
+
+Version 1.0 - Only Released Privately
+This version is our first release.
+Much more functionality will be included in later versions.
+
+
+--------------------------------------------------------------------------------
+3) Features
+--------------------------------------------------------------------------------
+
+As of this version NSRT can/has:
+- Full SNES ROM database with names chosen by a consensus (no hacks, bad ROMs,
+and duplicate entries). It is being constantly scanned for errors and edited to
+be the most accurate SNES ROM database to date.
+
+- Accurate CRC32 (and MD5 if you desire) ROM checking for the database to make
+sure that no false positives are registered, making sure you always have the ROM
+in the database.
+
+- Reports additional hashes (RIPEMD, SHA-1, SHA-256, SHA-512, Tiger, Whirlpool).
+
+- Full LFN support, even under Windows XP.
+
+- The most accurate interleave detection and support of any other ROM tool
+available. No other tool comes close.
+
+- The most accurate chip detection. NSRT has always been the tops of SNES chip
+detection, and trend still continues.
+
+- Fast checksum calculation, taking only milliseconds for an individual ROM.
+
+- Expanded Info on ROMs, now listing their ROM revision number along with the
+ROM's CRC32, Battery info, etc...
+
+- Renaming support. NSRT can mass rename your whole ROM collection, with
+uppercase or lowercase extensions. 8.3 filenames are supported, and, if you
+wish, spaces can be removed from long files names and replaced with underscores.
+
+- Save State renaming, so you don't lose your place if you want your ROMs to be
+renamed.
+
+- Add/remove headers. NSRT can also mass add/remove headers from your ROMs with
+just one command. Special NSRT headers can be added to any ROM with a good
+checksum.
+
+- Deinterleave ROMs, for those users that need to deinterleave their ROMs in
+order to use them.
+
+- Delete duplicates, to help you weed out unneeded duplicates from your
+collection.
+
+- Zip, GZip, BZip2, JMA, RAR, and 7-Zip support, allowing you to work with your
+ROMs even while compressed.
+
+- Fix many hacks and bad ROMs, including but not limited to: Bazooka Blitzkrieg,
+Metal Combat, Tales of Phantasia, and more.
+
+- Find which of your precious ROMs are really overdumps.
+
+- Output to HTML, to show the world the info of your collection.
+
+- Output to XML and CSV so you can work with your own databases.
+
+- Sort your ROMs into various directories - 11 sorting options in all! Now also
+featuring multisort!
+
+- Split files that contain several ROMs in them into files with one ROM each.
+
+- Merge multiple files together to make a single ROM. Useful if you have for
+example dumped a game using a copier and floppy disks and you have four separate
+parts.
+
+- Save files in a different compression format than they were originally in if
+you so desire.
+
+And many more features are being developed and added to NSRT. To see what is in
+store for the future, check under Future Plans.
+
+
+--------------------------------------------------------------------------------
+4) Command Line Options
+--------------------------------------------------------------------------------
+
+Usage: nsrt [[-credits | -control | -fixable | -verified |
+              -region <1> <2> | -fc <rom 1> <rom 2> | -merge <part 1>] |
+             [-info | -info2 | -infohtml | -infoxml | -infocsv]
+             [-list | -list2] [-loginfo] [-deint] [-fix] [-split]
+             [-findover | -trim | -safetrim | -pad]
+             [-remhead | -addhead | -addnsrt | -addspec ]
+             [-deldup | -rename | -ren83] [-renext] [-lowext] [-nospaces]
+             [-sort <sort method(s)>] [-sortdir <dir>] [-saveren]
+             [-savetype <type>] [-noext] [-64meg] [-modint] [[-hashes] |
+              [-md5] [-ripemd] [-sha1] [-sha256] [-sha512] [-whirlp] [-tiger]]
+             <rom1 rom2 ...>]
+
+Wildcards such as * and ? are acceptable.
+
+Database management:
+
+-list        Generates a list of all ROMs currently in the database in the file
+             sneslist.txt, if you specify any ROMs after the -list option, those
+             ROMs that are found in the database will be noted in that file.
+
+-list2       Similar to -list, but arranges the list by the number you have.
+
+-deldup      Delete duplicate ROMs if found.
+
+-rename      Renames all ROMs to database names if found.
+             Also implies -deldup.
+
+-ren83       Renames all ROMs to database 8.3 names if found.
+             Also implies -deldup.
+
+-renext      Rename extensions to match, without renaming the rest of the
+             filename if the file is modified.
+
+-lowext      Will make rename operations use lowercase extensions.
+
+-nospaces    Replaces any spaces in long file names with underscores.
+
+-saveren     Creates a batch file called saveren.bat. This file is used to
+             rename the files in your emulator's save directory to the ROM's new
+             name. Simply place the batch file into the emu's save directory and
+             run it. Afterwards, your save states and SRAM files should work
+             when you load your renamed roms. Implies -rename.
+             On *nix platforms, this works in conjunction with the bundled nren
+             utility.
+
+Sorting options:
+
+-sort        This will move every ROM scanned into a directory structure. ROMs
+             will be sorted by whatever characteristics you choose. These must
+             be specified straight after the -sort command, separated by colons.
+             For example: "-sort region:size:verified" would sort games into a
+             set of folders of which the top level would be the country, then
+             the size of the ROM, then whether it is a verified dump or not. The
+             possible choices for sort parameters are:
+
+             region    Country the ROM is from.
+             type      Type of game (normal, SuperFX, etc).
+             size      Uncompressed size.
+             publish   Publishing Company.
+             parent    Name of parent ROM (e.g., Rockman X's parent is
+                                           Megaman X).
+             input     Special input devices (Mouse, Super Scope).
+             genres    Both genres stored.
+             genre1    Primary Genre.
+             genre2    Secondary Genre.
+             verified  Whether it is a verified dump or not.
+             recog     Whether it is recognized in the database.
+
+             Beware of going overboard with this; some Operating Systems or File
+             Systems don't support too many nested directories.
+
+-sortdir     Type a new directory name after this to have it created for moving
+             files there when using a sort option.
+
+Output configuration:
+
+-info        Shows the ROM's info. On by default.
+
+-info2       Shows the ROM's info, but with each field on a line by itself.
+
+-infohtml    Outputs the ROM's info in HTML format.
+
+-infoxml     Output the ROM's info surrounded by XML tags.
+
+-infocsv     Outputs the ROM's info as a set of comma separated values.
+
+-loginfo     Log the ROM's info to nsrtlog.txt. -infohtml, -infoxml, and
+             -infocsv will change the extention to htm, xml, and csv
+             respectively.
+
+ROM altering:
+
+-fix         NSRT has the ability to fix certain hacked ROMs. The list of ROMs
+             is in the More Info section.
+
+-deint       Deinterleave interleaved ROMs.
+
+-remhead     Removes copier headers. It also restores or "de-NSRTs" a ROM with
+             an NSRT header that has a modified internal name to its correct
+             name.
+
+-addhead     Adds an empty 512 byte header.
+
+-addnsrt     Adds an NSRT header if the ROM has a good checksum.
+
+-addspec     Add an NSRT header only to games with special controllers.
+
+-trim        Trims any ROM that appears to be an overdump. USE AT YOUR OWN RISK!
+             BACK UP YOUR ROM BEFORE USE!
+             NOT SUGGESTED TO BE USED ON A MASS SCAN!
+
+-safetrim    This is somewhat safer than the above option. It will only trim a
+             ROM if the trimmed ROM to be produced is in the database.
+
+-split       This will split several ROMs contained in one file into several
+             files. Compatible with things like the Sufami Turbo, Same Game, and
+             SD-Gundam G-Next. Unless you are sorting, the files will be placed
+             into a directory labelled Split followed by the time that the split
+             took place.
+
+-merge       Merges together multiple parts of a ROM. Cannot be used with other
+             arguments. The filename of the first part of the ROM must be
+             specified next on the command line. ROM parts must have extensions
+             like .1, .2, .3, or .a, .b, .c, etc.
+
+-pad         Makes NSRT pad the ROM to the next power of 2 in size. i.e. a 6
+             Mbit ROM would pad to 8 Mbits, a 10 Mbits ROM would pad to 16
+             Mbits. The padding value is that of the last byte of the ROM.
+
+-modint      Modify the internal name stored in the ROM. BEWARE! Unless your ROM
+             has an NSRT header, this is not reversible by NSRT. Backup your
+             ROMs and use this feature at your own risk. To reverse this with a
+             ROM that has an NSRT header, just use -remhead.
+
+Open and Saving methods:
+
+-noext       Ignores the extension on the file and instead uses file detection
+             to determine if and how a file is compressed.
+
+-savetype    Saves each file in a specified format such as zip. Type this alone
+             to see a list of available types you can choose from. Currently,
+             this only works in conjunction with an option that renames or moves
+             the file.
+
+Hashes:
+
+-md5         Displays and uses the MD5 hash of a ROM when scanned.
+
+-ripemd      Display RIPEMD hash (160 bit) when scanning ROMs.
+
+-sha1        Display SHA-1 hash (160 bit) when scanning ROMs.
+
+-sha256      Display SHA-2 hash using 32 bit words (256 bit)
+             when scanning ROMs.
+
+-sha512      Display SHA-2 hash using 64 bit words (512 bit)
+             when scanning ROMs.
+
+-whirlp      Display Whirlpool 2.0 hash (512 bit) when.
+             scanning ROMs.
+
+-tiger       Display Tiger hash (192 bit) when scanning ROMs.
+
+-hashes      Use all the above listed hashes.
+
+Other switches:
+
+-fc          File Compare; compares two ROM files on a byte by byte level and
+             outputs the differences. This will open supported archive formats,
+             ignores copier headers, and deinterleaves if appropriate.
+
+-findover    Checks ROM to see if it is a possible overdump.
+
+-r           Searches sub-directories as well.
+
+-credits     Type this in alone to see the credits for NSRT.
+
+-control     Makes NSRT list all ROMs in the database that use any sort of
+             special controller (e.g. Mouse, Super Scope).
+
+-verified    Lists all the games of which we have verified dumps.
+
+-fixable     Lists all the CRCs of games which are bad or hacked that can be
+             fixed using -fix.
+
+-64meg       Allows ROMs which have an uncompressed size of up to 64 megabits (8
+             megabytes) to be scanned. We recommend you don't enable this option
+             unless you really need to do it, although it has worked
+             successfully to recognize ROMs overdumped to 64 megs. It may cause
+             problems with deinterleaving, etc.
+
+-region [reg1] [reg2]
+       This will cause NSRT to List all parent ROMs that are in
+       region reg1 and not in region reg2. This is the list of inputs
+       allowed for reg1 and reg2:
+
+       0   - Japan
+       1   - USA
+       2   - Europe
+       3   - Sweden
+       4   - Finland
+       5   - Denmark
+       6   - France
+       7   - Holland
+       8   - Spain
+       9   - Germany
+       10  - Italy
+       11  - China
+       12  - Indonesia
+       13  - South Korea
+       14  - Japan & USA
+       15  - Canada
+       16  - Australia
+       17  - Brazil
+       18  - Japan, USA, Europe
+       255 - Unknown
+
+
+NOTES: There may be problems updating zip files that have more than one file in
+them. Also, whenever a ROM is rewritten to the file (for example, using -fix),
+-deint is always applied.
+
+
+--------------------------------------------------------------------------------
+5) Frontend (formerly GUI Options)
+--------------------------------------------------------------------------------
+
+See nf.txt...
+
+
+--------------------------------------------------------------------------------
+6) NSRT Header Info
+--------------------------------------------------------------------------------
+
+1. What is the NSRT Header?
+
+   a) The NSRT Header uses empty space in the 512 Byte ROM Header to store info.
+   b) The NSRT Header is located at $01D0-$01EF in the Header.
+
+2. What information is stored in the Header?
+
+   a) Bank type (HiROM/LoROM)
+   b) Video/Country Settings
+   c) Cart Name
+   d) Checksum
+   e) NSRT Header Version #
+   f) Controller info
+
+3. What is the point in this header?
+
+   The point in the header is simple. Many people complained about the cart
+   names in ROMs. For example, in the Super Bomberman Series, some are just
+   written "Super Bomberman X", while others are written "Hu Super Bomberman X"
+   (Hu for Hudson), This can mess up alphabetization.
+
+   Or, some ROMs have beta names or the like for the cart name. For example
+   Kirby's Super Star's cart name is "Kirby Super Deluxe", the name of the game
+   in Japan.
+
+   You can hex edit your ROM to change the cart name, but you end up ruining the
+   checksum. But if you alter the checksum to match your changes, you have no
+   easy way to reverse all your changes. That's where the NSRT comes in. The
+   NSRT header stores a backup of the original checksum, cart name, and other
+   information so it is simple to change the ROM back to it's original state.
+   Just use the -remhead command.
+
+   Emulators can also utilize this NSRT header to automatically set up special
+   controllers like the SNES Mouse upon ROM load. This is currently implemented
+   in ZSNES.
+
+
+--------------------------------------------------------------------------------
+7) IPSEDIT Info
+--------------------------------------------------------------------------------
+
+      Starting with version 3.2, NSRT will be bundled with another application,
+IPSEDIT. This program is used to alter IPS patches to make or remove the
+requirement of a copier header on ROMs. For example, if you have a translation
+patch that requires you to have a copier header, and you don't want to add a
+header to your ROM to keep your collection header-free, you can use IPSEDIT to
+remove the requirement from the patch.
+
+Usage: IPSEDIT [-add | -rem] file.ips
+
+       -add  Will add 512 bytes to each patch offset in the patch.
+
+       -rem  Will remove 512 bytes from each patch offset in the patch.
+
+
+--------------------------------------------------------------------------------
+8) RAR and 7-Zip Support
+--------------------------------------------------------------------------------
+
+      NSRT now has support for RAR and 7-Zip files. However, NSRT can only read
+these types of files, it cannot write them. Also, you need to have the
+executables used to extract these types of archives in your PATH, with the
+exception of RARs made with RAR 2.x (which can be opened without external
+applications).
+
+In the case of RAR 3.x, you need unRAR.exe in your PATH (unrar in *nix).
+In the case of 7-Zip you need 7za.exe in your PATH (7za in *nix).
+
+Directions on how to add these two programs to your PATH, under Windows XP:
+(Please note that if you installed WinRAR or 7-Zip to a directory other than the
+default, you will have to add that directory to the PATH, not the one mentioned
+here.)
+
+1. Go to Start > Control Panel > System > Advanced > Environment Variables.
+
+2. Under "User Variables for [your user name]", select "path", and click "Edit".
+
+3. Inside the box that says "Variable value", scroll all the way to the right.
+
+4. Type in a semicolon (";") and then type in your path.  For example:
+   [Bunch of stuff];C:\Program Files\7-Zip;C:\Program Files\WinRAR;
+
+5. Click OK to confirm your changes.
+
+6. If you already had a command-line/console open, don't use it to test
+   your changes, it won't work.  Instead, start up a new instance of your
+   command-line program, or close your other instance then restart it.
+
+
+Alternatively, you could copy 7za.exe and unRAR.exe to a directory (folder)
+already in your PATH such as C:\Windows.
+
+To add a path temporarily from a DOS prompt, one can type:
+   set PATH=%PATH%;C:\Program Files\7-Zip;C:\Program Files\WinRAR
+
+
+--------------------------------------------------------------------------------
+9) More Info
+--------------------------------------------------------------------------------
+
+This is the current list of roms that NSRT can fix with the -fix switch:
+
+CRC32        ROM Name                             What is wrong
+0xB2EDBF88   Metal Combat: Falcon's Revenge       - Hacked to appear as SFX game
+0x8745A442   Tales of Phantasia                   - Hacked checksum
+0xDC1BEB4D   ToP Interleaved/Swapped              - Hacked checksum
+0x1BF3DB9A   Honkakuha Igo Gosei                  - Hacked to appear as SFX game
+0x6810AA95   Bazooka Blitzkrieg                   - ROM size hacked
+0x61E29C06   The Tick                             - Region hacked
+0x8FC452A0   Drift King Shutokou Battle 2         - Hacked name and checksum
+0x1EF90F74   Jikkyou Keiba Simulation Stable Star - Region hack
+0x45417117   Winter Gold FX                       - Company hack
+0x4ab225b5   Krusty's Super Fun House             - Region hack
+0x77fd806a   Donkey Kong Country 2                - Bad dump fix
+0x340f23e5   Donkey Kong Country 3                - Copier hack
+0xDAC1C838   Silva Saga 2                         - Copier hack
+0x1B3BC708   Star Fox 2                           - Older compile
+0x1FB1CF76   Star Fox 2 newer                     - Inaccurate header
+0x4E5E8810   Super Battletank (U)(R1.1)           - Hacked name
+0xC070DDF0   Rockman & Forte                      - Hacked company
+0x40124F6E   Dennis                               - Region hack
+0xDDAA7E6B   Dragon - The Bruce Lee Story         - Internal name, copier hack
+0x199A8FA2   Hebereke's Popoon                    - Region hack
+0x3F79EAD7   Muhammad Ali Boxing                  - Internal name hacked
+
+
+--------------------------------------------------------------------------------
+10) Future Plans
+--------------------------------------------------------------------------------
+
+Seeing as NSRT is an ongoing, never-ending project, we have to make plans for
+the version to come.
+Here is a list of some things that we want to add or improve upon:
+
+Changing country/region settings
+More IPS Support
+NPS (Nach's Patching System) Support
+Adding specific copier headers
+More game fixes
+Never-ending improvements to the database
+Recompressing zip files with more than one file
+Merging sibling games into one JMA or ZIP.
+More systems.
+External database so you can get updates of that separately.
+
+--------------------------------------------------------------------------------
+11) Contact Info
+--------------------------------------------------------------------------------
+
+There are several ways to get in contact with the NSRT team:
+
+For database suggestions/changes, bug reports, and feature requests, try
+posting on our forums at:
+    http://nsrt.edgeemu.com/forum
+
+If you want to talk to us in person and voice your questions and comments or to
+offer your help, you can come to our IRC channel here:
+    #nsrt at irc.freenode.net
+
+If all else fails, you can try emailing at:
+    joecool22us@yahoo.com
+    (NSRT official mailbox, usually read by CL, sometimes by Nach)
+    malcolm.reynolds@gmail.com (malcster)
+
+
+--------------------------------------------------------------------------------
+12) Project Thoughts
+--------------------------------------------------------------------------------
+
+This section is dedicated to the programmers of NSRT to let out whatever
+thoughts they have on the project.
+
+Gengar:
+When I first join up with this project, I was nothing more than a mere helper, a
+tester. While Nach was looking for a suitable library for the GUI version, I
+found one that looked simple enough to get it up and working, and Nach kinda
+nudged me into the project even though i didn't have any real programming
+knowledge. Heck, i didn't even know how to work a compiler. After looking
+through sample source code, trying things out, and a lot of Nach's help, I was
+able to get the GUI version that you are toying around with.
+
+CL:
+I was with Nach on this from the start and am very happy with the progress made
+since 1.0. I worked on this at first for fun, and to improve my BASIC skills,
+which was a success. I liked NSRT for it's easy to use hacking functions, but am
+pleased with the change in direction.
+
+Nach:
+I started this because of a lack in ROM tools that had correct info, and had
+features that I wanted/needed. NSRT now surpasses even my original expectations.
+NSRT has come such a long way that older versions seem insulting by comparison.
+I hope to continue improving things and adding on features that are sane, as
+well as continue my contributions to the SNES scene in general. One thing I
+always say to myself, if it's not done right, you have to do it yourself.
+
+Malcster:
+This is really the first proper programming project I've ever worked on, with me
+having only a limited knowledge of Java before I joined. Nach has been gently
+nudging me in the right direction in what at first appeared to be a hugely
+complex project. I'm glad to have a part, however small, in making a tool that
+the emulation community enjoy using.
+
+grinvader:
+I joined this project as a beta tester, then I helped Nach integrate the source
+files required for the JMA format. After some time, I now help him keep the ROM
+database updated with the latest news from the scene. My programming skills have
+greatly improved since I started working with him - and even though my work is
+minimal, it saves him some time, which is spent on better things. In regard to
+what he wrote, I can only add, if someone does it right, follow and learn.
+
+
+--------------------------------------------------------------------------------
+13) Credits
+--------------------------------------------------------------------------------
+
+         Main Coder(s): Nach
+    Assistant Coder(s): CL, grinvader, malcster, zones
+     Previous Coder(s): Gengar_1, Moe
+  Database Verifier(s): Evan G, FitzRoy, GeneralLeoFF, hydr0x, JohnDie,
+                        manliodp, NGEfreak, Overload, Zidanax
+
+Bug Testing and Advice: anomie, Astxist, Bisqwit, dbjh, Gideon Zhi,
+                        ipher, JB, Lord Nightmare, MKendora, Nightcrawler,
+                        pagefault, The Dumper, TRAC, sunny
+
+
+Special Thanks:
+
+DaveDrummer, RabbiEMU, Marsch, Striker,
+CaitSith2, Neviksti
+
+
+Whoever we forgot
+
+
+The makers of ZSNES, Snes9x, uCON64, insnest, & SMC File Checker
+And the Authors of zlib and bzlib for their libraries.
+
+
+And the one who inspired us & helped us to do everything we do - G-d
+
+
+--------------------------------------------------------------------------------
+14) License
+--------------------------------------------------------------------------------
+
+Libraries:
+CRC32 Hashing - Nach, TRAC
+MD5 Hashing - Colin Plumb, Todd Miller, Nach
+RIPEMD-160 Hashing - Markus Friedl, Nach
+SHA Hashing - Brian Gladman, Nach
+Tiger Hashing - Eli Biham, Nach
+Whirlpool Hashing - Paulo S.L.M. Barreto, Vincent Rijmen, Nach
+zlib Compression/Decompression - Jean-loup Gailly, Mark Adler, Nach
+bzip2 Compression/Decompression - Julian R. Seward
+UniquE RAR Decompression - Christian Scheurer, Johannes Winkelmann, Nach
+LZMA Compression/Decompression - Igor Pavlov, Andrea Mazzoleni
+JMA Compression/Decompression - Nach, Lord Nightmare, grinvader, CL, malcster
+
+Licenses for libraries that require us to mention them:
+/*
+ * Copyright (c) 2001 Markus Friedl.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+ ---------------------------------------------------------------------------
+ Copyright (c) 2002, Dr Brian Gladman, Worcester, UK.   All rights reserved.
+
+ LICENSE TERMS
+
+ The free distribution and use of this software in both source and binary
+ form is allowed (with or without changes) provided that:
+
+   1. distributions of this source code include the above copyright
+      notice, this list of conditions and the following disclaimer;
+
+   2. distributions in binary form include the above copyright
+      notice, this list of conditions and the following disclaimer
+      in the documentation and/or other associated materials;
+
+   3. the copyright holder's name is not used to endorse products
+      built using this software without specific written permission.
+
+ ALTERNATIVELY, provided that this notice is retained in full, this product
+ may be distributed under the terms of the GNU General Public License (GPL),
+ in which case the provisions of the GPL apply INSTEAD OF those given above.
+
+ DISCLAIMER
+
+ This software is provided 'as is' with no explicit or implied warranties
+ in respect of its properties, including, but not limited to, correctness
+ and/or fitness for purpose.
+ ---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------
+Free License for UniquE RAR File Library
+Copyright (C) 2000-2002 by Christian Scheurer (www.ChristianScheurer.ch)
+UNIX port by Johannes Winkelmann (jw@tks6.net)
+
+You have the permission to use, copy, modify, and distribute the
+UniquE RAR File Library (also called URARFileLib or unrarlib) and its
+documentation for any purpose except for re-creating the RAR compression
+algorithm, which is proprietary. URARFileLib may not be used or modified
+to create RAR/WinRAR compatible archives, only decompression is permitted.
+If you use URARFileLib, or parts of URARFileLib in your program,
+you must give the program away for free.
+The above copyright notice must be shipped with all copies.
+No representations are made about the suitability of the URARFileLib
+for any purpose. It is provided "as is" without expressed or implied warranty.
+
+
+Christian Scheurer (cs@unrarlib.org)
+14. June 2002
+---------------------------------------------------------------------------
+
+License for NSRT itself:
+
+Copyright (C) 2003-2007 NSRT Team
+
+You have permission to use NSRT in any method you desire.
+You cannot reverse engineer NSRT itself nor extract data or code from NSRT
+to use elsewhere.
+You may use, copy, modify, and distribute any kind of text NSRT produces,
+provided that distribution of modified text output is not misrepresented as
+original unmodified NSRT output.
+You have permission to copy and distribute NSRT Packages in anyway you desire.
+NSRT Packages are defined as releases made by the NSRT Team which are archive
+files containing the NSRT executables and documentation.
+Permission is not granted to modify NSRT or distribute modified NSRT packages.
+NSRT Packages may be renamed if the new filename chosen denotes the package
+as containing NSRT, and is not derogatory to NSRT or the NSRT Team in any
+manner.
+NSRT Packages may be included alongside other files, applications, and
+packages provided that NSRT is not used to endorse in any manner 3rd party
+files, applications, and packages without permission from the NSRT Team.
+NSRT is provided by the NSRT Team without any warranty, use at your own risk.
+The NSRT Team cannot be held responsible for any damage of whatever nature
+caused by NSRT.

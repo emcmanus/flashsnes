@@ -1,0 +1,26 @@
+/*
+ *  flash.h
+ *  SNES9x_FlashSnes
+ *
+ *  Created by Ed McManus on 12/26/08.
+ *  Copyright 2008. All rights reserved.
+ *
+ */
+
+
+// Flash Callbacks
+AS3_Val Flash_tick (void *data, AS3_Val args);
+AS3_Val Flash_setup (void *data, AS3_Val args);
+AS3_Val Flash_teardown (void *data, AS3_Val args);
+AS3_Val Flash_getDisplayPointer (void *data, AS3_Val args);
+AS3_Val Flash_setEventManager (void *data, AS3_Val args);
+
+void S9xPostRomInit();
+void S9xSetupDefaultKeymap();
+void S9xProcessEvents (bool8);
+
+void Convert16To24 (int, int);
+void OutOfMemory (void);
+
+// Test func
+void putpixel(int x, int y);

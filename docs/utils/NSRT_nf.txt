@@ -1,0 +1,360 @@
+NSRT Frontend
+http://nsrt.edgeemu.com
+
+                         NSRT Frontend Version 1.1
+                         For use with NSRT 3.4
+                         May 2007
+                         Copyright 2005-2007
+
+
+--------------------------------------------------------------------------------
+Table of Contents
+--------------------------------------------------------------------------------
+
+  I. Introduction
+ II. Version History
+III. Requirements
+ IV. Main Window Interface
+        A. Paths Window
+        B. Info Windows
+  V. Configuring Options
+        A. Frontend Tab
+        B. Emulators Tab
+        C. ROM Fixing Tab
+        D. Headers Tab
+        E. Sorting Tab
+        F. Naming Tab
+        G. Saving Tab
+        H. Scanning Tab
+        I. Applying Translations
+ VI. Credits
+
+
+--------------------------------------------------------------------------------
+I. Introduction
+--------------------------------------------------------------------------------
+
+The NSRT Frontend was written in an attempt to replace the GUI version of NSRT,
+which saw its last release with NSRT 3.2. The frontend is much easier for the
+developers to maintain and its interface should hopefully make things more
+straightforward. What this means to you, the user, is that you can more easily
+audit and work with your SNES ROMs. However, as with the former releases of NSRT
+that used the old GUI, you may still use the command prompt instead if you
+prefer to do so.
+
+--------------------------------------------------------------------------------
+II. Version History
+--------------------------------------------------------------------------------
+
+Version 1.1
+- Added icons. (grinvader, DeFender, Nach, FitzRoy)
+- Icons compressed better. (Jonas Quinn)
+- Improved build process. (Nach, zones)
+- Added apply button to options dialog. (DeFender)
+- Path browser auto updates. (Nach)
+- Can now pass as many files as you want to NSRT. (Nach)
+- Progress bar when scanning. (Nach)
+- More right click menu options. (Nach)
+- Auto complete in all path editors. (Nach, DeFender)
+- Can choose what double click/enter does on a ROM in the path
+  menu. (DeFender, Nach)
+- Updated to work with NSRT 3.4 and support several of its new features. (Nach)
+- Parsegen updated, should fix problems with large values in the config. (Nach)
+- Fixed several bugs. Thanks adventure_of_link and anewuser for the thorough
+  testing. (Nach)
+- German Translation (NGEfreak)
+- Improved Hebrew translation (nakee)
+
+
+Version 1.0 - First public release
+
+
+--------------------------------------------------------------------------------
+III. Requirements
+--------------------------------------------------------------------------------
+
+Obviously, you'll need the NSRT executable. ;-)
+
+As for the frontend itself, it requires certain DLL files in Windows in order
+to run. If the NSRT Frontend can't find these files when you first attempt to
+run the program, you will get an error message and the frontend will not open.
+
+The error message will tell you exactly which files you need in order to open
+the program. The files are available at the NSRT website,
+http://nsrt.edgeemu.com
+http://nsrt.edgeemu.com/nf
+At most, you will need three (3) DLL files. After downloading them, uncompress
+them and place the DLL files in the same directory as the frontend.
+
+To compile the frontend yourself, you will need to download a copy of
+Qt 4.2+, available at http://www.trolltech.com
+
+Minimum System Requirements:
+Windows: Windows 98SE+, Pentium II 300, 64MB RAM
+Mac OS: Mac OS X 10.3.9+
+X11: Anything recent should work.
+
+
+--------------------------------------------------------------------------------
+IV. Main Window Interface
+--------------------------------------------------------------------------------
+
+When the program first opens, you will see 3 different windows. One pertains to
+your ROM paths and the other two to the ROM info.
+
+
+ A. ***Paths Window***
+
+   - This window lets you explore through the directories on your system. Go
+   through the directories until you find the directory where your SNES ROMs
+   are.
+
+   - You can highlight an entire directory (folder), or just an individual ROM.
+
+   - After highlighting, press "Scan Selected" in order to get NSRT to display
+   that item's ROM info in the Info Window. If you are scanning an entire
+   directory, NSRT will continuously print out ROM info for each ROM it
+   encounters. This process can take several minutes if you have several
+   hundred or thousands of SNES ROMs.
+
+   - Pressing "Scan Selected" will also make NSRT do the options in the Options
+   menu you want it to do. The Options menu is explained in greater detail later
+   in this document.
+
+   - To make things easy, you can right-click entries in this window as well.
+   A menu will pop-up that lets you perform various options without
+   performing any other options selected in the Options menu
+   (explained in "Configuring Options", below).
+
+
+ B. ***Info Windows***
+
+   - After scanning your ROM(s), NSRT will print its output of the ROM info
+   here.
+
+   - You can select which format you want this info to be outputted in: HTML,
+   Unformatted HTML, Text, XML, or CSV.
+
+   - The bottom window shows general info like the command line arguments
+   NSRT used for the scan and how long the scan took, and any errors that may
+   have been encountered.
+
+
+--------------------------------------------------------------------------------
+V. Configuring Options
+--------------------------------------------------------------------------------
+
+Choose "Edit" on the menu bar and select "Options" to explore and set up the
+various features of NSRT. The window that opens will have eight tabs in which
+you can configure different options.
+
+
+ A. ***Frontend Tab***
+
+   NSRT Location -
+       This lets the frontend know where the NSRT executable is. By default, the
+       frontend is already in the same directory as NSRT, so browse for another
+       directory if you moved the frontend somewhere else.
+
+   Start Location -
+       Specify which directory you want the Paths window from the Main Window
+       Interface to be at every time you start the frontend.
+
+   Default Double Click/Enter Action -
+       Specify which action should be taken when double clicking or pressing
+       enter on a ROM in the Paths Windows. You can select Scan Selected or
+       any action available from the right click menu you would get on a ROM.
+
+
+ B. ***Emulators Tab***
+
+   You can configure paths to your SNES emulators here by typing them in the
+   appropriate fields. Then, in the Main Window Interface, select a game in the
+   Paths Window, right-click it, select Launch In and choose which emulator you
+   want to use to launch the game.
+
+
+ C. ***ROM Fixing Tab***
+
+   Overdump Handling -
+       When scanning, NSRT can use the following options to detect if your ROMs
+       are overdumped:
+
+         1. None -
+              NSRT will not detect overdumps.
+
+         2. Detection Only -
+              NSRT will only detect if your ROMs are overdumped, but won't trim
+              them.
+
+         3. Detect and Safely Trim -
+              With this option enabled, NSRT will only trim an overdump if the
+              trimmed ROM to be produced is in the NSRT database. Recommended.
+
+         4. Detect and Force Trim -
+              NSRT will trim any ROM it thinks is overdumped, regardless of
+              whether the trimmed ROM to be produced is in the database.
+
+   Deinterleave -
+       Deinterleaves interleaved ROMs. Recommended, since many people seem to
+       have interleaved copies of several games, usually Super FX ones such as
+       Yoshi's Island. Most modern SNES emulators will not load an interleaved
+       Super FX game.
+
+   Use Built-In List to Fix Certain Broken ROMs -
+       NSRT is capable of fixing some corrupted ROM images (see NSRT readme,
+       or right click the Info Window and have it list them). With this option
+       enabled, NSRT will correct any and all of these bad ROMs if they are
+       found while scanning. Recommended.
+
+   Split Merged ROMs -
+       Many Sufami Turbo ROM images have multiple ROMs merged into a single
+       file. This is unfavorable, so this option will split the ROMs into their
+       own individual files. The newly split files will be placed in the root
+       NSRT directory, inside a directory named "Split".
+
+
+ D. ***Headers Tab***
+
+   Header Modification -
+       When ROMs are dumped, copiers give them headers. Use the following
+       options to configure how NSRT deals with headers:
+
+         1. None -
+              NSRT will disregard headers; it will neither add nor remove them.
+
+         2. Remove Headers -
+              Will remove any header found on a ROM. Headers are generally
+              unnecessary, so for the sake of a "clean" ROM collection it is
+              recommended that you use this option unless you want to use the
+              special NSRT headers.
+
+         3. Add Empty Header -
+              Adds a regular 512 byte header to your ROM. Currently, you can not
+              add copier-specific headers with NSRT (e.g. SWC, GD3, etc.).
+
+         4. Add NSRT Header -
+              Adds an NSRT header. NSRT headers are special; they offer features
+              that other header types don't. Check the NSRT Readme for more
+              details.
+
+         5.Add NSRT Header Only If the ROM Has Special Controls -
+              Only adds an NSRT header to ROMs that utilize the following
+              special controllers: SNES Mouse, Super Scope, Justifier, MultiTap,
+              Lasabirdie, Barcode Battler, and the Miracle Piano Keyboard.
+
+
+ E. ***Sorting Tab***
+
+   This tab lets you configure how you want your ROMs sorted (using the choices
+   available under the Available window). Add the criteria you want by clicking
+   an item under the Available window, then move it to the Use window. NSRT will
+   sort your ROMs by the criteria in the Use window, in order from top to
+   bottom.
+
+
+ F. ***Naming Tab***
+
+   Renaming -
+       NSRT can rename your ROMs to match its ROM database. Configure the
+       details about that with these options:
+
+         1. None -
+              NSRT will not rename your ROMs at all. It will leave the filenames
+              the same.
+
+         2. Standard -
+              Renames ROMs according to NSRT's database. Renames the extensions
+              of the files as well.
+
+         3. Use 8.3 Filenames -
+              Enable this to make the ROM names conform to DOS 8.3 standards.
+
+         4. Extensions Only -
+              Enable this to make the extensions match their format. Useful
+              if you want to change the ROM's save format but don't want to
+              rename it otherwise.
+
+         4. Lowercase Extensions - File extensions will be made lowercase (e.g.
+              .SFC -> .sfc).
+
+         5. Underscores Instead of Spaces - Pretty self-explanatory (e.g. Super
+              Mario World (U).SFC -> Super_Mario_World_(U).SFC).
+
+
+ G. ***Saving Tab***
+
+  This option is for compressing your ROMs. You have several choices:
+
+    No change, which leaves ROMs unchanged.
+
+    Uncompressed, which decompresses whatever is compressed.
+
+    JMA, obviously this compresses your ROMs in the JMA format, developed
+    by the NSRT Team. This scheme is designed with SNES ROMs in mind.
+
+    Zip, which compresses ROMs in the Zip format.
+
+    BZip2, compresses ROMs in the BZip2 format.
+
+    GZip, compresses ROMs in the GZip format.
+
+    For save formats to work, you need to select a renaming option
+    (see section F above.)
+
+
+ H. ***Scanning Tab***
+
+   This configures your scanning options. You have four choices:
+
+     Calculate MD5 hash, which gives you an MD5 sum in your scan.
+
+     Enable 64Mbit support, should be used ONLY if you have 64Mbit ROMs.
+
+     Delete duplicates, which deletes duplicate ROMs from your collection.
+
+     Automatically Detect Proper Filetype, which detects if your ROM really
+     is in the correct format (e.g.: your ROM's extension is .zip, when it
+     should be .bz2)
+
+
+ I. ***Applying Translations***
+
+   This option is a bit different than configuring general NSRT Frontend
+   options. The frontend comes with the following translations: Dutch, English,
+   French, German, Hebrew, Japanese, and Spanish.
+
+   To apply the different translations, first open the nf.cfg in your favorite
+   text editor (eg: Notepad, Wordpad, nano, ee, vi, Kate, KWrite, etc.), it's
+   just a text file. Next, you should notice an option called nf_lang="auto"
+   (It should be the first line in the config file). Change the auto to the two
+   letter code for the language (as in the lang directory). The two-letter codes
+   are as follows:
+
+  auto = NSRT detects default system language and will use that if available
+    en = English
+    es = Spanish (Español)
+    fr = French (Français)
+    de = German (Deutsch)
+    he = Hebrew (עברית)
+    ja = Japanese (日本語)
+    nl = Dutch (Nederlands)
+
+   Example: nf_lang="ja" should change the NSRT Frontend to Japanese Text,
+            and so on.
+
+   After you change this option, save and exit the config file, and restart the
+   NSRT Frontend. The translation should then auto-apply.
+
+
+--------------------------------------------------------------------------------
+VI. Credits
+--------------------------------------------------------------------------------
+
+NSRT Frontend
+                Coders: DeFender, jdratlif, Nach, zones
+             Icons/Art: cdbsi, DeFender, grinvader, KDE, Nach
+          Translations: grinvader, Keeperofthekeys, Mexandrew, msstein24,
+                        Nach, nakee, NGEfreak, zones
+           Bug Testing: adventure_of_link, anewuser, Clements, xamenus, Zidanax
+         Documentation: adventure_of_link, Nach, xamenus

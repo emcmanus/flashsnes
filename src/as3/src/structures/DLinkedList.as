@@ -19,16 +19,16 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.polygonal.ds
+package structures
 {
-	import de.polygonal.ds.sort.compare.compareStringCaseInSensitive;
-	import de.polygonal.ds.sort.compare.compareStringCaseInSensitiveDesc;
-	import de.polygonal.ds.sort.compare.compareStringCaseSensitive;
-	import de.polygonal.ds.sort.compare.compareStringCaseSensitiveDesc;
-	import de.polygonal.ds.sort.dLinkedInsertionSort;
-	import de.polygonal.ds.sort.dLinkedInsertionSortCmp;
-	import de.polygonal.ds.sort.dLinkedMergeSort;
-	import de.polygonal.ds.sort.dLinkedMergeSortCmp;	
+	import structures.sort.compare.compareStringCaseInSensitive;
+	import structures.sort.compare.compareStringCaseInSensitiveDesc;
+	import structures.sort.compare.compareStringCaseSensitive;
+	import structures.sort.compare.compareStringCaseSensitiveDesc;
+	import structures.sort.dLinkedInsertionSort;
+	import structures.sort.dLinkedInsertionSortCmp;
+	import structures.sort.dLinkedMergeSort;
+	import structures.sort.dLinkedMergeSortCmp;	
 
 	/**
 	 * A doubly linked list.
