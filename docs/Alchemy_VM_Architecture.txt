@@ -2,11 +2,11 @@ What's using the CSystemBridge?
 
 Left on line 1296, looking for gstate.cf
 
-The more I play around with Alchemy the more I find myself reaching the same conclusion: Alchemy is really fucking beautiful software.
+The more I play around with Alchemy the more I find myself reaching the same conclusion: Alchemy is really fucking awesome software.
 
 Hidden away in the source are a few undocumented gems, like almost-complete SDL support and a pretty awesome GDB client, which allows you to keep from breaking out of your standard C toolchain.
 
-Perhaps more importantly, the C Virtual Machine (the Machine class in the AS source) is pretty elegantly architected.
+Perhaps more importantly, the C Virtual Machine (the Machine class in the AS source) is pretty cleanly architected.
 
 
 
@@ -47,7 +47,7 @@ work	// Executes queued worker methods until timing out or completing
 CLASS CLibInit
 ==========================
 
-The main C interface. Contains the beloved supplyFile, setEnv, and init methods.
+The main C interface. Contains the supplyFile, setEnv, and init methods which you call from you AS3 application.
 
 
 Key Methods
@@ -57,23 +57,23 @@ init	// Instantiates the CRunner and begins execution
 
 
 
-INSTANCE mstate/gstate (Global State?)
+INSTANCE mstate/gstate => extends MemUser
 ==========================
 
 Encapsulates the C Machine state.
 
 
-Key Properties - most of these are register names -- look further into assembly to understand what's going on here
+Key Properties - most of these are register names -- look into x86 assembly to understand what's going on here
 --------------------------
-sp		// state position?
+sp		// 
 ds		// 
 
-esp		//
-ebp		//
+esp		// Stack pointer
+ebp		// Base pointer
 eax		// Method execution register -- when you "mov" a value into this register, you're telling the system what function it'll
  		// execute next (we pass in the function's associated constant -- typically this is followed by a call to the VM signalling it 
 		// should execute the specified function. On linux, you'd then call interrupt with the kernel value as an operand.) Of course, 
-		// Alchemy doesn't need to deal with such low-level details. Check the bodies of the defined methods to get an idea of what 
+		// Alchemy doesn't need to deal with these low-level details. Check the bodies of the defined methods to get an idea of what 
 		// Alchemy outputs.
 edx		//
 st0		//
@@ -97,7 +97,7 @@ Getters/Setters of various types
 CLASS CProcTypemap
 ==========================
 
-Provides type mapping for C-AS3 communication, encapsulating methods
+Provides type mapping for C-AS3 marshalling
 
 
 Key Methods
