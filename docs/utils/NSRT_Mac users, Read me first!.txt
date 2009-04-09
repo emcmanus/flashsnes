@@ -1,8 +1,0 @@
-nf FAQ for Mac:Q. I set NSRT location to "Frontend Directory", but where is it?A. nf.app/Contents/MacOS. Put nsrt into this folder.Q. Where is the preference file?A. In nf.app/Contents/MacOS.Q. Where should I put the lang folder?A. In the same place as nf.app.
-
-All executable files are made as "universal binary".
-
-File type detection is supported as '-noext' option on all NSRT platforms.
-So, if your ROM image is compressed without extension, don't forget to add -noext option.
-
-- zones

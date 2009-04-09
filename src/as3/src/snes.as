@@ -33,9 +33,9 @@ package {
 			var paramObj:Object = LoaderInfo(this.root.loaderInfo).parameters;
 			var romString:String = parseRom( paramObj ); 
 			
-//			this.romLoader.load(new URLRequest("http://localhost/test_roms/dk_rom_1"));
-//			this.romLoader.load(new URLRequest("http://192.168.1.64/test_roms/dk_rom_3"));
-			this.romLoader.load(new URLRequest(romString));
+			this.romLoader.load(new URLRequest("http://localhost/test_roms/dk_rom_1"));
+//			this.romLoader.load(new URLRequest("http://192.168.1.58/test_roms/dk_rom_3"));
+//			this.romLoader.load(new URLRequest(romString));
 //			this.romLoader.load(new URLRequest("http://localhost/test_roms/1"));
 //			this.romLoader.load(new URLRequest("http://localhost/test_roms/test_rom.smc"));
 		}
