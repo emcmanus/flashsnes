@@ -1,5 +1,5 @@
-## FlashSNES - Quick Guide ##
-====================================
+FlashSNES - Quick Guide
+=======================
 
 *More docs in /docs*
 
