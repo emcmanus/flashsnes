@@ -15,6 +15,8 @@ FlashSNES - Quick Guide
   - `/src/c/snes9x/flash` contains the Flash drivers
   - `/src/c/snes9x/flash/flash.cpp` is the C interface for the Flash application
   - `/src/c/snes9x/Markedup_SNES9x.as` details my attempt to understand Alchemy's C VM
+  - `/src/c/snes9x/port.h` defines port-specific directives
+  - `/docs/snes9x/porting.html` helpful doc detailing important preprocessor directives
  
 
 #### Running config over SNES9x ####
@@ -22,8 +24,7 @@ FlashSNES - Quick Guide
  
 
 #### After modifying C code ####
-  - Compile C code using Makefile.flash
-  - Refresh and recompile flash project
+  - See `/docs/Building`
  
 
 #### Generating emitted AS3 ####
@@ -38,4 +39,4 @@ FlashSNES - Quick Guide
 
 #### After modifying emitted AS3 ####
   - Run make-swc -- Ant target in `/build`
-  - Refresh and recompile flash project
+  - Clean and recompile flash project

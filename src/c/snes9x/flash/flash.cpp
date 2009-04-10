@@ -51,7 +51,7 @@ int main (int argc, char **argv) {
 	AS3_Val getDisplayPointerMethod = AS3_Function(NULL, Flash_getDisplayPointer);
 	AS3_Val setEventManagerMethod = AS3_Function(NULL, Flash_setEventManager);
 	
-    AS3_Val libSDL = AS3_Object(
+    AS3_Val libSNES = AS3_Object(
 		"setup:AS3ValType, tick:AS3ValType, getDisplayPointer:AS3ValType, quit:AS3ValType, setEventManager:AS3ValType", 
 		setupMethod, tickMethod, getDisplayPointerMethod, quitApplicationMethod, setEventManagerMethod
 	);
@@ -62,7 +62,7 @@ int main (int argc, char **argv) {
 	AS3_Release( quitApplicationMethod );
 	AS3_Release( setEventManagerMethod );
 	
-    AS3_LibInit(libSDL);
+    AS3_LibInit(libSNES);
 	
 	return (0);
 }
@@ -108,15 +108,15 @@ AS3_Val Flash_setup (void *data, AS3_Val args) {
 	Settings.SupportHiRes = false;
 	Settings.SDD1Pack = true;
 	
-	Settings.JoystickEnabled = FALSE;
-	Settings.MouseMaster = FALSE;
-	Settings.SuperScopeMaster = FALSE;
-	Settings.MultiPlayer5Master = FALSE;
-	Settings.JustifierMaster = FALSE;
+	Settings.JoystickEnabled = false;
+	Settings.MouseMaster = false;
+	Settings.SuperScopeMaster = false;
+	Settings.MultiPlayer5Master = false;
+	Settings.JustifierMaster = false;
 	
-	Settings.APUEnabled = Settings.NextAPUEnabled = false;
-	Settings.Multi = FALSE;
-	Settings.StopEmulation = TRUE;
+	Settings.APUEnabled = Settings.NextAPUEnabled = true;
+	Settings.Multi = false;
+	Settings.StopEmulation = true;
 	
 	// So listen, snes9x, we don't have any controllers. That's OK, yeah?
 	S9xReportControllers();
@@ -149,7 +149,7 @@ AS3_Val Flash_setup (void *data, AS3_Val args) {
 	
 	CPU.Flags = saved_flags;
 	
-	//S9xInitInputDevices();	// Not necessary!
+	//S9xInitInputDevices();	// Not necessary! In the unix port it's used to setup an optional joystick
 	
 	// Initialize GFX members
 	GFX.Pitch = IMAGE_WIDTH * 2;
@@ -233,7 +233,7 @@ void S9xMessage (int type, int number, const char *message) {
 
 bool8 S9xOpenSoundDevice (int mode, bool8 stereo, int buffer_size) {
 	AS3_Trace(AS3_String("S9xOpenSoundDevice"));
-	return FALSE;
+	return true;
 }
 
 const char *S9xGetFilename (const char *extension, enum s9x_getdirtype dirtype) {

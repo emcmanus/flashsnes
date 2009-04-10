@@ -9,7 +9,9 @@ package {
 	import snesLib.Snes9x;
 	import snesLib.video.VideoSurface;
 	
-//	import Profiler;
+	import utils.FPSCounter;
+	
+	import Profiler;
 	
 	[SWF(width=512,height=448,frameRate=60)]
 	public class Snes extends Sprite {
@@ -52,8 +54,8 @@ package {
 			snes9x.setEventTarget( this.surfaceContainer );
 			
 			// Monitor FPS performance
-//			var fps:FPSCounter = new FPSCounter();
-//			addChild(fps);
+			var fps:FPSCounter = new FPSCounter();
+			addChild(fps);
 		}
 		
 		public function parseRom(paramObj:Object):String

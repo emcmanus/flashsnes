@@ -36,9 +36,11 @@ OPTIONAL CONFIGURE: (Makefile already exists!)
 alc-on; DISABLE_PEDANTIC=1; export DISABLE_PEDANTIC;
 ./configure --prefix=$ALCHEMY_HOME/../usr/local --includedir=$ALCHEMY_HOME/avm2-libc/include --libdir=$ALCHEMY_HOME/avm2-libc/lib --without-assembler --without-joystick --without-sdd1-decomp --without-jma-decomp --without-screenshot --without-sound --without-png --without-zlib --with-x=no --with-extra-opt="-DOSX -I$ALCHEMY_HOME/../usr/local/include -L$ALCHEMY_HOME/../usr/local/lib"
 
-BUILD:
+BUILD USING GENERATED MAKEFILE:
 make clean; make;
 
+BUILD WITH EXISTING MAKEFILE (RECOMMENDED):
+make -f Makefile.flash clean; make -f Makefile.flash all;
 
 
 * ==============================================
