@@ -181,20 +181,20 @@ static void S9xGlideCalcSquare (int snes_width, int snes_height,
 				int x, int y, int width, int height,
 				GrVertex *square)
 {
-    float virtual_height;
-    float virtual_width;
-    float virtual_x;
-    float virtual_y;
+    double virtual_height;
+    double virtual_width;
+    double virtual_x;
+    double virtual_y;
 
 #if 0
-    float snes_aspect_ratio = snes_width / (float) snes_height;
-    float voodoo_aspect_ratio = Glide.voodoo_width / (float) Glide.voodoo_height;
+    double snes_aspect_ratio = snes_width / (double) snes_height;
+    double voodoo_aspect_ratio = Glide.voodoo_width / (double) Glide.voodoo_height;
 
     if (snes_aspect_ratio < voodoo_aspect_ratio)
     {
-	virtual_height = (float) Glide.voodoo_height;
+	virtual_height = (double) Glide.voodoo_height;
 	virtual_width = virtual_height * snes_aspect_ratio;
-	virtual_x = ((float) Glide.voodoo_width - virtual_width) / 2.0;
+	virtual_x = ((double) Glide.voodoo_width - virtual_width) / 2.0;
 	virtual_y = 0.0;
     }
     else
@@ -227,8 +227,8 @@ static void S9xGlideCalcSquare (int snes_width, int snes_height,
     square [3].tmuvtx [0].sow = 0.0;
     square [3].tmuvtx [0].tow = height;
 
-    float texture_width_percent;
-    float texture_height_percent;
+    double texture_width_percent;
+    double texture_height_percent;
 
     if ((texture_width_percent = virtual_width * TEXTURE_SIZE / snes_width) > virtual_width)
 	texture_width_percent = virtual_width;

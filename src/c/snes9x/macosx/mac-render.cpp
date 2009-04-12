@@ -237,8 +237,8 @@ static void S9xPutImageOverscanBlitGL(int, int);
 static void S9xPutImageOverscanCoreImage(int, int);
 static void S9xPutImageBlitGL2(int, int);
 static void S9xPutImageBlitGL2CoreImage(int, int);
-static void GLMakeScreenMesh(GLfloat *, int, int);
-static void GLMakeTextureMesh(GLfloat *, int, int, float, float);
+static void GLMakeScreenMesh(GLdouble *, int, int);
+static void GLMakeTextureMesh(GLdouble *, int, int, double, double);
 
 #define	BYTES_PER_PIXEL	2
 
@@ -318,7 +318,7 @@ typedef struct
 	GLint		type;
 	GLenum		target;
 	GLuint		textures[kGLNumTextures];
-	GLfloat		vertex[kGLNumTextures][8];
+	GLdouble		vertex[kGLNumTextures][8];
 	GLint		texW[kGLNumTextures];
 	GLint		texH[kGLNumTextures];
 	GLboolean   rangeExt;
@@ -362,8 +362,8 @@ static int					prevBlitWidth, prevBlitHeight;
 static int					imageWidth[2], imageHeight[2];
 static int					nx                = 2;
 
-static GLfloat				*scTexArray[kSCNumTextures];
-static GLfloat				*scScnArray;
+static GLdouble				*scTexArray[kSCNumTextures];
+static GLdouble				*scScnArray;
 
 static struct timeval		bencht1, bencht2;
 
@@ -656,7 +656,7 @@ void DrawPauseScreen(CGContextRef ctx, HIRect bounds)
 	image = CreateGameScreenCGImage();
 	if (image)
 	{
-		float	rx, ry;
+		double	rx, ry;
 		int		ofs;
 
 		rx = bounds.size.width / 512.0;
@@ -666,18 +666,18 @@ void DrawPauseScreen(CGContextRef ctx, HIRect bounds)
 			if (drawingMethod == kDrawingDirect)
 			{
 				ofs = copyRect.top;
-				ry = bounds.size.height / (float) kMacWindowHeight;
+				ry = bounds.size.height / (double) kMacWindowHeight;
 			}
 			else
 			if (windowExtend)
 			{
 				ofs = copyRect.top;
-				ry = bounds.size.height / (float) kMacWindowHeight;
+				ry = bounds.size.height / (double) kMacWindowHeight;
 			}
 			else
 			{
 				ofs = 0;
-				ry = bounds.size.height / (float) ((height <= 256) ? (height << 1) : height);
+				ry = bounds.size.height / (double) ((height <= 256) ? (height << 1) : height);
 			}
 		}
 		else
@@ -687,7 +687,7 @@ void DrawPauseScreen(CGContextRef ctx, HIRect bounds)
 			else
 				ofs = kMacWindowHeight - ((height <= 256) ? (height << 1) : height);
 
-			ry = bounds.size.height / (float) kMacWindowHeight;
+			ry = bounds.size.height / (double) kMacWindowHeight;
 		}
 
 		CGContextSetRGBFillColor(ctx, 0.0, 0.0, 0.0, 1.0);
@@ -696,8 +696,8 @@ void DrawPauseScreen(CGContextRef ctx, HIRect bounds)
 		crt = CGRectMake(0, 0, copyRect.right - copyRect.left, copyRect.bottom - copyRect.top);
 		crt.size.width  *= rx;
 		crt.size.height *= ry;
-		crt.origin.x = (float) (int) (rx * (float) copyRect.left);
-		crt.origin.y = (float) (int) (ry * (float) ofs);
+		crt.origin.x = (double) (int) (rx * (double) copyRect.left);
+		crt.origin.y = (double) (int) (ry * (double) ofs);
 		CGContextDrawImage(ctx, crt, image);
 
 		CGContextSetRGBFillColor(ctx, 0.0, 0.0, 0.0, 0.5);
@@ -835,7 +835,7 @@ static void S9xInitFullScreen(void)
 
 		if ((macControllerOption == SNES_MOUSE) || (macControllerOption == SNES_MOUSE_SWAPPED))
 		{
-			CGDisplayMoveCursorToPoint(gGameDisplayID, CGPointMake((float) (width >> 1), (float) (height >> 1)));
+			CGDisplayMoveCursorToPoint(gGameDisplayID, CGPointMake((double) (width >> 1), (double) (height >> 1)));
 			CGAssociateMouseAndMouseCursorPosition(false);
 		}
 	}
@@ -1088,7 +1088,7 @@ static void S9xInitOpenGLContext(void)
 
 	GLint	storage_hint  = GL_STORAGE_SHARED_APPLE;
 	GLint	storage_apple = 1;
-	GLfloat	agp_texturing = 0.0f;
+	GLdouble	agp_texturing = 0.0f;
 
 	storage_apple = extraOptions.glUseClientStrageApple ? 1 : 0;
 
@@ -1356,31 +1356,31 @@ static void S9xInitOpenGLContext(void)
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-		scTexArray[kSC2xNormal] = new GLfloat [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
+		scTexArray[kSC2xNormal] = new GLdouble [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
 		GLMakeTextureMesh(scTexArray[kSC2xNormal], kSCMeshX, kSCMeshY, 1.0, 224.0 / 256.0);
 
-		scTexArray[kSC2xExtend] = new GLfloat [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
+		scTexArray[kSC2xExtend] = new GLdouble [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
 		GLMakeTextureMesh(scTexArray[kSC2xExtend], kSCMeshX, kSCMeshY, 1.0, 239.0 / 256.0);
 
-		scTexArray[kSC2xNHiRes] = new GLfloat [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
+		scTexArray[kSC2xNHiRes] = new GLdouble [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
 		GLMakeTextureMesh(scTexArray[kSC2xNHiRes], kSCMeshX, kSCMeshY, 1.0, 224.0 / 512.0);
 
-		scTexArray[kSC2xEHiRes] = new GLfloat [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
+		scTexArray[kSC2xEHiRes] = new GLdouble [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
 		GLMakeTextureMesh(scTexArray[kSC2xEHiRes], kSCMeshX, kSCMeshY, 1.0, 239.0 / 512.0);
 
-		scTexArray[kSC3xNormal] = new GLfloat [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
+		scTexArray[kSC3xNormal] = new GLdouble [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
 		GLMakeTextureMesh(scTexArray[kSC3xNormal], kSCMeshX, kSCMeshY, 768.0 / 1024.0, 672.0 / 1024.0);
 
-		scTexArray[kSC3xExtend] = new GLfloat [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
+		scTexArray[kSC3xExtend] = new GLdouble [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
 		GLMakeTextureMesh(scTexArray[kSC3xExtend], kSCMeshX, kSCMeshY, 768.0 / 1024.0, 717.0 / 1024.0);
 
-		scTexArray[kSC3xNHiRes] = new GLfloat [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
+		scTexArray[kSC3xNHiRes] = new GLdouble [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
 		GLMakeTextureMesh(scTexArray[kSC3xNHiRes], kSCMeshX, kSCMeshY, 768.0 / 1024.0, 672.0 / 2048.0);
 
-		scTexArray[kSC3xEHiRes] = new GLfloat [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
+		scTexArray[kSC3xEHiRes] = new GLdouble [(kSCMeshX + 1) * 2 * kSCMeshY * 2];
 		GLMakeTextureMesh(scTexArray[kSC3xEHiRes], kSCMeshX, kSCMeshY, 768.0 / 1024.0, 717.0 / 2048.0);
 
-		scScnArray = new GLfloat [(kSCMeshX + 1) * 2 * kSCMeshY * 3];
+		scScnArray = new GLdouble [(kSCMeshX + 1) * 2 * kSCMeshY * 3];
 		GLMakeScreenMesh(scScnArray, kSCMeshX, kSCMeshY);
 	}
 
@@ -1480,7 +1480,7 @@ void S9xInitDisplay(int argc, char **argv)
 	CGDirectDisplayID	activeDisplays[32];
 	CGPoint				windowAt;
 
-	windowAt = CGPointMake((float) windowPos[kWindowScreen].h, (float) windowPos[kWindowScreen].v);
+	windowAt = CGPointMake((double) windowPos[kWindowScreen].h, (double) windowPos[kWindowScreen].v);
 
 	cgErr = CGGetDisplaysWithPoint(windowAt, maxDisplays, activeDisplays, &numDisplays);
 	if ((cgErr == noErr) && (numDisplays > 0))
@@ -1661,7 +1661,7 @@ bool8 S9xContinueUpdate(int width, int height)
 
 void S9xPutImage(int width, int height)
 {
-	static float	fps   = 0.0;
+	static double	fps   = 0.0;
 	static long		count = 0;
 	static char		text[32];
 
@@ -1677,7 +1677,7 @@ void S9xPutImage(int width, int height)
 		delta = 1000000 * (bencht2.tv_sec - bencht1.tv_sec) + (bencht2.tv_usec - bencht1.tv_usec);
 		if (delta > 1000000)
 		{
-			fps = (1000000.0 * (float) count) / (float) delta;
+			fps = (1000000.0 * (double) count) / (double) delta;
 			count = 0;
 
 			gettimeofday(&bencht1, nil);
@@ -1894,8 +1894,8 @@ static void S9xPutImageOpenGL(int width, int height)
 
 			if (glstretch)
 			{
-				float   fpw = (float) glScreenH / vh * 512.0;
-				int		pw  = (int) (fpw + ((float) glScreenW - fpw) * (float) macAspectRatio / 100.0);
+				double   fpw = (double) glScreenH / vh * 512.0;
+				int		pw  = (int) (fpw + ((double) glScreenW - fpw) * (double) macAspectRatio / 100.0);
 
 				glViewport((glScreenW - pw) >> 1, 0, pw, glScreenH);
 			}
@@ -1950,7 +1950,7 @@ static void S9xPutImageOpenGL(int width, int height)
 	}
 	else
 	{
-		GLfloat *t, *s;
+		GLdouble *t, *s;
 		int		tex;
 
 		if ((height == SNES_HEIGHT) || (height == (SNES_HEIGHT << 1)))
@@ -1963,8 +1963,8 @@ static void S9xPutImageOpenGL(int width, int height)
 
 		for (int i = 0; i < kSCMeshY; i++)
 		{
-			glTexCoordPointer(2, GL_FLOAT, 0, t);
-			glVertexPointer(3, GL_FLOAT, 0, s);
+			glTexCoordPointer(2, GL_double, 0, t);
+			glVertexPointer(3, GL_double, 0, s);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, (kSCMeshX + 1) * 2);
 
 			t += (kSCMeshX + 1) * 2 * 2;
@@ -2096,8 +2096,8 @@ static void S9xPutImageCoreImage(int width, int height)
 
 			if (glstretch)
 			{
-				float   fpw = (float) glScreenH / vh * 512.0;
-				int		pw  = (int) (fpw + ((float) glScreenW - fpw) * (float) macAspectRatio / 100.0);
+				double   fpw = (double) glScreenH / vh * 512.0;
+				int		pw  = (int) (fpw + ((double) glScreenW - fpw) * (double) macAspectRatio / 100.0);
 
 				glViewport((glScreenW - pw) >> 1, 0, pw, glScreenH);
 			}
@@ -2262,8 +2262,8 @@ static void S9xPutImageOverscanOpenGL(int width, int height)
 
 			if (glstretch)
 			{
-				float   fpw = (float) glScreenH / vh * 512.0;
-				int		pw  = (int) (fpw + ((float) glScreenW - fpw) * (float) macAspectRatio / 100.0);
+				double   fpw = (double) glScreenH / vh * 512.0;
+				int		pw  = (int) (fpw + ((double) glScreenW - fpw) * (double) macAspectRatio / 100.0);
 
 				glViewport((glScreenW - pw) >> 1, 0, pw, glScreenH);
 			}
@@ -2315,15 +2315,15 @@ static void S9xPutImageOverscanOpenGL(int width, int height)
 	}
 	else
 	{
-		GLfloat *t, *s;
+		GLdouble *t, *s;
 
 		t = scTexArray[kSC2xExtend];
 		s = scScnArray;
 
 		for (int i = 0; i < kSCMeshY; i++)
 		{
-			glTexCoordPointer(2, GL_FLOAT, 0, t);
-			glVertexPointer(3, GL_FLOAT, 0, s);
+			glTexCoordPointer(2, GL_double, 0, t);
+			glVertexPointer(3, GL_double, 0, s);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, (kSCMeshX + 1) * 2);
 
 			t += (kSCMeshX + 1) * 2 * 2;
@@ -2488,8 +2488,8 @@ static void S9xPutImageOverscanCoreImage(int width, int height)
 
 			if (glstretch)
 			{
-				float   fpw = (float) glScreenH / vh * 512.0;
-				int		pw  = (int) (fpw + ((float) glScreenW - fpw) * (float) macAspectRatio / 100.0);
+				double   fpw = (double) glScreenH / vh * 512.0;
+				int		pw  = (int) (fpw + ((double) glScreenW - fpw) * (double) macAspectRatio / 100.0);
 
 				glViewport((glScreenW - pw) >> 1, 0, pw, glScreenH);
 			}
@@ -2548,8 +2548,8 @@ static void S9xPutImageBlitGL2(int blit_width, int blit_height)
 			if (glstretch)
 			{
 				int		sh  = (blit_width > blit_height * 2) ? (blit_height * 2) : blit_height;
-				float	fpw = (float) glScreenH / (float) sh * (float) blit_width;
-				int		pw  = (int) (fpw + ((float) glScreenW - fpw) * (float) macAspectRatio / 100.0);
+				double	fpw = (double) glScreenH / (double) sh * (double) blit_width;
+				int		pw  = (int) (fpw + ((double) glScreenW - fpw) * (double) macAspectRatio / 100.0);
 				glViewport((glScreenW - pw) >> 1, 0, pw, glScreenH);
 			}
 			else
@@ -2598,8 +2598,8 @@ static void S9xPutImageBlitGL2(int blit_width, int blit_height)
 		else
 		{
 			int	sl = (blit_width > 512) ? 1024 : 512;
-			OpenGL.vertex[textureNum][2] = OpenGL.vertex[textureNum][4] = blit_width  / (float) sl;
-			OpenGL.vertex[textureNum][5] = OpenGL.vertex[textureNum][7] = blit_height / (float) sl;
+			OpenGL.vertex[textureNum][2] = OpenGL.vertex[textureNum][4] = blit_width  / (double) sl;
+			OpenGL.vertex[textureNum][5] = OpenGL.vertex[textureNum][7] = blit_height / (double) sl;
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, sl);
 		}
 
@@ -2628,7 +2628,7 @@ static void S9xPutImageBlitGL2(int blit_width, int blit_height)
 	}
 	else
 	{
-		GLfloat *t, *s;
+		GLdouble *t, *s;
 		int		tex;
 
 		if (blit_width > blit_height * 2)
@@ -2651,8 +2651,8 @@ static void S9xPutImageBlitGL2(int blit_width, int blit_height)
 
 		for (int i = 0; i < kSCMeshY; i++)
 		{
-			glTexCoordPointer(2, GL_FLOAT, 0, t);
-			glVertexPointer(3, GL_FLOAT, 0, s);
+			glTexCoordPointer(2, GL_double, 0, t);
+			glVertexPointer(3, GL_double, 0, s);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, (kSCMeshX + 1) * 2);
 
 			t += (kSCMeshX + 1) * 2 * 2;
@@ -2680,8 +2680,8 @@ static void S9xPutImageBlitGL2CoreImage(int blit_width, int blit_height)
 			if (glstretch)
 			{
 				int		sh  = (blit_width > blit_height * 2) ? (blit_height * 2) : blit_height;
-				float	fpw = (float) glScreenH / (float) sh * (float) blit_width;
-				int		pw  = (int) (fpw + ((float) glScreenW - fpw) * (float) macAspectRatio / 100.0);
+				double	fpw = (double) glScreenH / (double) sh * (double) blit_width;
+				int		pw  = (int) (fpw + ((double) glScreenW - fpw) * (double) macAspectRatio / 100.0);
 				glViewport((glScreenW - pw) >> 1, 0, pw, glScreenH);
 			}
 			else
@@ -2740,10 +2740,10 @@ static void S9xPutImageBlitGL2CoreImage(int blit_width, int blit_height)
 #endif
 }
 
-static void GLMakeScreenMesh(GLfloat *vertex3D, int meshx, int meshy)
+static void GLMakeScreenMesh(GLdouble *vertex3D, int meshx, int meshy)
 {
-	GLfloat *v;
-	float   warp;
+	GLdouble *v;
+	double   warp;
 
 	v = vertex3D;
 	warp = macCurvatureWarp * 0.001;
@@ -2752,11 +2752,11 @@ static void GLMakeScreenMesh(GLfloat *vertex3D, int meshx, int meshy)
 	{
 		for (int x = 0; x <= meshx; x++)
 		{
-			float	u1, v1, v2;
+			double	u1, v1, v2;
 
-			u1 = -1.0 + 2.0 / (float) meshx * (float)  x;
-			v1 = -1.0 + 2.0 / (float) meshy * (float)  y;
-			v2 = -1.0 + 2.0 / (float) meshy * (float) (y + 1);
+			u1 = -1.0 + 2.0 / (double) meshx * (double)  x;
+			v1 = -1.0 + 2.0 / (double) meshy * (double)  y;
+			v2 = -1.0 + 2.0 / (double) meshy * (double) (y + 1);
 
 			*v++ = u1;
 			*v++ = v2;
@@ -2769,9 +2769,9 @@ static void GLMakeScreenMesh(GLfloat *vertex3D, int meshx, int meshy)
 	}
 }
 
-static void GLMakeTextureMesh(GLfloat *vertex2D, int meshx, int meshy, float lx, float ly)
+static void GLMakeTextureMesh(GLdouble *vertex2D, int meshx, int meshy, double lx, double ly)
 {
-	GLfloat *v;
+	GLdouble *v;
 
 	v = vertex2D;
 
@@ -2779,11 +2779,11 @@ static void GLMakeTextureMesh(GLfloat *vertex2D, int meshx, int meshy, float lx,
 	{
 		for (int x = 0; x <= meshx; x++)
 		{
-			float	u1, v1, v2;
+			double	u1, v1, v2;
 
-			u1 = lx / (float) meshx * (float)  x;
-			v1 = ly / (float) meshy * (float)  y;
-			v2 = ly / (float) meshy * (float) (y - 1);
+			u1 = lx / (double) meshx * (double)  x;
+			v1 = ly / (double) meshy * (double)  y;
+			v2 = ly / (double) meshy * (double) (y - 1);
 
 			*v++ = u1;
 			*v++ = v2;

@@ -212,17 +212,17 @@ void FinishGDrawing(GWorldPtr)
 
 void DrawSubCGImage(CGContextRef ctx, CGImageRef image, CGRect src, CGRect dst)
 {
-    float	w = (float) CGImageGetWidth(image);
-    float	h = (float) CGImageGetHeight(image);
+    double	w = (double) CGImageGetWidth(image);
+    double	h = (double) CGImageGetHeight(image);
 
 	CGRect	drawRect = CGRectMake(0.0, 0.0, w, h);
 
 	if (!CGRectEqualToRect(src, dst))
 	{
-		float	sx = CGRectGetWidth(dst)  / CGRectGetWidth(src);
-		float	sy = CGRectGetHeight(dst) / CGRectGetHeight(src);
-		float	dx = CGRectGetMinX(dst) - (CGRectGetMinX(src) * sx);
-		float	dy = CGRectGetMinY(dst) - (CGRectGetMinY(src) * sy);
+		double	sx = CGRectGetWidth(dst)  / CGRectGetWidth(src);
+		double	sy = CGRectGetHeight(dst) / CGRectGetHeight(src);
+		double	dx = CGRectGetMinX(dst) - (CGRectGetMinX(src) * sx);
+		double	dy = CGRectGetMinY(dst) - (CGRectGetMinY(src) * sy);
 
 		drawRect = CGRectMake(dx, dy, w * sx, h * sy);
 	}

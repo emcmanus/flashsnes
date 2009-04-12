@@ -245,7 +245,7 @@ static PrefList	prefList[] =
 	{ 'mstv', &Settings.DisableMasterVolume,				sizeof(bool8      ) },
 	{ 'srat', &Settings.SoundPlaybackRate,					sizeof(uint32     ) },
 	{ 'deco', &Settings.AltSampleDecode,					sizeof(uint8      ) },
-	{ 'pich', &macSoundPitch,								sizeof(float      ) },
+	{ 'pich', &macSoundPitch,								sizeof(double      ) },
 	{ 'Volm', &macSoundVolume,								sizeof(SInt32     ) },
 	{ 'TMiv', &macSoundInterval,							sizeof(int        ) },
 	{ 'AUef', &aueffect,									sizeof(uint16     ) },
@@ -1419,7 +1419,7 @@ void ConfigurePreferences(void)
 			HIViewFindByID(root, cid, &ctl);
 			GetEditTextText(ctl, numP);
 			ConvertPString(numP, num);
-			macSoundPitch = (float) atof(num);
+			macSoundPitch = (double) atof(num);
 
 			cid.id = iNibSVolume;
 			HIViewFindByID(root, cid, &ctl);

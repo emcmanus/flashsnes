@@ -919,10 +919,10 @@ static pascal Boolean NavDefrostFromPreview(NavCBRecPtr callBackParms, NavCallBa
 
 						rightedge = (callBackParms->previewRect.right < (rct.right - rct.left - 11)) ? callBackParms->previewRect.right : (rct.right - rct.left - 11);
 
-						bounds.origin.x = (float) callBackParms->previewRect.left;
-						bounds.origin.y = (float) (rct.bottom - rct.top - callBackParms->previewRect.bottom);
-						bounds.size.width  = (float) (rightedge - callBackParms->previewRect.left);
-						bounds.size.height = (float) (callBackParms->previewRect.bottom - callBackParms->previewRect.top);
+						bounds.origin.x = (double) callBackParms->previewRect.left;
+						bounds.origin.y = (double) (rct.bottom - rct.top - callBackParms->previewRect.bottom);
+						bounds.size.width  = (double) (rightedge - callBackParms->previewRect.left);
+						bounds.size.height = (double) (callBackParms->previewRect.bottom - callBackParms->previewRect.top);
 
 						CGContextClipToRect(ctx, bounds);
 
@@ -930,8 +930,8 @@ static pascal Boolean NavDefrostFromPreview(NavCBRecPtr callBackParms, NavCallBa
 						CGContextFillRect(ctx, bounds);
 						CGContextSetRGBFillColor(ctx, 0.0, 0.0, 0.0, 1.0);
 
-						bounds.origin.x = (float) (callBackParms->previewRect.left + ((callBackParms->previewRect.right - callBackParms->previewRect.left - 128) >> 1));
-						bounds.origin.y = (float) (rct.bottom - rct.top - callBackParms->previewRect.top - 120 - 25);
+						bounds.origin.x = (double) (callBackParms->previewRect.left + ((callBackParms->previewRect.right - callBackParms->previewRect.left - 128) >> 1));
+						bounds.origin.y = (double) (rct.bottom - rct.top - callBackParms->previewRect.top - 120 - 25);
 						bounds.size.width  = 128.0;
 						bounds.size.height = 120.0;
 
@@ -951,9 +951,9 @@ static pascal Boolean NavDefrostFromPreview(NavCBRecPtr callBackParms, NavCallBa
 							textinfo.truncationMaxLines  = 0;
 							textinfo.truncationHappened  = false;
 
-							bounds.origin.x = (float) (callBackParms->previewRect.left + 10);
-							bounds.origin.y = (float) (rct.bottom - rct.top - callBackParms->previewRect.top - 153 - 20);
-							bounds.size.width  = (float) (callBackParms->previewRect.right - callBackParms->previewRect.left - 20);
+							bounds.origin.x = (double) (callBackParms->previewRect.left + 10);
+							bounds.origin.y = (double) (rct.bottom - rct.top - callBackParms->previewRect.top - 153 - 20);
+							bounds.size.width  = (double) (callBackParms->previewRect.right - callBackParms->previewRect.left - 20);
 							bounds.size.height = 20.0;
 
 							err = HIThemeDrawTextBox(sref, &bounds, &textinfo, ctx, kHIThemeOrientationInverted);
@@ -1733,10 +1733,10 @@ static pascal Boolean NavPlayMovieFromPreview(NavCBRecPtr callBackParms, NavCall
 
 						rightedge = (callBackParms->previewRect.right < (rct.right - rct.left - 11)) ? callBackParms->previewRect.right : (rct.right - rct.left - 11);
 
-						bounds.origin.x = (float) callBackParms->previewRect.left;
-						bounds.origin.y = (float) (rct.bottom - rct.top - callBackParms->previewRect.bottom);
-						bounds.size.width  = (float) (rightedge - callBackParms->previewRect.left);
-						bounds.size.height = (float) (callBackParms->previewRect.bottom - callBackParms->previewRect.top);
+						bounds.origin.x = (double) callBackParms->previewRect.left;
+						bounds.origin.y = (double) (rct.bottom - rct.top - callBackParms->previewRect.bottom);
+						bounds.size.width  = (double) (rightedge - callBackParms->previewRect.left);
+						bounds.size.height = (double) (callBackParms->previewRect.bottom - callBackParms->previewRect.top);
 
 						CGContextClipToRect(ctx, bounds);
 
@@ -1746,8 +1746,8 @@ static pascal Boolean NavPlayMovieFromPreview(NavCBRecPtr callBackParms, NavCall
 
 						// Thumbnail
 
-						bounds.origin.x  = (float) (callBackParms->previewRect.left + ((callBackParms->previewRect.right - callBackParms->previewRect.left - 128) >> 1));
-						bounds.origin.y  = (float) (rct.bottom - rct.top - callBackParms->previewRect.top - 120 - 25);
+						bounds.origin.x  = (double) (callBackParms->previewRect.left + ((callBackParms->previewRect.right - callBackParms->previewRect.left - 128) >> 1));
+						bounds.origin.y  = (double) (rct.bottom - rct.top - callBackParms->previewRect.top - 120 - 25);
 						bounds.size.width  = 128.0;
 						bounds.size.height = 120.0;
 
@@ -1768,9 +1768,9 @@ static pascal Boolean NavPlayMovieFromPreview(NavCBRecPtr callBackParms, NavCall
 							textinfo.truncationMaxLines = 0;
 							textinfo.truncationHappened = false;
 
-							bounds.origin.x = (float) (((callBackParms->previewRect.right - callBackParms->previewRect.left - width) >> 1) + callBackParms->previewRect.left + border + 7);
-							bounds.origin.y = (float) (rct.bottom - rct.top - callBackParms->previewRect.top - 153 - 60);
-							bounds.size.width  = (float) callBackParms->previewRect.right - bounds.origin.x;
+							bounds.origin.x = (double) (((callBackParms->previewRect.right - callBackParms->previewRect.left - width) >> 1) + callBackParms->previewRect.left + border + 7);
+							bounds.origin.y = (double) (rct.bottom - rct.top - callBackParms->previewRect.top - 153 - 60);
+							bounds.size.width  = (double) callBackParms->previewRect.right - bounds.origin.x;
 							bounds.size.height = 60.0;
 
 							sref = CFStringCreateWithCString(kCFAllocatorDefault, cbuf, CFStringGetSystemEncoding());
@@ -1781,9 +1781,9 @@ static pascal Boolean NavPlayMovieFromPreview(NavCBRecPtr callBackParms, NavCall
 								CFRelease(sref);
 							}
 
-							bounds.origin.x = (float) callBackParms->previewRect.left;
-							bounds.origin.y = (float) (rct.bottom - rct.top - callBackParms->previewRect.top - 153 - 60);
-							bounds.size.width  = (float) (((callBackParms->previewRect.right - callBackParms->previewRect.left - width) >> 1) + border);
+							bounds.origin.x = (double) callBackParms->previewRect.left;
+							bounds.origin.y = (double) (rct.bottom - rct.top - callBackParms->previewRect.top - 153 - 60);
+							bounds.size.width  = (double) (((callBackParms->previewRect.right - callBackParms->previewRect.left - width) >> 1) + border);
 							bounds.size.height = 60.0;
 
 							sref = CFCopyLocalizedString(CFSTR("MoviePrevMes"), "MovieInfo");
@@ -1794,10 +1794,10 @@ static pascal Boolean NavPlayMovieFromPreview(NavCBRecPtr callBackParms, NavCall
 								CFRelease(sref);
 							}
 
-							bounds.origin.x = (float) (((callBackParms->previewRect.right - callBackParms->previewRect.left - 132) >> 1) + callBackParms->previewRect.left);
-							bounds.origin.y = (float) (rct.bottom - rct.top - callBackParms->previewRect.bottom + 10);
+							bounds.origin.x = (double) (((callBackParms->previewRect.right - callBackParms->previewRect.left - 132) >> 1) + callBackParms->previewRect.left);
+							bounds.origin.y = (double) (rct.bottom - rct.top - callBackParms->previewRect.bottom + 10);
 							bounds.size.width  = 132.0;
-							bounds.size.height = (float) (callBackParms->previewRect.bottom - callBackParms->previewRect.top - 223 - 10);
+							bounds.size.height = (double) (callBackParms->previewRect.bottom - callBackParms->previewRect.top - 223 - 10);
 
 							n = wcslen(movinfo.Metadata);
 
@@ -2121,7 +2121,7 @@ static void GlobalPointToWindowLocalPoint(Point *pt, WindowRef window)
 	if (systemVersion >= 0x1040)
 	{
 		HIViewRef	view;
-		HIPoint		cpt = CGPointMake((float) pt->h, (float) pt->v);
+		HIPoint		cpt = CGPointMake((double) pt->h, (double) pt->v);
 
 		HIViewFindByID(HIViewGetRoot(window), kHIViewWindowContentID, &view);
 		HIPointConvert(&cpt, kHICoordSpace72DPIGlobal, nil, kHICoordSpaceView, view);

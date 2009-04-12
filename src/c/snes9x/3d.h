@@ -208,10 +208,10 @@ typedef struct
     GrTexInfo	texture;
     int32	texture_mem_size;
     int32	texture_mem_start;
-    float	x_offset, y_offset;
-    float	x_scale, y_scale;
-    float	voodoo_width;
-    float	voodoo_height;
+    double	x_offset, y_offset;
+    double	x_scale, y_scale;
+    double	voodoo_width;
+    double	voodoo_height;
 } GlideData;
 
 extern GlideData Glide;

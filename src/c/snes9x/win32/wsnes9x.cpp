@@ -1359,7 +1359,7 @@ int HandleKeyMessage(WPARAM wParam, LPARAM lParam)
 			ResetFrameTimer ();
 //					sprintf (InfoString, WINPROC_EMUFRAMETIME,
 //						Settings.FrameTime / 1);
-			sprintf (InfoString, "Speed: %.0f%% (%.1f ms/frame)", ((Settings.PAL?Settings.FrameTimePAL:Settings.FrameTimeNTSC) * 100.0f) / (float)Settings.FrameTime, Settings.FrameTime*0.001f);
+			sprintf (InfoString, "Speed: %.0f%% (%.1f ms/frame)", ((Settings.PAL?Settings.FrameTimePAL:Settings.FrameTimeNTSC) * 100.0f) / (double)Settings.FrameTime, Settings.FrameTime*0.001f);
 			S9xSetInfoString (InfoString);
 			hitHotKey = true;
 		}
@@ -1375,7 +1375,7 @@ int HandleKeyMessage(WPARAM wParam, LPARAM lParam)
 			ResetFrameTimer ();
 //					sprintf (InfoString, WINPROC_EMUFRAMETIME,
 //						Settings.FrameTime / 1);
-			sprintf (InfoString, "Speed: %.0f%% (%.1f ms/frame)", ((Settings.PAL?Settings.FrameTimePAL:Settings.FrameTimeNTSC) * 100.0f) / (float)Settings.FrameTime, Settings.FrameTime*0.001f);
+			sprintf (InfoString, "Speed: %.0f%% (%.1f ms/frame)", ((Settings.PAL?Settings.FrameTimePAL:Settings.FrameTimeNTSC) * 100.0f) / (double)Settings.FrameTime, Settings.FrameTime*0.001f);
 			S9xSetInfoString (InfoString);
 			hitHotKey = true;
 		}
@@ -3830,7 +3830,7 @@ int WINAPI WinMain(
 	PCEnd = PCStart;
 	PCEndTicks = timeGetTime()*1000;
 	PCStartTicks = timeGetTime()*1000;
-    PCFrameTime = PCFrameTimeNTSC = (__int64)((float)PCBase / 59.948743718592964824120603015098f);
+    PCFrameTime = PCFrameTimeNTSC = (__int64)((double)PCBase / 59.948743718592964824120603015098f);
     PCFrameTimePAL = PCBase / 50;
 
 
@@ -4774,10 +4774,10 @@ bool8 S9xOpenGLInit ()
 		glDepthFunc (GL_LESS);
 		glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-		GLfloat LightAmbient[]    = { 0.2f, 0.2f, 0.2f, 1.0f };
-		GLfloat LightDiffuse[]    = { 1.0f, 1.0f, 1.0f, 1.0f };
-		GLfloat LightSpecular[]   = { 0.5f, 0.5f, 0.5f, 1.0f };
-		GLfloat LightPosition[]   = { 0.0f, 0.0f, 2.0f, 1.0f };
+		GLdouble LightAmbient[]    = { 0.2f, 0.2f, 0.2f, 1.0f };
+		GLdouble LightDiffuse[]    = { 1.0f, 1.0f, 1.0f, 1.0f };
+		GLdouble LightSpecular[]   = { 0.5f, 0.5f, 0.5f, 1.0f };
+		GLdouble LightPosition[]   = { 0.0f, 0.0f, 2.0f, 1.0f };
 
 		glLightfv (GL_LIGHT0, GL_AMBIENT, LightAmbient);
 		glLightfv (GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
@@ -4785,8 +4785,8 @@ bool8 S9xOpenGLInit ()
 		glLightfv (GL_LIGHT0, GL_POSITION, LightPosition);
 
 		//Set common material properties
-		GLfloat MatSpecular[]    = { 1.0f, 1.0f, 1.0f, 1.1f };
-		GLfloat WhMat[]          = { 1.0f, 1.0f, 1.0f, 1.0f };
+		GLdouble MatSpecular[]    = { 1.0f, 1.0f, 1.0f, 1.1f };
+		GLdouble WhMat[]          = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		glMaterialf (GL_FRONT_AND_BACK, GL_SHININESS, 128.0f);
 		glMaterialfv (GL_FRONT_AND_BACK, GL_SPECULAR, MatSpecular);
@@ -4830,7 +4830,7 @@ void S9xOpenGLResize (int width, int height)
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity();
 
-    gluPerspective (45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+    gluPerspective (45.0f, (GLdouble)width / (GLdouble)height, 0.1f, 100.0f);
     glMatrixMode (GL_MODELVIEW);
 }
 #endif

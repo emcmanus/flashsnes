@@ -189,7 +189,7 @@ void S9xResetSuperFX ()
 {
     SuperFX.vFlags = 0; //FX_FLAG_ROM_BUFFER;// | FX_FLAG_ADDRESS_CHECKING;
 	// FIXME: Snes9x can't execute CPU and SuperFX at a time. Don't ask me what is 0.417 :P
-	SuperFX.speedPerLine = (uint32) (0.417 * 10.5e6 * ((1.0 / (float) Memory.ROMFramesPerSecond) / ((float) (Timings.V_Max))));
+	SuperFX.speedPerLine = (uint32) (0.417 * 10.5e6 * ((1.0 / (double) Memory.ROMFramesPerSecond) / ((double) (Timings.V_Max))));
 	//S9xTracef( "Print f: SFX:%d\n", SuperFX.speedPerLine);
 	SuperFX.oneLineDone = FALSE;
 	FxReset (&SuperFX);

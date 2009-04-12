@@ -279,7 +279,7 @@ static Handle GetScreenAsRawHandle(int destWidth, int destHeight)
 				ctx = CGBitmapContextCreate(*data, destWidth, destHeight, 5, destWidth * 2, color, kCGImageAlphaNoneSkipFirst | ((systemVersion >= 0x1040) ? kCGBitmapByteOrder16Big : 0));
 				if (ctx)
 				{
-					CGContextDrawImage(ctx, CGRectMake(0.0, 0.0, (float) destWidth, (float) destHeight), image);
+					CGContextDrawImage(ctx, CGRectMake(0.0, 0.0, (double) destWidth, (double) destHeight), image);
 					CGContextRelease(ctx);
 				}
 
@@ -508,7 +508,7 @@ bool8 S9xDoScreenshot(int width, int height)
 
 	Settings.TakeScreenshot = false;
 
-	size = CGSizeMake((float) (width * ((width <= SNES_WIDTH) ? 2 : 1)), (float) (height * ((height <= SNES_HEIGHT_EXTENDED) ? 2 : 1)));
+	size = CGSizeMake((double) (width * ((width <= SNES_WIDTH) ? 2 : 1)), (double) (height * ((height <= SNES_HEIGHT_EXTENDED) ? 2 : 1)));
 
 	image = CreateGameScreenCGImage();
 	if (image)

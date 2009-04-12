@@ -212,11 +212,11 @@ typedef struct {
 		}	b;
 		
 		struct {
-			float	max, min, cur;
+			double	max, min, cur;
 		}	s;
 		
 		struct {
-			float	r, g, b, a;
+			double	r, g, b, a;
 		}	c;
 	}	u;	
 }	FilterParam;
@@ -381,7 +381,7 @@ static void FilterParamToFilter(void)
 					break;
 					
 				case kCITypeScalar:
-					num = [NSNumber numberWithFloat: ciFilterParam[i].u.s.cur];
+					num = [NSNumber numberWithdouble: ciFilterParam[i].u.s.cur];
 					[ciFilter setValue: num forKey: key];
 					break;
 					
@@ -443,17 +443,17 @@ static void FilterToFilterParam(void)
                     ciFilterParam[i].type = kCITypeScalar;
 					
 					num = [ciFilter valueForKey: key];
-    				ciFilterParam[i].u.s.cur = [num floatValue];
+    				ciFilterParam[i].u.s.cur = [num doubleValue];
 					
 					num = [(NSDictionary *) param objectForKey: kCIAttributeSliderMax];
 				    if (!num)
 				        num = [(NSDictionary *) param objectForKey: kCIAttributeMax];
-				    ciFilterParam[i].u.s.max = [num floatValue];
+				    ciFilterParam[i].u.s.max = [num doubleValue];
 					
 					num = [(NSDictionary *) param objectForKey: kCIAttributeSliderMin];
 				    if (!num)
 				        num = [(NSDictionary *) param objectForKey: kCIAttributeMin];
-				    ciFilterParam[i].u.s.min = [num floatValue];
+				    ciFilterParam[i].u.s.min = [num doubleValue];
 				}
             }
             else
@@ -710,7 +710,7 @@ static void FilterUIAddSubviews(WindowRef window, HIViewRef parent)
 				HIViewSetCommandID(ctl, cid.signature);
 				err = HIViewAddSubview(parent, ctl);
 				frame.origin.x = 5.0;
-				frame.origin.y = (float) (m * 28);
+				frame.origin.y = (double) (m * 28);
 				frame.size.width  = bounds.size.width - 10.0;
 				frame.size.height = 20.0;
 				err = HIViewSetFrame(ctl, &frame);
@@ -726,19 +726,19 @@ static void FilterUIAddSubviews(WindowRef window, HIViewRef parent)
 				SetStaticTextTrunc(ctl, truncEnd, true);
 				err = HIViewAddSubview(parent, ctl);
 				frame.origin.x = 7.0;
-				frame.origin.y = (float) (m * 28);
+				frame.origin.y = (double) (m * 28);
 				frame.size.width  = 120.0;
 				frame.size.height = 20.0;
 				err = HIViewSetFrame(ctl, &frame);
 				
-				value = (SInt32) ((ciFilterParam[i].u.s.cur - ciFilterParam[i].u.s.min) / (ciFilterParam[i].u.s.max - ciFilterParam[i].u.s.min) * (float) FIXEDRANGE);
+				value = (SInt32) ((ciFilterParam[i].u.s.cur - ciFilterParam[i].u.s.min) / (ciFilterParam[i].u.s.max - ciFilterParam[i].u.s.min) * (double) FIXEDRANGE);
 				err = CreateSliderControl(window, &rct, value, 0, FIXEDRANGE, kControlSliderDoesNotPoint, 0, false, nil, &ctl);
 				SetHIViewID(&cid, kCommandSliderBase + i, i);
 				HIViewSetID(ctl, cid);
 				HIViewSetCommandID(ctl, cid.signature);
 				err = HIViewAddSubview(parent, ctl);
 				frame.origin.x = 135.0;
-				frame.origin.y = (float) (m * 28);
+				frame.origin.y = (double) (m * 28);
 				frame.size.width  = bounds.size.width - 140.0;
 				frame.size.height = 20.0;
 				err = HIViewSetFrame(ctl, &frame);
@@ -756,7 +756,7 @@ static void FilterUIAddSubviews(WindowRef window, HIViewRef parent)
 				HIViewSetCommandID(ctl, cid.signature);
 				err = HIViewAddSubview(parent, ctl);
 				frame.origin.x = bounds.size.width - 125.0;
-				frame.origin.y = (float) (m * 28);
+				frame.origin.y = (double) (m * 28);
 				frame.size.width  = 120.0;
 				frame.size.height = 20.0;
 				err = HIViewSetFrame(ctl, &frame);
@@ -781,7 +781,7 @@ static void FilterUIAddSubviews(WindowRef window, HIViewRef parent)
 		HIViewSetCommandID(ctl, cid.signature);
 		err = HIViewAddSubview(parent, ctl);
 		frame.origin.x = bounds.size.width - 180.0;
-		frame.origin.y = (float) (m * 28 + 12);
+		frame.origin.y = (double) (m * 28 + 12);
 		frame.size.width  = 175.0;
 		frame.size.height = 20.0;
 		err = HIViewSetFrame(ctl, &frame);
@@ -811,7 +811,7 @@ static void FilterUISetValues(HIViewRef parent)
 				break;
 				
 			case kCITypeScalar:
-				value = (SInt32) ((ciFilterParam[i].u.s.cur - ciFilterParam[i].u.s.min) / (ciFilterParam[i].u.s.max - ciFilterParam[i].u.s.min) * (float) FIXEDRANGE);
+				value = (SInt32) ((ciFilterParam[i].u.s.cur - ciFilterParam[i].u.s.min) / (ciFilterParam[i].u.s.max - ciFilterParam[i].u.s.min) * (double) FIXEDRANGE);
 				SetHIViewID(&cid, kCommandSliderBase + i, i);
 				HIViewFindByID(parent, cid, &ctl);
 				SetControl32BitValue(ctl, value);
@@ -900,7 +900,7 @@ static pascal OSStatus CoreImageFilterEventHandler(EventHandlerCallRef inHandler
 									SInt32	value;
 									
 									value = GetControl32BitValue(tHICommand.source.control);
-									ciFilterParam[i].u.s.cur = ciFilterParam[i].u.s.min + (ciFilterParam[i].u.s.max - ciFilterParam[i].u.s.min) * (float) value / (float) FIXEDRANGE;
+									ciFilterParam[i].u.s.cur = ciFilterParam[i].u.s.min + (ciFilterParam[i].u.s.max - ciFilterParam[i].u.s.min) * (double) value / (double) FIXEDRANGE;
 									FilterParamToFilter();
 									result = noErr;
 									
@@ -920,9 +920,9 @@ static pascal OSStatus CoreImageFilterEventHandler(EventHandlerCallRef inHandler
 									
 									if ((err == noErr) && info.newColorChosen)
 									{
-										ciFilterParam[i].u.c.r = (float) info.theColor.color.rgb.red   / 65535.0;
-										ciFilterParam[i].u.c.g = (float) info.theColor.color.rgb.green / 65535.0;
-										ciFilterParam[i].u.c.b = (float) info.theColor.color.rgb.blue  / 65535.0;
+										ciFilterParam[i].u.c.r = (double) info.theColor.color.rgb.red   / 65535.0;
+										ciFilterParam[i].u.c.g = (double) info.theColor.color.rgb.green / 65535.0;
+										ciFilterParam[i].u.c.b = (double) info.theColor.color.rgb.blue  / 65535.0;
 									}
 									
 									FilterParamToFilter();

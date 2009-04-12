@@ -396,8 +396,8 @@ void SaveWindowPosition(WindowRef window, int which)
 	GetWindowBounds(window, kWindowContentRgn, &rct);
 	windowPos[which].h = rct.left;
 	windowPos[which].v = rct.top;
-	windowSize[which].width  = (float) (rct.right  - rct.left);
-	windowSize[which].height = (float) (rct.bottom - rct.top );
+	windowSize[which].width  = (double) (rct.right  - rct.left);
+	windowSize[which].height = (double) (rct.bottom - rct.top );
 }
 
 void AppearanceAlert(AlertType type, int stringID1, int stringID2)

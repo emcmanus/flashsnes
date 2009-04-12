@@ -546,16 +546,16 @@ void MacQTRecordFrame(int width, int height)
 					CGImageRelease(sqt.srcImage);
 				sqt.srcImage = CreateGameScreenCGImage();
 
-				CGRect	dst = CGRectMake(0.0, 0.0, (float) sqt.width, (float) sqt.height);
+				CGRect	dst = CGRectMake(0.0, 0.0, (double) sqt.width, (double) sqt.height);
 
 				if ((!(height % SNES_HEIGHT_EXTENDED)) && (!(macQTMovFlag & kMovExtendedHeight)))
 				{
 					CGRect	src;
 
-					src.size.width  = (float) width;
-					src.size.height = (float) ((height > 256) ? (SNES_HEIGHT << 1) : SNES_HEIGHT);
-					src.origin.x    = (float) 0;
-					src.origin.y    = (float) height - src.size.height;
+					src.size.width  = (double) width;
+					src.size.height = (double) ((height > 256) ? (SNES_HEIGHT << 1) : SNES_HEIGHT);
+					src.origin.x    = (double) 0;
+					src.origin.y    = (double) height - src.size.height;
 					DrawSubCGImage(ctx, sqt.srcImage, src, dst);
 				}
 				else
@@ -564,9 +564,9 @@ void MacQTRecordFrame(int width, int height)
 					CGContextSetRGBFillColor(ctx, 0.0, 0.0, 0.0, 1.0);
 					CGContextFillRect(ctx, dst);
 
-					float	dh  = (float) ((sqt.height > 256) ? (SNES_HEIGHT << 1) : SNES_HEIGHT);
-					float	ofs = (float) ((int) ((drawoverscan ? 1.0 : 0.5) * ((float) sqt.height - dh) + 0.5));
-					dst = CGRectMake(0.0, ofs, (float) sqt.width, dh);
+					double	dh  = (double) ((sqt.height > 256) ? (SNES_HEIGHT << 1) : SNES_HEIGHT);
+					double	ofs = (double) ((int) ((drawoverscan ? 1.0 : 0.5) * ((double) sqt.height - dh) + 0.5));
+					dst = CGRectMake(0.0, ofs, (double) sqt.width, dh);
 					CGContextDrawImage(ctx, dst, sqt.srcImage);
 				}
 				else

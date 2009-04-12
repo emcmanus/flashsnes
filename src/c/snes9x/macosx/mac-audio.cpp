@@ -596,7 +596,7 @@ static void SetAudioUnitSoundFormatAndVolume(void)
 
 	// Always stereo even if Snes9x outputs mono
 
-	format.mSampleRate	     = (Float64) so.playback_rate;
+	format.mSampleRate	     = (double64) so.playback_rate;
 	format.mFormatID	     = kAudioFormatLinearPCM;
 #ifdef __BIG_ENDIAN__
 	format.mFormatFlags	     = kLinearPCMFormatFlagIsBigEndian | (so.sixteen_bit ? kLinearPCMFormatFlagIsSignedInteger : 0);
@@ -629,7 +629,7 @@ static void SetAudioUnitSoundFormatAndVolume(void)
 
 	// Set volume of output AudioUnit
 
-	err = AudioUnitSetParameter(output, kAudioUnitParameterUnit_LinearGain, kAudioUnitScope_Output, 0, (float) macSoundVolume / 100.0, 0);
+	err = AudioUnitSetParameter(output, kAudioUnitParameterUnit_LinearGain, kAudioUnitScope_Output, 0, (double) macSoundVolume / 100.0, 0);
 
 	/*
 	err = AudioUnitInitialize(target);
@@ -791,7 +791,7 @@ bool8 S9xOpenSoundDevice(int mode, bool8 stereo, int buffer_size)
 	// Thanks to '2' testers !
 
 	// Base value
-	samplesPerSlice = (int) ((float) so.playback_rate * ((float) macSoundInterval / 1000.0));
+	samplesPerSlice = (int) ((double) so.playback_rate * ((double) macSoundInterval / 1000.0));
 
 	//S9xTracef( "Print f: Calculated samplesPerSlice:%d\n", samplesPerSlice);
 
@@ -868,7 +868,7 @@ static void ReplaceAudioUnitCarbonView(void)
 	ComponentDescription	desc;
 	ControlRef				viewPane, root, ctl;
 	ControlID				cid;
-	Float32Point			location, size;
+	double32Point			location, size;
 	Rect					rct;
 	UInt32					psize;
 
@@ -1063,7 +1063,7 @@ void ConfigureSoundEffects(void)
 					CFRelease(str);
 				}
 
-				frame = CGRectMake(0.0, 0.0, (float) (rct.right - rct.left), (float) (rct.bottom - rct.top));
+				frame = CGRectMake(0.0, 0.0, (double) (rct.right - rct.left), (double) (rct.bottom - rct.top));
 				err = CreateNewWindow(kDocumentWindowClass, kWindowCloseBoxAttribute | kWindowCollapseBoxAttribute | kWindowStandardHandlerAttribute | kWindowCompositingAttribute | metal, &rct, &effectWRef);
 				err = HIViewFindByID(HIViewGetRoot(effectWRef), kHIViewWindowContentID, &contentview);
 				err = HIViewAddSubview(contentview, userpane);
@@ -1130,8 +1130,8 @@ void ConfigureSoundEffects(void)
 			err = InstallWindowEventHandler(effectWRef, eventUPP, GetEventTypeCount(event), event, (void *) effectWRef, &eventHandler);
 
 			GetWindowBounds(effectWRef, kWindowContentRgn, &rct);
-			effectWSize.width  = (float) (rct.right  - rct.left);
-			effectWSize.height = (float) (rct.bottom - rct.top );
+			effectWSize.width  = (double) (rct.right  - rct.left);
+			effectWSize.height = (double) (rct.bottom - rct.top );
 
 			carbonView = nil;
 			ReplaceAudioUnitCarbonView();

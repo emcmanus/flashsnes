@@ -359,8 +359,8 @@ void ConfigureCheat(void)
 				err = HIViewSetLayoutInfo(userpane, &layoutinfo);
 			}
 
-			minSize.width  = (float) (winBounds.right  - winBounds.left);
-			minSize.height = (float) (winBounds.bottom - winBounds.top );
+			minSize.width  = (double) (winBounds.right  - winBounds.left);
+			minSize.height = (double) (winBounds.bottom - winBounds.top );
 			err = SetWindowResizeLimits(wRef, &minSize, nil);
 
 			MoveWindowPosition(wRef, kWindowCheatEntry, true);

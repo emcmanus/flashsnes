@@ -390,10 +390,10 @@ void S9xOpenGLPutImage (int snes_width, int snes_height)
             if ((pwidth = snes_width - startx) > (uint32) texture_size)
                 pwidth = texture_size;
 
-            float fx1 = (float) startx / snes_width;
-            float fy1 = (float) starty / snes_height;
-            float fx2 = fx1 + (float) pwidth / snes_width;
-            float fy2 = fy1 + (float) pheight / snes_height;
+            double fx1 = (double) startx / snes_width;
+            double fy1 = (double) starty / snes_height;
+            double fx2 = fx1 + (double) pwidth / snes_width;
+            double fy2 = fy1 + (double) pheight / snes_height;
 
             if (!OpenGL.packed_pixels_extension_present)
             {
@@ -432,8 +432,8 @@ void S9xOpenGLPutImage (int snes_width, int snes_height)
             glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, pwidth, pheight,
                              OpenGL.format, OpenGL.type, data);
 
-            float maxx = (float) pwidth / texture_size;
-            float maxy = (float) pheight / texture_size;
+            double maxx = (double) pwidth / texture_size;
+            double maxy = (double) pheight / texture_size;
 
             if (OpenGL.draw_cube)
             {

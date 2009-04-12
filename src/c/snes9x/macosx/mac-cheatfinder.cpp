@@ -277,9 +277,9 @@ static void CheatFinderHandleAddEntryButton(WindowData *);
 static void CheatFinderMakeValueFormat(char *);
 static void CheatFinderAddEntry(SInt64, char *);
 static void CheatFinderBeginAddEntrySheet(WindowData *);
-static void CheatFinderListViewScrollToThere(float, ListViewData *);
+static void CheatFinderListViewScrollToThere(double, ListViewData *);
 static void CheatFinderListViewDraw(CGContextRef, HIRect *, ListViewData *);
-static float CheatFinderListViewSanityCheck(float, ListViewData *);
+static double CheatFinderListViewSanityCheck(double, ListViewData *);
 static SInt64 CheatFinderReadBytes(UInt8 *, UInt32);
 static SInt64 CheatFinderGetValueEditText(ControlRef);
 static Boolean CheatFinderCompare(SInt64, SInt64);
@@ -430,12 +430,12 @@ void CheatFinder(void)
 						HISize		minSize;
 						CGImageRef	image;
 						Rect		rct;
-						float		pich;
+						double		pich;
 
 						GetWindowBounds(cf.main, kWindowContentRgn, &rct);
 
-						minSize.width  = (float) (rct.right  - rct.left);
-						minSize.height = (float) (rct.bottom - rct.top );
+						minSize.width  = (double) (rct.right  - rct.left);
+						minSize.height = (double) (rct.bottom - rct.top );
 						err = SetWindowResizeLimits(cf.main, &minSize, nil);
 
 						root = HIViewGetRoot(cf.main);
@@ -559,10 +559,10 @@ void CheatFinder(void)
 						sUPP = NewEventHandlerUPP(CheatFinderSheetEventHandler);
 						err = InstallWindowEventHandler (cf.sheet, sUPP, GetEventTypeCount(sEvents), sEvents, (void *) &cf,      &sEref);
 
-						pich = (float) (IPPU.RenderedScreenHeight >> ((IPPU.RenderedScreenHeight > 256) ? 1 : 0));
+						pich = (double) (IPPU.RenderedScreenHeight >> ((IPPU.RenderedScreenHeight > 256) ? 1 : 0));
 
 						err = SetDrawerParent(cf.drawer, cf.main);
-						err = SetDrawerOffsets(cf.drawer, 0.0, (float) ((rct.bottom - rct.top) - (pich + 37)));
+						err = SetDrawerOffsets(cf.drawer, 0.0, (double) ((rct.bottom - rct.top) - (pich + 37)));
 
 						image = CreateGameScreenCGImage();
 						if (image)
@@ -579,7 +579,7 @@ void CheatFinder(void)
 
 								frame.origin.x = 8.0;
 								frame.origin.y = 8.0;
-								frame.size.width  = (float) SNES_WIDTH;
+								frame.size.width  = (double) SNES_WIDTH;
 								frame.size.height = pich;
 								HIViewSetFrame(imageview, &frame);
 							}
@@ -706,8 +706,8 @@ static pascal OSStatus CheatFinderWindowEventHandler(EventHandlerCallRef inHandl
 
 								pbounds.origin.x = 0.0;
 								pbounds.origin.y = 0.0;
-								pbounds.size.width  = (float) (winBounds.right  - winBounds.left);
-								pbounds.size.height = (float) (winBounds.bottom - winBounds.top );
+								pbounds.size.width  = (double) (winBounds.right  - winBounds.left);
+								pbounds.size.height = (double) (winBounds.bottom - winBounds.top );
 
 								root = HIViewGetRoot(cf->main);
 								cid.id = 0;
@@ -1540,10 +1540,10 @@ static pascal OSStatus CheatFinderListFrameEventHandler(EventHandlerCallRef inHa
 									Rect	rgnBounds;
 
 									GetRegionBounds(rgn, &rgnBounds);
-									drawBounds.origin.x    = (float)  rgnBounds.left;
-									drawBounds.origin.y    = (float)  rgnBounds.top;
-									drawBounds.size.width  = (float) (rgnBounds.right  - rgnBounds.left);
-									drawBounds.size.height = (float) (rgnBounds.bottom - rgnBounds.top );
+									drawBounds.origin.x    = (double)  rgnBounds.left;
+									drawBounds.origin.y    = (double)  rgnBounds.top;
+									drawBounds.size.width  = (double) (rgnBounds.right  - rgnBounds.left);
+									drawBounds.size.height = (double) (rgnBounds.bottom - rgnBounds.top );
 								}
 								else
 									drawBounds = bounds;
@@ -1589,12 +1589,12 @@ static pascal OSStatus CheatFinderListFrameEventHandler(EventHandlerCallRef inHa
 
 									rct = bounds;
 									rct.size.height = 16.0;
-									rct.size.width  = (float) cfListAddrColumnWidth + 1.0;
+									rct.size.width  = (double) cfListAddrColumnWidth + 1.0;
 									err = HIThemeDrawButton(&rct, &buttoninfo, ctx, kHIThemeOrientationNormal, nil);
 
 									CGContextSetRGBFillColor(ctx, 0.0, 0.0, 0.0, 1.0);
 
-									rct.size.width  = (float) cfListAddrColumnWidth;
+									rct.size.width  = (double) cfListAddrColumnWidth;
 									rct.origin.y++;
 									textinfo.horizontalFlushness = kHIThemeTextHorizontalFlushCenter;
 									str = CFCopyLocalizedString(CFSTR("Address"), "address");
@@ -1606,8 +1606,8 @@ static pascal OSStatus CheatFinderListFrameEventHandler(EventHandlerCallRef inHa
 
 									rct = bounds;
 									rct.size.height = 16.0;
-									rct.size.width -= (float) cfListAddrColumnWidth;
-									rct.origin.x   += (float) cfListAddrColumnWidth;
+									rct.size.width -= (double) cfListAddrColumnWidth;
+									rct.origin.x   += (double) cfListAddrColumnWidth;
 									err = HIThemeDrawButton(&rct, &buttoninfo, ctx, kHIThemeOrientationNormal, nil);
 
 									CGContextSetRGBFillColor(ctx, 0.0, 0.0, 0.0, 1.0);
@@ -1715,7 +1715,7 @@ static void CheatFinderListViewDraw(CGContextRef ctx, HIRect *bounds, ListViewDa
 	UniCharCount	runLength[1], len;
 	SInt32			start, end, val, max;
 	Fixed			ax, vx, f;
-	float			y;
+	double			y;
 	UniChar			unistr[64];
 	char			format[32], t1[64], t2[64];
 
@@ -1819,7 +1819,7 @@ static HIViewPartCode CheatFinderListViewFindPart(EventRef inEvent, ListViewData
 	HIViewPartCode	part;
 	HIPoint			hipt;
 	SInt32			start, line;
-	float			y;
+	double			y;
 
 	part = kControlNoPart;
 
@@ -1841,7 +1841,7 @@ static HIViewPartCode CheatFinderListViewFindPart(EventRef inEvent, ListViewData
 	return (part);
 }
 
-static float CheatFinderListViewSanityCheck(float where, ListViewData *myData)
+static double CheatFinderListViewSanityCheck(double where, ListViewData *myData)
 {
 	HIRect	bounds;
 	HISize	imageSize;
@@ -1858,7 +1858,7 @@ static float CheatFinderListViewSanityCheck(float where, ListViewData *myData)
 	return (where);
 }
 
-static void CheatFinderListViewScrollToThere(float where, ListViewData *myData)
+static void CheatFinderListViewScrollToThere(double where, ListViewData *myData)
 {
 	OSStatus	err;
 	EventRef	theEvent;
@@ -2073,7 +2073,7 @@ static pascal OSStatus CheatFinderListViewHandler(EventHandlerCallRef inHandlerC
 					while (trackResult != kMouseTrackingMouseUp)
 					{
 						SInt32	start, line;
-						float	y;
+						double	y;
 
 						start = (SInt32) (myData->originPoint.y / myData->lineSize.height);
 						y = start * myData->lineSize.height - myData->originPoint.y;
@@ -2097,7 +2097,7 @@ static pascal OSStatus CheatFinderListViewHandler(EventHandlerCallRef inHandlerC
 
 					 		if (goThere != -1)
 							{
-								float	where;
+								double	where;
 
 								where = goThere * myData->lineSize.height;
 								where = CheatFinderListViewSanityCheck(where, myData);

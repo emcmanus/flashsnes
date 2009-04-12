@@ -190,7 +190,7 @@
 #include "mac-musicbox.h"
 #include "mac-stringtools.h"
 
-const float	mbxOffsetX   = 0.0,
+const double	mbxOffsetX   = 0.0,
 			mbxOffsetY   = 0.0,	// 0.5
 			mbxBarWidth  = 12.0,
 			mbxBarHeight = 128.0,
@@ -220,7 +220,7 @@ static volatile Boolean	stopNow, showIndicator, mbxFinished;
 static pthread_t		mbxThread;
 
 static short			mbxOpenedHeight, mbxClosedHeight;
-static float			mbxMarginX, mbxMarginY, mbxViewWidth, mbxViewHeight;
+static double			mbxMarginX, mbxMarginY, mbxViewWidth, mbxViewHeight;
 
 static SAPU				*StoredAPU;
 static SAPURegisters	*StoredAPURegisters;
@@ -788,7 +788,7 @@ static void MusicBoxDrawIndicator(HIViewRef view, CGContextRef mboxctx)
 
 	// Bar
 
-	const float	length[] = { 1.0, 1.0 };
+	const double	length[] = { 1.0, 1.0 };
 
 	CGContextSetLineWidth(mboxctx, mbxBarWidth);
 	CGContextSetLineDash(mboxctx, 0, length, 2);
@@ -796,7 +796,7 @@ static void MusicBoxDrawIndicator(HIViewRef view, CGContextRef mboxctx)
 
 	CGContextBeginPath(mboxctx);
 
-	float   x = mbxOffsetX + mbxMarginX + mbxBarWidth / 2.0;
+	double   x = mbxOffsetX + mbxMarginX + mbxBarWidth / 2.0;
 	for (int h = 0; h < 8; h++)
 	{
 		// Inactive
@@ -841,10 +841,10 @@ static void MusicBoxDrawIndicator(HIViewRef view, CGContextRef mboxctx)
 		else
 		if ((prevLMax[h] > 0) && (barTimeL[h] + 1000000 > currentTime))
 		{
-			CGContextSetRGBStrokeColor(mboxctx, (22.0 / 256.0), (156.0 / 256.0), (20.0 / 256.0), (float) (barTimeL[h] + 1000000 - currentTime) / 1000000.0);
+			CGContextSetRGBStrokeColor(mboxctx, (22.0 / 256.0), (156.0 / 256.0), (20.0 / 256.0), (double) (barTimeL[h] + 1000000 - currentTime) / 1000000.0);
 
-			CGContextMoveToPoint   (mboxctx, x, mbxOffsetY + mbxMarginY + (float) (prevLMax[h] - 2));
-			CGContextAddLineToPoint(mboxctx, x, mbxOffsetY + mbxMarginY + (float) (prevLMax[h]    ));
+			CGContextMoveToPoint   (mboxctx, x, mbxOffsetY + mbxMarginY + (double) (prevLMax[h] - 2));
+			CGContextAddLineToPoint(mboxctx, x, mbxOffsetY + mbxMarginY + (double) (prevLMax[h]    ));
 
 			CGContextStrokePath(mboxctx);
 		}
@@ -863,10 +863,10 @@ static void MusicBoxDrawIndicator(HIViewRef view, CGContextRef mboxctx)
 		else
 		if ((prevRMax[h] > 0) && (barTimeR[h] + 1000000 > currentTime))
 		{
-			CGContextSetRGBStrokeColor(mboxctx, (22.0 / 256.0), (156.0 / 256.0), (20.0 / 256.0), (float) (barTimeR[h] + 1000000 - currentTime) / 1000000.0);
+			CGContextSetRGBStrokeColor(mboxctx, (22.0 / 256.0), (156.0 / 256.0), (20.0 / 256.0), (double) (barTimeR[h] + 1000000 - currentTime) / 1000000.0);
 
-			CGContextMoveToPoint   (mboxctx, x + mbxRightBarX, mbxOffsetY + mbxMarginY + (float) (prevRMax[h] - 2));
-			CGContextAddLineToPoint(mboxctx, x + mbxRightBarX, mbxOffsetY + mbxMarginY + (float) (prevRMax[h]    ));
+			CGContextMoveToPoint   (mboxctx, x + mbxRightBarX, mbxOffsetY + mbxMarginY + (double) (prevRMax[h] - 2));
+			CGContextAddLineToPoint(mboxctx, x + mbxRightBarX, mbxOffsetY + mbxMarginY + (double) (prevRMax[h]    ));
 
 			CGContextStrokePath(mboxctx);
 		}
@@ -880,10 +880,10 @@ static void MusicBoxDrawIndicator(HIViewRef view, CGContextRef mboxctx)
 		CGContextSetRGBStrokeColor(mboxctx, (22.0 / 256.0), (22.0 / 256.0), (20.0 / 256.0), 1.0);
 
 		CGContextMoveToPoint   (mboxctx, x,                mbxOffsetY + mbxMarginY);
-		CGContextAddLineToPoint(mboxctx, x,                mbxOffsetY + mbxMarginY + (float) vl);
+		CGContextAddLineToPoint(mboxctx, x,                mbxOffsetY + mbxMarginY + (double) vl);
 		CGContextStrokePath(mboxctx);
 		CGContextMoveToPoint   (mboxctx, x + mbxRightBarX, mbxOffsetY + mbxMarginY);
-		CGContextAddLineToPoint(mboxctx, x + mbxRightBarX, mbxOffsetY + mbxMarginY + (float) vr);
+		CGContextAddLineToPoint(mboxctx, x + mbxRightBarX, mbxOffsetY + mbxMarginY + (double) vr);
 		CGContextStrokePath(mboxctx);
 
 		x += (mbxBarWidth + mbxBarSpace);

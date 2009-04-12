@@ -173,7 +173,7 @@
 #include "auxmath.h"
 
 #ifdef _MSC_VER
-#pragma warning (disable : 4244)	//Conversi� de double a float
+#pragma warning (disable : 4244)	//Conversi� de double a double
 #endif
 
 //----------------------------------------------------------------------/
@@ -184,7 +184,7 @@
 //////////////////
 //Constructores //
 //////////////////
-vect::vect(const float x1, const float y1, const float z1)
+vect::vect(const double x1, const double y1, const double z1)
 {
 	x = x1;
 	y = y1;
@@ -225,7 +225,7 @@ vect& vect::operator -= (const vect v)
 	return *this;
 }
 
-vect& vect::operator *= (const float num)
+vect& vect::operator *= (const double num)
 {
 	x *= num;
 	y *= num;
@@ -241,7 +241,7 @@ vect& vect::operator *= (const vect v)
 	return *this;
 }
 
-vect& vect::operator /= (const float num)
+vect& vect::operator /= (const double num)
 {
 	x /= num;
 	y /= num;
@@ -260,7 +260,7 @@ vect& vect::operator /= (const vect v)
 /////////////////////////////////
 // Operador de acceso indexado //
 /////////////////////////////////
-const float& vect::operator[](int i) const
+const double& vect::operator[](int i) const
 {
 	return n[i];
 }
@@ -299,7 +299,7 @@ vect operator* (const vect& vect1,const vect& vect2)
 	return result;
 }
 
-vect operator* (const vect& vect1, const float num)
+vect operator* (const vect& vect1, const double num)
 {
 	vect result ( num * vect1.x,
 				  num * vect1.y,
@@ -307,7 +307,7 @@ vect operator* (const vect& vect1, const float num)
 	return result;
 }
 
-vect operator* (const float num, const vect& vect1)
+vect operator* (const double num, const vect& vect1)
 {
 	vect result ( num * vect1.x,
 			      num * vect1.y,
@@ -323,7 +323,7 @@ vect operator/ (const vect& vect1, const vect& vect2)
 	return result;
 }
 
-vect operator/ (const vect& vect1, const float num)
+vect operator/ (const vect& vect1, const double num)
 {
 	vect result ( vect1.x / num,
 				  vect1.y / num,
@@ -382,7 +382,7 @@ int operator!= (const vect& vect1, const vect& vect2)
 
 void vect::Normalize(void)
 {
-	float mod = GetMod();
+	double mod = GetMod();
 	x /= mod;
 	y /= mod;
 	z /= mod;
@@ -423,7 +423,7 @@ quat::quat(const quat& q)
 	w = q.w;
 }
 
-quat::quat(const float x1, const float y1, const float z1, const float angle)
+quat::quat(const double x1, const double y1, const double z1, const double angle)
 {
 	x = x1;
 	y = y1;
@@ -431,7 +431,7 @@ quat::quat(const float x1, const float y1, const float z1, const float angle)
 	w = angle;
 }
 
-inline quat::quat(const vect& v, const float angle)
+inline quat::quat(const vect& v, const double angle)
 {
 	x = v.x;
 	y = v.y;
@@ -439,20 +439,20 @@ inline quat::quat(const vect& v, const float angle)
 	w = angle;
 }
 
-quat::quat(const float yaw, const float pitch,
-				  const float roll)
+quat::quat(const double yaw, const double pitch,
+				  const double roll)
 {
 	//el orden de las rotaciones es:
 	//r' = roll ( pitch ( yaw r)))
 	//yaw:   sobre eje Z (tambi� llamado heading)
 	//pitch: sobre eje Y
 	//roll:  sobre eje X
-	float SinYaw   = (float)sin(yaw/2);
-    float SinPitch = (float)sin(pitch/2);
-    float SinRoll  = (float)sin(roll/2);
-    float CosYaw   = (float)cos(yaw/2);
-    float CosPitch = (float)cos(pitch/2);
-    float CosRoll  = (float)cos(roll/2);
+	double SinYaw   = (double)sin(yaw/2);
+    double SinPitch = (double)sin(pitch/2);
+    double SinRoll  = (double)sin(roll/2);
+    double CosYaw   = (double)cos(yaw/2);
+    double CosPitch = (double)cos(pitch/2);
+    double CosRoll  = (double)cos(roll/2);
 
     x = SinRoll * CosPitch * CosYaw - CosRoll * SinPitch * SinYaw;
     y = CosRoll * SinPitch * CosYaw + SinRoll * CosPitch * SinYaw;
@@ -495,7 +495,7 @@ inline quat& quat::operator -= (const quat q)
 quat& quat::operator *= (const quat q)
 {
 	//guardo los valores actuales
-	float Angle1 = Angle;
+	double Angle1 = Angle;
 	vect RotAx1(RotAx);
 
 	//Los quaterniones se multiplican:
@@ -512,7 +512,7 @@ quat& quat::operator *= (const quat q)
 	return *this;
 }
 
-quat& quat::operator *= ( const float num)
+quat& quat::operator *= ( const double num)
 {
 	x *= num;
 	y *= num;
@@ -521,15 +521,15 @@ quat& quat::operator *= ( const float num)
 	return *this;
 }
 
-void quat::set(const float yaw, const float pitch, const float roll)
+void quat::set(const double yaw, const double pitch, const double roll)
 {
 	//idem al constructor a partir de �gulos Euler
-	float SinYaw   = (float)sin(yaw/2);
-    float SinPitch = (float)sin(pitch/2);
-    float SinRoll  = (float)sin(roll/2);
-    float CosYaw   = (float)cos(yaw/2);
-    float CosPitch = (float)cos(pitch/2);
-    float CosRoll  = (float)cos(roll/2);
+	double SinYaw   = (double)sin(yaw/2);
+    double SinPitch = (double)sin(pitch/2);
+    double SinRoll  = (double)sin(roll/2);
+    double CosYaw   = (double)cos(yaw/2);
+    double CosPitch = (double)cos(pitch/2);
+    double CosRoll  = (double)cos(roll/2);
 
     x = SinRoll * CosPitch * CosYaw - CosRoll * SinPitch * SinYaw;
     y = CosRoll * SinPitch * CosYaw + SinRoll * CosPitch * SinYaw;
@@ -539,7 +539,7 @@ void quat::set(const float yaw, const float pitch, const float roll)
 
 }
 
-void quat::set(const float x1, const float y1, const float z1, const float angle)
+void quat::set(const double x1, const double y1, const double z1, const double angle)
 {
 	w = angle;
 	x = x1;
@@ -558,10 +558,10 @@ void quat::set(const float x1, const float y1, const float z1, const float angle
 //Constructores //
 //////////////////
 
-mat4::mat4( float m00, float m01, float m02, float m03,
-		float m10, float m11, float m12, float m13,
-		float m20, float m21, float m22, float m23,
-		float m30, float m31, float m32, float m33)
+mat4::mat4( double m00, double m01, double m02, double m03,
+		double m10, double m11, double m12, double m13,
+		double m20, double m21, double m22, double m23,
+		double m30, double m31, double m32, double m33)
 {
 	m[0] = m00;		m[1] = m01;		m[2] = m02;		m[3] = m03;
 	m[4] = m10;		m[5] = m11;		m[6] = m12;		m[7] = m13;
@@ -639,14 +639,14 @@ mat4& mat4::operator *= ( const mat4& m )
 	return *this;
 }
 
-mat4& mat4::operator *= ( const float d )
+mat4& mat4::operator *= ( const double d )
 {
 	for(int a = 0 ; a < 16; a++)
 		this->m[a] *= d;
 	return *this;
 }
 
-mat4& mat4::operator /= ( const float d )
+mat4& mat4::operator /= ( const double d )
 {
 	for(int a = 0 ; a < 16; a++)
 		this->m[a] /= d;
@@ -684,7 +684,7 @@ mat4 operator * (const mat4& a, const mat4& b)
 	return c;
 }
 
-mat4 operator * (const mat4& a, const float d)
+mat4 operator * (const mat4& a, const double d)
 {
 	//multiplicacion miembro a miembro
 	mat4 c;
@@ -696,7 +696,7 @@ mat4 operator * (const mat4& a, const float d)
 }
 
 
-mat4 operator * (const float d, const mat4& a)
+mat4 operator * (const double d, const mat4& a)
 {
 	//multiplicacion miembro a miembro
 	mat4 c;
@@ -707,11 +707,11 @@ mat4 operator * (const float d, const mat4& a)
 	return c;
 }
 
-mat4 operator / (const mat4& a, const float d)
+mat4 operator / (const mat4& a, const double d)
 {
 	//es la division miembro a miembro
 	mat4 b;
-	float u = 1.0f / d;
+	double u = 1.0f / d;
 
 	for (int i = 0; i < 16; i++)
 		b.m[i] = a.m[i]*u;
@@ -871,7 +871,7 @@ void mat4::SetId(void)
 //crea la matriz de rotaci� a partir de un quat
 void mat4::FromQuat(const quat &q)
 {
-	float wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
+	double wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
 
 	// calculo coeficientes
 	x2 = q.x + q.x; y2 = q.y + q.y;
@@ -992,15 +992,15 @@ void mat4::SetViewNormal(const vect &vpn)
 * Function name	: DegToRad  				     				 *
 * Description	: Conversi� Grados a Radianes en sus dos sabores*
 * Return type	: void										     *
-* Argument      : float										     *
+* Argument      : double										     *
 *****************************************************************/
 
-float DegToRad(const float deg)
+double DegToRad(const double deg)
 {
 	return deg*PI/180;
 }
 
-void DegToRad(float *deg)
+void DegToRad(double *deg)
 {
 	*deg = (*deg)*PI/180;
 }
@@ -1008,16 +1008,16 @@ void DegToRad(float *deg)
 /*****************************************************************
 * Function name	: RadToDeg	 				     				 *
 * Description	: Conversi� Radianes a Grados en sus dos sabores*
-* Return type	: float										     *
-* Argument      : float										     *
+* Return type	: double										     *
+* Argument      : double										     *
 *****************************************************************/
 
-float RadToDeg(const float rad)
+double RadToDeg(const double rad)
 {
 	return rad*180/PI;
 }
 
-void RadToDeg(float *rad)
+void RadToDeg(double *rad)
 {
 	*rad = (*rad)*180/PI;
 }
@@ -1026,9 +1026,9 @@ void RadToDeg(float *rad)
 * Function name	: ClampD-R	   				     				*
 * Description	: Keeps angles between 0 and 360/ 0/2PI		    *
 * Return type	: void										    *
-* Argument      : float											*
+* Argument      : double											*
 ****************************************************************/
-void ClampD (float x)
+void ClampD (double x)
 {
 	while (x > 360.0f)
 		x -= 360.0f;
@@ -1036,7 +1036,7 @@ void ClampD (float x)
 		x += 360.0f;
 }
 
-void ClampR (float x)
+void ClampR (double x)
 {
 	while (x > PI2)
 		x -= PI2;
@@ -1046,14 +1046,14 @@ void ClampR (float x)
 
 /*****************************************************************
 * Function name	: Sgn	 				     				     *
-* Description	: Devuelve el signo de un float mediante acceso  *
+* Description	: Devuelve el signo de un double mediante acceso  *
 *				  binario (mas r�ido que comparar con 0.		 *
 * Return type	: int (-1 para negativo, 1 para positivo o cero) *
-* Argument      : float										     *
+* Argument      : double										     *
 *****************************************************************/
-int Sgn(float num)
+int Sgn(double num)
 {
-	//acceso al float como DWORD (32 bits idem al float)
+	//acceso al double como DWORD (32 bits idem al double)
 	unsigned long fl = (*(unsigned long *)&(num));
 	fl = ((fl &= 0x80000000) >> 31 ) & 0x1;
 
@@ -1068,11 +1068,11 @@ int Sgn(float num)
 * Description	: Producto escalar de dos vectores.			    *
 *				  El orden de los vectores no afecta el			*
 *				  resultado (conmutativo)						*
-* Return type	: float										    *
+* Return type	: double										    *
 * Argument      : vect, vect								    *
 ****************************************************************/
 
-float VectDotProd(const vect& vect1, const vect& vect2)
+double VectDotProd(const vect& vect1, const vect& vect2)
 {
 	return (vect1.x * vect2.x +
 			vect1.y * vect2.y +
@@ -1119,11 +1119,11 @@ vect VectXProd(const vect& vect1, const vect& vect2)
 * Description	: M�ulo de un vector o magnitud.				*
 *				  Es el "largo" del vector y se saca por		*
 *				  Pit�oras										*
-* Return type	: float										    *
+* Return type	: double										    *
 * Argument      : vect										    *
 ****************************************************************/
 
-float Mod(const vect& vect1)
+double Mod(const vect& vect1)
 {
 	return sqrt(vect1.x * vect1.x +
 		        vect1.y * vect1.y +
@@ -1134,10 +1134,10 @@ float Mod(const vect& vect1)
 * Function name	: ModSquared  				     				*
 * Description	: M�ulo de un vector al cuadrado.				*
 *				  Sirve para varias funciones					*
-* Return type	: float										    *
+* Return type	: double										    *
 * Argument      : vect										    *
 ****************************************************************/
-float ModSquared(const vect& vect1)
+double ModSquared(const vect& vect1)
 {
 	return vect1.x * vect1.x +
 		   vect1.y * vect1.y +
@@ -1153,7 +1153,7 @@ float ModSquared(const vect& vect1)
 
 void Normalize(vect *vect1)
 {
-	float module = Mod(*vect1);
+	double module = Mod(*vect1);
 	if(module > EPS)	{
 		vect1->x /= module;
 		vect1->y /= module;
@@ -1173,7 +1173,7 @@ void Normalize(vect *vect1)
 vect Normalize(const vect& vect1)
 {
 	vect result;
-	float module = Mod(vect1);
+	double module = Mod(vect1);
 	if (module > EPS)	{
 		result.x = vect1.x/module;
 		result.y = vect1.y/module;
@@ -1192,11 +1192,11 @@ vect Normalize(const vect& vect1)
 *				  Le pasas dos puntos que definan (pertenezcan) *
 *				  a la recta, devuelve la distancia minima ( a	*
 *				  traves de la normal)							*
-* Return type	: float										    *
+* Return type	: double										    *
 * Argument      : vect,vect									    *
 ****************************************************************/
 
-float OrigToRect(const vect& point1, const vect& point2)
+double OrigToRect(const vect& point1, const vect& point2)
 {
 
 	//me aseguro que los argumentos no sean iguales
@@ -1208,9 +1208,9 @@ float OrigToRect(const vect& point1, const vect& point2)
 	//Saco el vector directriz de la recta
 	vect v = point2 - point1;
 	//Saco el m�ulo cuadrado del directriz
-	float modv2 = v.x * v.x + v.y * v.y + v.z * v.z;
+	double modv2 = v.x * v.x + v.y * v.y + v.z * v.z;
 	//Saco el prod escalar entre point1 y v
-	float p1dotv = VectDotProd(point1,v);
+	double p1dotv = VectDotProd(point1,v);
 	//Aprovecho la misma variable
 	p1dotv/=modv2;
 	//Saco el normal a v, con extremo en la recta point1-point2
@@ -1228,11 +1228,11 @@ float OrigToRect(const vect& point1, const vect& point2)
 *				  Idem OrigToRect pero esta ves la recta se 	*
 *				  define por un vector direccion y un punto		*
 *				  perteneciente.								*
-* Return type	: float										    *
+* Return type	: double										    *
 * Argument      : vect,vect									    *
 ****************************************************************/
 
-float OrigToRect2(const vect& dir, const vect& point)
+double OrigToRect2(const vect& dir, const vect& point)
 {
 	//No hice un overload de la anterior porque tiene
 	//los mismos argumentos y return pero los argumentos
@@ -1246,10 +1246,10 @@ float OrigToRect2(const vect& dir, const vect& point)
 		return 0;
 
 	//Saco el m�ulo cuadrado del directriz
-	float modv2 = dir.x * dir.x + dir.y * dir.y
+	double modv2 = dir.x * dir.x + dir.y * dir.y
 				+ dir.z * dir.z;
 	//Saco el prod escalar entre point y dir
-	float p1dotv = VectDotProd(point,dir);
+	double p1dotv = VectDotProd(point,dir);
 	//Aprovecho la misma variable
 	p1dotv/=modv2;
 	//Saco el normal a v, con extremo en la recta point1-point2
@@ -1270,11 +1270,11 @@ float OrigToRect2(const vect& dir, const vect& point)
 *				  (pertenezcan) a la recta, devuelve la distancia *
 *				  entre el punto y la recta a traves de la normal *
 *				  O sea la distacia m�ima entre ambos.           *
-* Return type	: float										      *
+* Return type	: double										      *
 * Argument      : vect,vect,vect							      *
 ******************************************************************/
 
-float PointToRect (const vect& point, const vect& rect1, const vect& rect2)
+double PointToRect (const vect& point, const vect& rect1, const vect& rect2)
 {
 	//me aseguro que los puntos que definen la recta
 	//no sea iguales (definan infinitas rectas)
@@ -1297,11 +1297,11 @@ float PointToRect (const vect& point, const vect& rect1, const vect& rect2)
 * Description	: Distancia del origen a un plano.				  *
 *				  El plano se define por 3 puntos (los argumentos)*
 *				  que pertenezcan al mismo						  *
-* Return type	: float										      *
+* Return type	: double										      *
 * Argument      : vect,vect,vect							      *
 ******************************************************************/
 
-float OrigToPlane(const vect& point1, const vect& point2, const vect& point3)
+double OrigToPlane(const vect& point1, const vect& point2, const vect& point3)
 {
 	//saco dos vectores pertenecientes al plano
 	//y la normal al plano haciendo el prod.
@@ -1311,7 +1311,7 @@ float OrigToPlane(const vect& point1, const vect& point2, const vect& point3)
 	//Haciendo el prod. escalar entre un punto de los tres
 	//(cualquiera) y la normal obtengo la proyeccion de ese
 	//vector sobre la normal, multip. por el m�ulo de la normal.
-	float distance = VectDotProd(point1, Norm)/Mod(Norm);
+	double distance = VectDotProd(point1, Norm)/Mod(Norm);
 
 	//la distancia puede dar + o - de acuerdo a la
 	//orientaci� de la normal respecto del plano
@@ -1328,11 +1328,11 @@ float OrigToPlane(const vect& point1, const vect& point2, const vect& point3)
 *                 pertenezcan al mismo.							  *
 *                 la distancia es a travez de la nornmal al plano *
 *				  o sea la minima distancia.				      *
-* Return type	: float										      *
+* Return type	: double										      *
 * Argument      : vect,vect,vect							      *
 ******************************************************************/
 
-float PointToPlane(const vect& point, const vect& plane1, const vect& plane2, const vect& plane3)
+double PointToPlane(const vect& point, const vect& plane1, const vect& plane2, const vect& plane3)
 {
 
 	//saco dos vectores pertenecientes al plano y con
@@ -1343,15 +1343,15 @@ float PointToPlane(const vect& point, const vect& plane1, const vect& plane2, co
 
 	//Haciendo el prod. escalar entre un punto y la normal
 	//obtengo la proyeccion del punto sobre la normal.
-	float proj = VectDotProd(point, Norm);
+	double proj = VectDotProd(point, Norm);
 
 	//Hago prod escalar de la normal por un punto del plano
 	//para obtener la dist del origen al plano
-	float distplan = VectDotProd(plane2, Norm);
+	double distplan = VectDotProd(plane2, Norm);
 
 	//la resta de la distancia al plano menos la proyeccion
 	//del punto sobre la normal es la distancia buscada
-	float distance = distplan - proj;
+	double distance = distplan - proj;
 
 	//la distancia puede dar + o - de acuerdo a la
 	//orientaci� de la normal respecto del plano
@@ -1364,11 +1364,11 @@ float PointToPlane(const vect& point, const vect& plane1, const vect& plane2, co
 /******************************************************************
 * Function name	: Distance		 				     			  *
 * Description	: Distancia de un punto a otro.					  *
-* Return type	: float										      *
+* Return type	: double										      *
 * Argument      : vect,vect.								      *
 ******************************************************************/
 
-float Distance (const vect& point1, const vect& point2)
+double Distance (const vect& point1, const vect& point2)
 {
 	return Mod(point2-point1);
 }
@@ -1379,11 +1379,11 @@ float Distance (const vect& point1, const vect& point2)
 *				  por ellos con v�tice en point2.				  *
 *				  Devuelve en radianes, para converitr a grados   *
 *				  usar RadToDeg() con el resultado.               *
-* Return type	: float										      *
+* Return type	: double										      *
 * Argument      : vect,vect,vect								  *
 ******************************************************************/
 
-float GetAngle (const vect& point1, const vect& point2, const vect& point3)
+double GetAngle (const vect& point1, const vect& point2, const vect& point3)
 {
 
 	//Saco los vectores que van de 2->1 y de 2->3
@@ -1395,10 +1395,10 @@ float GetAngle (const vect& point1, const vect& point2, const vect& point3)
 	//norma v21 * norma v23 * cos (angulo buscado)
 	//como norma de v21 = norma v23 = 1 (porque los normalic�
 	//el resultado es directamente el coseno del �gulo.
-	float cos = VectDotProd(v21, v23);
+	double cos = VectDotProd(v21, v23);
 
 	//Ahora tengo que hacer el coseno inverso (arco coseno)
-	float angle = acos(cos);
+	double angle = acos(cos);
 
 	return angle;
 }
@@ -1408,17 +1408,17 @@ float GetAngle (const vect& point1, const vect& point2, const vect& point3)
 * Description	: dados 2 vectores devuelve el �gulo formado	  *
 *				  por ellos.									  *
 *				  Devuelve en radianes, para grados usar RadToDeg *
-* Return type	: float										      *
+* Return type	: double										      *
 * Argument      : vect,vect.								      *
 ******************************************************************/
 
-float GetAngle (const vect& vect1, const vect& vect2)
+double GetAngle (const vect& vect1, const vect& vect2)
 {
 	//identica a la anterior, pero esta vez ya
 	//tengo los vectores
-	float cos = VectDotProd(Normalize(vect1), Normalize(vect2));
+	double cos = VectDotProd(Normalize(vect1), Normalize(vect2));
 
-	float angle = acos(cos);
+	double angle = acos(cos);
 
 	return angle;
 }
@@ -1430,12 +1430,12 @@ float GetAngle (const vect& vect1, const vect& vect2)
 *				  pasar un pointer a m[0][0] si es m[4][4] o      *
 *				  m[0] si es m[16]								  *
 * Return type	: void										      *
-* Argument      : quat,float*.								      *
+* Argument      : quat,double*.								      *
 ******************************************************************/
 
-void  MatrixfromQuat   (const quat& q, float* m)
+void  MatrixfromQuat   (const quat& q, double* m)
 {
-	float wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
+	double wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
 
 	// calculo coeficientes
 	x2 = q.x + q.x; y2 = q.y + q.y;
@@ -1465,14 +1465,14 @@ void  MatrixfromQuat   (const quat& q, float* m)
 *				  quaternion equivalente.						  *
 *				  La inversa de la anterior.					  *
 * Return type	: void										      *
-* Argument      : float* , quat.								      *
+* Argument      : double* , quat.								      *
 ******************************************************************/
 
-void  QuatfromMatrix   (const float *m, quat& q)
+void  QuatfromMatrix   (const double *m, quat& q)
 {
 
-	float qs2, qx2, qy2, qz2;  // squared magniudes of quaternion components
-	float tmp;
+	double qs2, qx2, qy2, qz2;  // squared magniudes of quaternion components
+	double tmp;
 	int n;
 
 	// primero calculamos los valores al cuadrado del quat.
@@ -1545,12 +1545,12 @@ void  QuatfromMatrix   (const float *m, quat& q)
 *				  Pitch: Respecto del Y 						  *
 *																  *
 * Return type	: void										      *
-* Argument      : float, float, float, quat&.					  *
+* Argument      : double, double, double, quat&.					  *
 ******************************************************************/
-void QuatfromEuler( const float yaw, const float pitch, const float roll, quat& q)
+void QuatfromEuler( const double yaw, const double pitch, const double roll, quat& q)
 {
-	float cosYaw, sinYaw, cosPitch, sinPitch, cosRoll, sinRoll;
-	float half_roll, half_pitch, half_yaw;
+	double cosYaw, sinYaw, cosPitch, sinPitch, cosRoll, sinRoll;
+	double half_roll, half_pitch, half_yaw;
 
 	half_yaw = yaw / 2.0;
 	half_pitch = pitch / 2.0;
@@ -1577,17 +1577,17 @@ void QuatfromEuler( const float yaw, const float pitch, const float roll, quat& 
 * Description	: Spherical Linear intERPolation entre dos quat.  *
 *				  Un promedio ponderado de dos rotaciones.        *
 * Return type	: void										      *
-* Argument      : &quat,&quat,float, &quat.				          *
+* Argument      : &quat,&quat,double, &quat.				          *
 ******************************************************************/
 
-void QuatSlerp(const quat &from, const quat &to, float t, quat &res)
+void QuatSlerp(const quat &from, const quat &to, double t, quat &res)
 {
 
 	//minlerp define la barrera para interpolar esf�ico/lineal
 	//subir el valor para obtener mayor velocidad/menor calidad
-	const float	minlerp = 0.02f;
+	const double	minlerp = 0.02f;
 	quat           to1;
-	float        omega, cosom, sinom, scale0, scale1;
+	double        omega, cosom, sinom, scale0, scale1;
 
 	// calc cosine
 	cosom = from.x * to.x +
@@ -1612,10 +1612,10 @@ void QuatSlerp(const quat &from, const quat &to, float t, quat &res)
 	// calculate coefficients
 	if ( (1.0 - cosom) > minlerp ) {
           // interpolaci� esf�ica (SLERP)
-          omega = (float)acos(cosom);
-          sinom = (float)sin(omega);
-          scale0 = (float)sin((1.0 - t) * omega) / sinom;
-          scale1 = (float)sin(t * omega) / sinom;
+          omega = (double)acos(cosom);
+          sinom = (double)sin(omega);
+          scale0 = (double)sin((1.0 - t) * omega) / sinom;
+          scale1 = (double)sin(t * omega) / sinom;
 
 	} else {
 		// "from" y "to" quaternions est� muy cerca

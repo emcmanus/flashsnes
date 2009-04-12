@@ -2479,19 +2479,19 @@ static void S9xGlideCalcSquare (int snes_width, int snes_height,
 				int x, int y, int width, int height,
 				GrVertex *square)
 {
-    float snes_aspect_ratio = snes_width / (float) snes_height;
-    float voodoo_aspect_ratio = Glide.voodoo_width / (float) Glide.voodoo_height;
-    float virtual_height;
-    float virtual_width;
-    float virtual_x;
-    float virtual_y;
+    double snes_aspect_ratio = snes_width / (double) snes_height;
+    double voodoo_aspect_ratio = Glide.voodoo_width / (double) Glide.voodoo_height;
+    double virtual_height;
+    double virtual_width;
+    double virtual_x;
+    double virtual_y;
 
 #if 0
     if (snes_aspect_ratio < voodoo_aspect_ratio)
     {
-	virtual_height = (float) Glide.voodoo_height;
+	virtual_height = (double) Glide.voodoo_height;
 	virtual_width = virtual_height * snes_aspect_ratio;
-	virtual_x = ((float) Glide.voodoo_width - virtual_width) / 2.0;
+	virtual_x = ((double) Glide.voodoo_width - virtual_width) / 2.0;
 	virtual_y = 0.0;
     }
     else
@@ -2517,17 +2517,17 @@ static void S9xGlideCalcSquare (int snes_width, int snes_height,
 
     square [0].tmuvtx [0].sow = 0.0;
     square [0].tmuvtx [0].tow = 0.0;
-    square [1].tmuvtx [0].sow = (float) width;
+    square [1].tmuvtx [0].sow = (double) width;
     square [1].tmuvtx [0].tow = 0.0;
-    square [2].tmuvtx [0].sow = (float) width;
-    square [2].tmuvtx [0].tow = (float) height;
+    square [2].tmuvtx [0].sow = (double) width;
+    square [2].tmuvtx [0].tow = (double) height;
     square [3].tmuvtx [0].sow = 0.0;
-    square [3].tmuvtx [0].tow = (float) height;
+    square [3].tmuvtx [0].tow = (double) height;
 
-    float width_percent;
-    float height_percent;
-    float width_percent2;
-    float height_percent2;
+    double width_percent;
+    double height_percent;
+    double width_percent2;
+    double height_percent2;
 
     if ((width_percent = virtual_width * TEXTURE_SIZE / snes_width) > virtual_width)
 	width_percent = virtual_width;
@@ -2726,8 +2726,8 @@ static void S9xGlideInitTextures ()
     Glide.x_offset = 0.0;
     Glide.y_offset = 0.0;
     // XXX: Do this when the SNES screen resolution is known.
-    Glide.x_scale = (float) (Glide.voodoo_width * 8.0 / 256);
-    Glide.y_scale = (float) (Glide.voodoo_height * 8.0 / 224);
+    Glide.x_scale = (double) (Glide.voodoo_width * 8.0 / 256);
+    Glide.y_scale = (double) (Glide.voodoo_height * 8.0 / 224);
 }
 
 static HMODULE GlideDLL = NULL;
@@ -2842,8 +2842,8 @@ bool8 S9xGlideInit ()
                               GR_ORIGIN_UPPER_LEFT, 2, 1))
 	{
 	    (*pgrBufferClear) (0, 0, GR_ZDEPTHVALUE_FARTHEST);
-	    Glide.voodoo_width = (float) (*pgrSstScreenWidth) ();
-	    Glide.voodoo_height = (float) (*pgrSstScreenHeight) ();
+	    Glide.voodoo_width = (double) (*pgrSstScreenWidth) ();
+	    Glide.voodoo_height = (double) (*pgrSstScreenHeight) ();
 	    S9xGlideInitTextures ();
 	    return (TRUE);
 	}
@@ -2864,8 +2864,8 @@ void S9xGlidePutImage (int snes_width, int snes_height)
 {
     GrVertex square [4];
 
-    Glide.voodoo_width = (float) (*pgrSstScreenWidth) ();
-    Glide.voodoo_height = (float) (*pgrSstScreenHeight) ();
+    Glide.voodoo_width = (double) (*pgrSstScreenWidth) ();
+    Glide.voodoo_height = (double) (*pgrSstScreenHeight) ();
 
     //(*pgrBufferClear) (0, 0, GR_ZDEPTHVALUE_FARTHEST);
 
@@ -3007,9 +3007,9 @@ void RenderGlide (SSurface Src, SSurface Dst, RECT *rect)
 
 BYTE basetexbuffer [512 * 512 * 3];
 
-GLfloat	xrot;			// X Rotation
-GLfloat	yrot;			// Y Rotation
-GLfloat	zrot;			// Z Rotation
+GLdouble	xrot;			// X Rotation
+GLdouble	yrot;			// Y Rotation
+GLdouble	zrot;			// Z Rotation
 #endif
 
 void RenderOpenGL (SSurface Src, SSurface Dst, RECT *rect)
@@ -3108,10 +3108,10 @@ void RenderOpenGL (SSurface Src, SSurface Dst, RECT *rect)
             if ((pwidth = Src.Width - startx) > (uint32) texture_size)
                 pwidth = texture_size;
 
-            float fx1 = (float) startx / Src.Width;
-            float fy1 = (float) starty / (srcheight);
-            float fx2 = fx1 + (float) pwidth / Src.Width;
-            float fy2 = fy1 + (float) (pheight+1) / (srcheight);
+            double fx1 = (double) startx / Src.Width;
+            double fy1 = (double) starty / (srcheight);
+            double fx2 = fx1 + (double) pwidth / Src.Width;
+            double fy2 = fy1 + (double) (pheight+1) / (srcheight);
 
             if (!OpenGL.packed_pixels_extension_present)
             {
@@ -3149,8 +3149,8 @@ void RenderOpenGL (SSurface Src, SSurface Dst, RECT *rect)
 			glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, pwidth, pheight,
 				OpenGL.format, OpenGL.type, data);
 
-			float maxx = (float) (pwidth - 1) / texture_size;
-			float maxy = (float) (pheight - 1) / texture_size;
+			double maxx = (double) (pwidth - 1) / texture_size;
+			double maxy = (double) (pheight - 1) / texture_size;
 
 			if (OpenGL.draw_cube)
 			{

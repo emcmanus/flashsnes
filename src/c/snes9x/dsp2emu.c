@@ -377,22 +377,22 @@ void DSP2_Op0D()
 
 void DSP2_Op0D()
 {
-	// Float implementation of Neviksti's algorithm
+	// double implementation of Neviksti's algorithm
 	// This is the right algorithm to match the DSP2 bits but the precision
-	// of the PC float does not match the precision of the fixed point math
+	// of the PC double does not match the precision of the fixed point math
 	// on the DSP2 causing occasional one off data mismatches (which should
 	// be no problem because its just a one pixel difference in a scaled image
 	// to be displayed).
 
-	float multiplier;
-	float pixloc;
+	double multiplier;
+	double pixloc;
 	int	i, j;
 	uint8 pixelarray[512];
 
 	if (DSP2Op0DInLen <= DSP2Op0DOutLen)
-		multiplier = (float) 1.0;
+		multiplier = (double) 1.0;
 	else
-		multiplier = (float) ((DSP2Op0DInLen * 2.0) / (DSP2Op0DOutLen * 2.0 + 1.0));
+		multiplier = (double) ((DSP2Op0DInLen * 2.0) / (DSP2Op0DOutLen * 2.0 + 1.0));
 
 	pixloc = 0.0;
 	for ( i=0; i < DSP2Op0DOutLen * 2; i++ )

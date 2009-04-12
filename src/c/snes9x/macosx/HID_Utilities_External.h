@@ -439,7 +439,7 @@ typedef struct hu_SaveRec_t
 // polls all devices and elements for a change greater than kPercentMove. Times out after given time
 // returns TRUE and pointer to device and element if found
 // returns FALSE and NULL for both parameters if not found
-extern Boolean HIDConfigureAction( hu_device_t **outDevice, hu_element_t **outElement, float inTimeout );
+extern Boolean HIDConfigureAction( hu_device_t **outDevice, hu_element_t **outElement, double inTimeout );
 
 // -- These are routines to use if the applcation wants HID Utilities to do the file handling --
 // Notes: the FILE* is a MachO posix FILE and will not work with the MWCW MSL FILE* type.

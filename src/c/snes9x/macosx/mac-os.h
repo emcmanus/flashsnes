@@ -281,7 +281,7 @@ extern bool8				fullscreen, autoRes, doubleSize,
 							glstretch, gl32bit, vsync, drawoverscan, lastoverscan, screencurvature,
 							multiprocessor, ciFilterEnable;
 extern long					drawingMethod;
-extern float				macSoundPitch;
+extern double				macSoundPitch;
 extern SInt32				macSoundVolume;
 extern int					macSoundInterval;
 extern uint16				aueffect;

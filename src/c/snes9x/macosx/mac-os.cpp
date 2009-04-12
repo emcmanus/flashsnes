@@ -300,7 +300,7 @@ bool8				fullscreen          = false,
 					ciFilterEnable      = false;
 long				drawingMethod       = kDrawingOpenGL;
 
-float				macSoundPitch       = 1.0;
+double				macSoundPitch       = 1.0;
 SInt32				macSoundVolume      = 80;
 int					macSoundInterval  	= 10;
 uint16				aueffect            = 0;
@@ -1006,7 +1006,7 @@ void InitGameWindow(void)
 		if (!lastoverscan && !windowExtend && drawoverscan)
 		{
 			windowExtend = true;
-			windowSize[kWindowScreen].height = (int) ((float) (windowSize[kWindowScreen].height + 0.5) * SNES_HEIGHT_EXTENDED / SNES_HEIGHT);
+			windowSize[kWindowScreen].height = (int) ((double) (windowSize[kWindowScreen].height + 0.5) * SNES_HEIGHT_EXTENDED / SNES_HEIGHT);
 		}
 
 		SizeWindow(gWindow, (short) windowSize[kWindowScreen].width, (short) windowSize[kWindowScreen].height, false);
@@ -1161,7 +1161,7 @@ static pascal OSStatus GameWindowEventHandler(EventHandlerCallRef inHandlerCallR
 								err = GetEventParameter(inEvent, kEventParamOriginalBounds, typeQDRectangle, nil, sizeof(Rect), nil, &origRct);
 								if (err == noErr)
 								{
-									rct.right = rct.left + (int) ((float) (origRct.right - origRct.left) / (float) (origRct.bottom - origRct.top) * (float) (rct.bottom - rct.top));
+									rct.right = rct.left + (int) ((double) (origRct.right - origRct.left) / (double) (origRct.bottom - origRct.top) * (double) (rct.bottom - rct.top));
 									err = SetEventParameter(inEvent, kEventParamCurrentBounds, typeQDRectangle, sizeof(Rect), &rct);
 								}
 							}
@@ -1177,8 +1177,8 @@ static pascal OSStatus GameWindowEventHandler(EventHandlerCallRef inHandlerCallR
 
 								bounds.origin.x = 0.0;
 								bounds.origin.y = 0.0;
-								bounds.size.width  = (float) (rct.right  - rct.left);
-								bounds.size.height = (float) (rct.bottom - rct.top );
+								bounds.size.width  = (double) (rct.right  - rct.left);
+								bounds.size.height = (double) (rct.bottom - rct.top );
 
 								HIViewFindByID(HIViewGetRoot(window), cid, &ctl);
 								HIViewSetFrame(ctl, &bounds);
@@ -1209,9 +1209,9 @@ static pascal OSStatus GameWindowEventHandler(EventHandlerCallRef inHandlerCallR
 					GetWindowBounds(gWindow, kWindowContentRgn, &rct);
 
 					if (windowExtend)
-						rct.bottom = rct.top + (int) ((float) (rct.bottom - rct.top + 0.5) * SNES_HEIGHT_EXTENDED / SNES_HEIGHT);
+						rct.bottom = rct.top + (int) ((double) (rct.bottom - rct.top + 0.5) * SNES_HEIGHT_EXTENDED / SNES_HEIGHT);
 					else
-						rct.bottom = rct.top + (int) ((float) (rct.bottom - rct.top + 0.5) * SNES_HEIGHT / SNES_HEIGHT_EXTENDED);
+						rct.bottom = rct.top + (int) ((double) (rct.bottom - rct.top + 0.5) * SNES_HEIGHT / SNES_HEIGHT_EXTENDED);
 
 					SetWindowBounds(gWindow, kWindowContentRgn, &rct);
 
@@ -2186,7 +2186,7 @@ int PromptFreezeDefrost(Boolean freezing)
 	FSRef				ref;
 	KeyMap				keys;
 	UInt64				newestDate, currentDate;
-	float				x, y, textw;
+	double				x, y, textw;
 	unsigned long		startTime;
 	unsigned int		repeatDelay;
 	long				newestIndex;
@@ -2229,7 +2229,7 @@ int PromptFreezeDefrost(Boolean freezing)
 	if (!ctx)
 		QuitWithFatalError(0, "os 06");
 
-	rct = CGRectMake(0.0, 0.0, (float) w, (float) h);
+	rct = CGRectMake(0.0, 0.0, (double) w, (double) h);
 	CGContextClearRect(ctx, rct);
 
 	image = nil;
@@ -2252,7 +2252,7 @@ int PromptFreezeDefrost(Boolean freezing)
 
 	if (image)
 	{
-		rct = CGRectMake(0.0, (float) h - 118.0, 512.0, 118.0);
+		rct = CGRectMake(0.0, (double) h - 118.0, 512.0, 118.0);
 		CGContextDrawImage(ctx, rct, image);
 		CGImageRelease(image);
 	}
@@ -2262,7 +2262,7 @@ int PromptFreezeDefrost(Boolean freezing)
 
 	CGContextSetLineJoin(ctx, kCGLineJoinRound);
 
-	rct = CGRectMake(0.0, (float) h - 238.0, 128.0, 120.0);
+	rct = CGRectMake(0.0, (double) h - 238.0, 128.0, 120.0);
 
 	for (count = 0; count < 12; count++)
 	{
@@ -2608,11 +2608,11 @@ static void UpdateFreezeDefrostScreen(int newIndex, CGImageRef image, uint8 *dra
 
 		CGContextSetLineWidth(ctx, 1.0);
 
-		rct = CGRectMake(0.0, 0.0, (float) w, (float) h);
+		rct = CGRectMake(0.0, 0.0, (double) w, (double) h);
 		CGContextDrawImage(ctx, rct, image);
 
-		rct = CGRectMake(0.0, (float) h - 238.0, 128.0, 120.0);
-		rct = CGRectOffset(rct, (float) (128 * (newIndex % 4)), (float) (-120 * (newIndex / 4)));
+		rct = CGRectMake(0.0, (double) h - 238.0, 128.0, 120.0);
+		rct = CGRectOffset(rct, (double) (128 * (newIndex % 4)), (double) (-120 * (newIndex / 4)));
 		rct.size.width  -= 1.0;
 		rct.size.height -= 1.0;
 
@@ -3065,9 +3065,9 @@ static void ProcessInput(void)
 						if (currentTime > autofireRec[i].nextTime[j])
 						{
 							if (Settings.TurboMode)
-								autofireRec[i].nextTime[j] = currentTime + (long long) ((1.0 / (float) autofireRec[i].frequency) * 1000000.0 / macFastForwardRate);
+								autofireRec[i].nextTime[j] = currentTime + (long long) ((1.0 / (double) autofireRec[i].frequency) * 1000000.0 / macFastForwardRate);
 							else
-								autofireRec[i].nextTime[j] = currentTime + (long long) ((1.0 / (float) autofireRec[i].frequency) * 1000000.0);
+								autofireRec[i].nextTime[j] = currentTime + (long long) ((1.0 / (double) autofireRec[i].frequency) * 1000000.0);
 						}
 						else
 							controlPad[i] &= ~mask;
@@ -3142,9 +3142,9 @@ void GetGameScreenPointer(int16 *x, int16 *y, bool fullmouse)
 		{
 			if (glstretch)
 			{
-				float   fpw = (float) glScreenH / (float) ph * 512.0;
+				double   fpw = (double) glScreenH / (double) ph * 512.0;
 
-				scopeViewInfo.width      = (int) (fpw + ((float) glScreenW - fpw) * (float) macAspectRatio / 100.0);
+				scopeViewInfo.width      = (int) (fpw + ((double) glScreenW - fpw) * (double) macAspectRatio / 100.0);
 				scopeViewInfo.height     = glScreenH;
 				scopeViewInfo.globalLeft = (int) glScreenBounds.origin.x + ((glScreenW - scopeViewInfo.width) >> 1);
 				scopeViewInfo.globalTop  = (int) glScreenBounds.origin.y;
@@ -3225,13 +3225,13 @@ void GetGameScreenPointer(int16 *x, int16 *y, bool fullmouse)
 
 		GetGlobalMouse(&pos);
 
-		*x = (int16) (((float) (pos.h - scopeViewInfo.globalLeft)) / ((float) scopeViewInfo.width ) * (float) IPPU.RenderedScreenWidth);
-		*y = (int16) (((float) (pos.v - scopeViewInfo.globalTop )) / ((float) scopeViewInfo.height) * (float) (!drawoverscan ? IPPU.RenderedScreenHeight : SNES_HEIGHT_EXTENDED));
+		*x = (int16) (((double) (pos.h - scopeViewInfo.globalLeft)) / ((double) scopeViewInfo.width ) * (double) IPPU.RenderedScreenWidth);
+		*y = (int16) (((double) (pos.v - scopeViewInfo.globalTop )) / ((double) scopeViewInfo.height) * (double) (!drawoverscan ? IPPU.RenderedScreenHeight : SNES_HEIGHT_EXTENDED));
 	}
 	else
 	{
-		*x = (int16) (unlimitedCursor.x / (float) scopeViewInfo.width  * (float) IPPU.RenderedScreenWidth);
-		*y = (int16) (unlimitedCursor.y / (float) scopeViewInfo.height * (float) (!drawoverscan ? IPPU.RenderedScreenHeight : SNES_HEIGHT_EXTENDED));
+		*x = (int16) (unlimitedCursor.x / (double) scopeViewInfo.width  * (double) IPPU.RenderedScreenWidth);
+		*y = (int16) (unlimitedCursor.y / (double) scopeViewInfo.height * (double) (!drawoverscan ? IPPU.RenderedScreenHeight : SNES_HEIGHT_EXTENDED));
 	}
 }
 

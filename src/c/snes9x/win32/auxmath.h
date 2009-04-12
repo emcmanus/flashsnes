@@ -179,7 +179,7 @@
 #define PI2		(PI*2.0f)
 #define SQRT_2  1.4142135623730950488016887242096980785696718753769f
 #define EPS		   1.19e-07f		//epsilon
-#define MAX_FLOAT  1.0e+38f			//max 32 bit float
+#define MAX_double  1.0e+38f			//max 32 bit double
 
 //////////////////////////////////////////////////////////
 // Clase vect: vector simple de tres componentes		//
@@ -190,10 +190,10 @@ public:
 
 	union
 	{
-		float n[3];
+		double n[3];
 		struct
 		{
-			float x, y, z;
+			double x, y, z;
 		};
 	};
 
@@ -201,7 +201,7 @@ public:
 
 	// Constructores
 	vect() {};
-	vect(const float x1, const float y1, const float z1);
+	vect(const double x1, const double y1, const double z1);
 	vect(const vect& v);          // copy constructor
 
   	// Operadores de asignaci�
@@ -209,24 +209,24 @@ public:
 	vect& operator += ( const vect v );   // suma/asignacion
 	vect& operator -= ( const vect v );   // resta/asignacion
 	vect& operator *= ( const vect v);    // multiplicaci�/asignaci�
-	vect& operator /= ( const vect v);	  // division/asignaci� x float
-	vect& operator *= ( const float num); // multiplicaci�/asignaci� x float
-	vect& operator /= ( const float num); // division/asignaci�
-	float& operator [] ( int i) { return n[i]; };   // indexaci�
-	const float& operator[](int i) const;
+	vect& operator /= ( const vect v);	  // division/asignaci� x double
+	vect& operator *= ( const double num); // multiplicaci�/asignaci� x double
+	vect& operator /= ( const double num); // division/asignaci�
+	double& operator [] ( int i) { return n[i]; };   // indexaci�
+	const double& operator[](int i) const;
 
-	//float* cast
-	operator float*() {return (float*)this;};
+	//double* cast
+	operator double*() {return (double*)this;};
 
 	//Operadores "friend", no pertenecen a la clase
 	//operadores binarios
 	friend vect operator+ (const vect& vect1, const vect& vect2);
 	friend vect operator- (const vect& vect1, const vect& vect2);
 	friend vect operator* (const vect& vect1,const vect& vect2);
-	friend vect operator* (const vect& vect1, const float num);
-	friend vect operator* (const float num, const vect& vect1);
+	friend vect operator* (const vect& vect1, const double num);
+	friend vect operator* (const double num, const vect& vect1);
 	friend vect operator/ (const vect& vect1, const vect& vect2);
-	friend vect operator/ (const vect& vect1, const float num);
+	friend vect operator/ (const vect& vect1, const double num);
 	//operador unario
 	friend vect operator- (const vect& vect1);
 	//operadores de comparaci�
@@ -237,9 +237,9 @@ public:
 	friend int operator!= (const vect& vect1, const vect& vect2);
 	friend int operator== (const vect& vect1, const vect& vect2);
 	//funciones
-	float GetMod(void) {	return (float)sqrt(x*x+y*y+z*z);};
-	float GetModSquared(void) {		return x*x+y*y+z*z;};
-	void Set(float _x, float _y, float _z)	{ x=_x; y=_y; z=_z;};
+	double GetMod(void) {	return (double)sqrt(x*x+y*y+z*z);};
+	double GetModSquared(void) {		return x*x+y*y+z*z;};
+	void Set(double _x, double _y, double _z)	{ x=_x; y=_y; z=_z;};
 	void Normalize(void);
 	void MakeOrthonormal(vect &base1, vect &base2);
 };
@@ -256,9 +256,9 @@ public:
 #ifdef __MINGW32__
 /* FIXME: GCC doesn't seem to like anon structs and such.. */
 	vect RotAx;
-	float Angle;
-	float x, y, z, w;
-	float n[4];
+	double Angle;
+	double x, y, z, w;
+	double n[4];
 #else
 
 	union
@@ -266,13 +266,13 @@ public:
 		struct
 		{
 			vect RotAx;
-			float Angle;
+			double Angle;
 		};
 		struct
 		{
-			float x, y, z, w;
+			double x, y, z, w;
 		};
-		float n[4];
+		double n[4];
 	};
 
 #endif
@@ -281,26 +281,26 @@ public:
 
 	// Constructores
 	quat() {};
-	quat(const float x1, const float y1, const float z1, const float angle);
+	quat(const double x1, const double y1, const double z1, const double angle);
 	quat(const quat& q);					// copy constructor
-	quat(const vect& v, const float angle);	//de un vector (eje) y un �gulo
+	quat(const vect& v, const double angle);	//de un vector (eje) y un �gulo
 	//de tres �gulos respecto de c/eje (�gulos de Euler)
 	//yaw:   sobre eje Z (tambi� llamado heading)
 	//pitch: sobre eje Y
 	//roll:  sobre eje X
-	quat(const float yaw, const float pitch, const float roll);
+	quat(const double yaw, const double pitch, const double roll);
 
 	// Operadores de asignaci�
 	quat& operator =  ( const quat q );   // asignacion de un quat
 	quat& operator += ( const quat q );   // composici�/asignacion
 	quat& operator -= ( const quat q );   // resta/asignacion
 	quat& operator *= ( const quat q );   // multiplicaci�/asignaci�
-	quat& operator *= ( const float num); // multiplicaci�/asignaci� x float
-	quat& operator /= ( const float num); // division/asignaci�
+	quat& operator *= ( const double num); // multiplicaci�/asignaci� x double
+	quat& operator /= ( const double num); // division/asignaci�
 
 	//funciones
-	void set(const float yaw, const float pitch, const float roll);
-	void set(const float x1, const float y1, const float z1, const float angle);
+	void set(const double yaw, const double pitch, const double roll);
+	void set(const double x1, const double y1, const double z1, const double angle);
 };
 
 
@@ -314,8 +314,8 @@ public:
 
 	union
 	{
-		float m[16];
-		float m1[4][4];
+		double m[16];
+		double m1[4][4];
 	};
 
 
@@ -323,10 +323,10 @@ public:
 
 	// Constructores
 	mat4() {};
-	mat4(	float m00, float m01, float m02, float m03,
-			float m10, float m11, float m12, float m13,
-			float m20, float m21, float m22, float m23,
-			float m30, float m31, float m32, float m33);
+	mat4(	double m00, double m01, double m02, double m03,
+			double m10, double m11, double m12, double m13,
+			double m20, double m21, double m22, double m23,
+			double m30, double m31, double m32, double m33);
 	mat4(	const mat4 &m);
 
 	// Assignment operators
@@ -334,21 +334,21 @@ public:
 	mat4& operator += ( const mat4& m );      // incrementato por mat4
 	mat4& operator -= ( const mat4& m );      // decremento por mat4
 	mat4& operator *= ( const mat4& m );      // multiplicacion por matriz
-	mat4& operator *= ( const float d );      // multiplicacion por constante
-	mat4& operator /= ( const float d );      // division por constante
+	mat4& operator *= ( const double d );      // multiplicacion por constante
+	mat4& operator /= ( const double d );      // division por constante
 
 	//indexaci�
-	float & operator () ( const int i, const int j) { return m1[i][j]; }
-	float & operator [] ( int i) { return m[i]; };
+	double & operator () ( const int i, const int j) { return m1[i][j]; }
+	double & operator [] ( int i) { return m[i]; };
 
 	//operadores friends
 	friend mat4 operator - (const mat4& a);					// -m1
 	friend mat4 operator + (const mat4& a, const mat4& b);  // m1 + m2
 	friend mat4 operator - (const mat4& a, const mat4& b);  // m1 - m2
 	friend mat4 operator * (const mat4& a, const mat4& b);  // m1 * m2
-	friend mat4 operator * (const mat4& a, const float d);  // m1 * d
-	friend mat4 operator * (const float d, const mat4& a);  // d * m1
-	friend mat4 operator / (const mat4& a, const float d);  // m1 / d
+	friend mat4 operator * (const mat4& a, const double d);  // m1 * d
+	friend mat4 operator * (const double d, const mat4& a);  // d * m1
+	friend mat4 operator / (const mat4& a, const double d);  // m1 / d
 
 	//operadores de comparaci�
 	friend int operator == (const mat4& a, const mat4& b);  // m1 == m2 ?
@@ -358,7 +358,7 @@ public:
 	void Transpose();
 	void Invert();
 	void MakeGL();
-	void Set(int i, int j, float value) {m1[i][j] = value;};
+	void Set(int i, int j, double value) {m1[i][j] = value;};
 	void SetId (void);
 	void FromQuat(const quat &q);
     void FromAllVectors(const vect &vpn, const vect &vup, const vect &vr);
@@ -372,8 +372,8 @@ public:
 	vect GetViewRight(void);
 	vect GetViewNormal(void);
 
-	//float* cast
-	operator float*() { return (float*)this; };
+	//double* cast
+	operator double*() { return (double*)this; };
 };
 
 
@@ -385,33 +385,33 @@ public:
 //////////////////////////////////////////
 
 
-float DegToRad		(const float deg);
-void  DegToRad		(float *deg);
-float RadToDeg		(const float rad);
-void  RadToDeg		(float *rad);
-int   Sgn			(float num);
-void  ClampD		(float angle);
-void  ClampR		(float angle);
-float VectDotProd	(const vect& vect1, const vect& vect2);
+double DegToRad		(const double deg);
+void  DegToRad		(double *deg);
+double RadToDeg		(const double rad);
+void  RadToDeg		(double *rad);
+int   Sgn			(double num);
+void  ClampD		(double angle);
+void  ClampR		(double angle);
+double VectDotProd	(const vect& vect1, const vect& vect2);
 vect  VectXProd		(const vect& vect1, const vect& vect2);
-float Mod			(const vect& vect1);
-float ModSquared	(const vect& vect1);
+double Mod			(const vect& vect1);
+double ModSquared	(const vect& vect1);
 void  Normalize		(vect *vect1);
 vect  Normalize		(const vect& vect1);
-float OrigToRect	(const vect& point1, const vect& point2);
-float OrigToRect2	(const vect& dir, const vect& point);
-float PointToRect	(const vect& point, const vect& rect1, const vect& rect2);
-float OrigToPlane	(const vect& point1, const vect& point2, const vect& point3);
-float PointToPlane	(const vect& point, const vect& plane1, const vect& plane2, const vect& plane3);
-float Distance		(const vect& point1, const vect& point2);
-float GetAngle		(const vect& point1, const vect& point2, const vect& point3);
-float GetAngle		(const vect& vect1, const vect& vect2);
-void  MatrixfromQuat   (const quat& q, float* m);
-void  QuatfromMatrix   (const float *m, quat& q);
-void  QuatfromEuler	   (const float yaw, const float pitch,
-						 const float roll, quat& q);
+double OrigToRect	(const vect& point1, const vect& point2);
+double OrigToRect2	(const vect& dir, const vect& point);
+double PointToRect	(const vect& point, const vect& rect1, const vect& rect2);
+double OrigToPlane	(const vect& point1, const vect& point2, const vect& point3);
+double PointToPlane	(const vect& point, const vect& plane1, const vect& plane2, const vect& plane3);
+double Distance		(const vect& point1, const vect& point2);
+double GetAngle		(const vect& point1, const vect& point2, const vect& point3);
+double GetAngle		(const vect& vect1, const vect& vect2);
+void  MatrixfromQuat   (const quat& q, double* m);
+void  QuatfromMatrix   (const double *m, quat& q);
+void  QuatfromEuler	   (const double yaw, const double pitch,
+						 const double roll, quat& q);
 void  QuatSlerp		   (const quat &from, const quat &to,
-						float t, quat &res);
+						double t, quat &res);
 
 
 #endif //__AUXMATH_H_CUERVO__
