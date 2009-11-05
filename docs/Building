@@ -32,9 +32,12 @@ alc-on; alc-asc libSNES9x.as libSNES9x.swc
 * C
 * ==============================================
 
+BUILD ZLIB in $alchemy/usr/local
+(No instructions.)
+
 OPTIONAL CONFIGURE: (Makefile already exists!)
 alc-on; DISABLE_PEDANTIC=1; export DISABLE_PEDANTIC;
-./configure --prefix=$ALCHEMY_HOME/../usr/local --includedir=$ALCHEMY_HOME/avm2-libc/include --libdir=$ALCHEMY_HOME/avm2-libc/lib --without-assembler --without-joystick --without-sdd1-decomp --without-jma-decomp --without-screenshot --without-sound --without-png --without-zlib --with-x=no --with-extra-opt="-DOSX -I$ALCHEMY_HOME/../usr/local/include -L$ALCHEMY_HOME/../usr/local/lib"
+./configure --prefix=$ALCHEMY_HOME/../usr/local --includedir=$ALCHEMY_HOME/avm2-libc/include --libdir=$ALCHEMY_HOME/avm2-libc/lib --without-assembler --without-joystick --without-sdd1-decomp --without-jma-decomp --without-screenshot --without-png --without-zlib --with-x=no --with-extra-opt="-DOSX -D__FLASH__ -I$ALCHEMY_HOME/../usr/local/include -L$ALCHEMY_HOME/../usr/local/lib"
 
 BUILD USING GENERATED MAKEFILE:
 make clean; make;

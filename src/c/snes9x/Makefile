@@ -182,7 +182,7 @@ ifdef DREAMCAST
 OPTIMISE=-O4 -ffreestanding -ffast-math -fschedule-insns2 -fomit-frame-pointer -fno-inline-functions -fno-defer-pop -fforce-addr -fstrict-aliasing -funroll-loops -fdelete-null-pointer-checks -fno-exceptions
 CPUFLAGS=-ml  -m4-single-only
 else
-OPTIMISE =  -O2 -fomit-frame-pointer -fno-exceptions -Wall -W -Wno-unused-parameter -pipe -DOSX -I/Users/edmcmanus/alchemy/v0.5/../usr/local/include -L/Users/edmcmanus/alchemy/v0.5/../usr/local/lib
+OPTIMISE =  -O5 -fomit-frame-pointer -fno-exceptions -Wall -W -Wno-unused-parameter -pipe -D__FLASH__ -DOSX -I/Users/edmcmanus/alchemy/v0.5/../usr/local/include -L/Users/edmcmanus/alchemy/v0.5/../usr/local/lib
 endif
 
 DEFS += \

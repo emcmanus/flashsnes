@@ -159,10 +159,7 @@
 **********************************************************************************/
 
 
-// this is a Flash port!
-#ifndef __FLASH__
-#define __FLASH__ 1
-#endif
+// Remember: __FLASH__ is defined in the Flash-specific makefile (Makefile.flash)
 
 #ifndef _PORT_H_
 #define _PORT_H_

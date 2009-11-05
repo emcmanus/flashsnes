@@ -1,12 +1,8 @@
-What's using the CSystemBridge?
+Notes on the Alchemy VM Architecture
 
-Left on line 1296, looking for gstate.cf
+Alchemy is awesome! Hidden away in the source are a few undocumented gems, like almost-complete SDL support and a pretty awesome GDB client, which allows you to keep from breaking out of your standard C toolchain.
 
-The more I play around with Alchemy the more I find myself reaching the same conclusion: Alchemy is really fucking awesome software.
-
-Hidden away in the source are a few undocumented gems, like almost-complete SDL support and a pretty awesome GDB client, which allows you to keep from breaking out of your standard C toolchain.
-
-Perhaps more importantly, the C Virtual Machine (the Machine class in the AS source) is pretty cleanly architected.
+Additionally, the C Virtual Machine (the Machine class in the AS source) is really clean. Very nice.
 
 
 
@@ -22,7 +18,7 @@ i_AS3_Release:int = exportSym("_AS3_Release", new CProcTypemap(CTypemap.VoidType
 
 CProcTypemap is created by specifying, as parameters, the return type and an array of all argument types. createC, which is called on the resulting CProcTypemap process, returns the memory offset to the resulting function after it's registered.
 
-C functions map directly to Machine sub-classes and all use the prefix FSM. Before every class definition, Alchemy defines the original method name (without the FSM prefix) to be a constant int which points to the function offset in C memory.
+C functions map directly to Machine sub-classes and all use the prefix FSM. (Alchemy operates as a group of concurrent finite state machines to simulate threading.) Before every class definition, Alchemy defines the original method name (without the FSM prefix) to be a constant int which points to the function offset in C memory.
 
 
 

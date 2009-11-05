@@ -159,7 +159,9 @@
 **********************************************************************************/
 
 
-
+#ifdef __FLASH__
+#include "AS3.h"
+#endif
 
 #ifdef __DJGPP
 #include <allegro.h>
@@ -976,7 +978,10 @@ void S9xAPUExecute (void)
 	if (IAPU.APUExecuting)
 	{
 		while (APU.Cycles < (CPU.Cycles << SNES_APU_ACCURACY))
+		{
 			APU_EXECUTE1();
+//			APU_EXECUTE_FLASH();
+		}
 	}
 	else
 		APU.Cycles = (CPU.Cycles << SNES_APU_ACCURACY);
