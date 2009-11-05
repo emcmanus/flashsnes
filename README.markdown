@@ -18,7 +18,7 @@ This port does not currently support input or audio, and runs at half real-time 
 
 ## Important Locations ##
 
-  - `/bin` contains some utils to check for ROM curruption and to find correct checksums
+  - `/bin` contains some utils to check for ROM corruption and to find correct checksums
   - `/libs` contains the SWC resulting from the make-swc target
   - `/src/as3/generated_as3` contains the emitted AS3 files (the Alchemy VM and Application -- currently this requires some manual labor to generate!)
   - `/src/c/snes9x/flash` contains the Flash drivers
@@ -28,7 +28,7 @@ This port does not currently support input or audio, and runs at half real-time 
   - `/docs/snes9x/porting.html` helpful doc detailing important preprocessor directives
 
 
-## Supplimental Build Instructions ##
+## Supplemental Build Instructions ##
 
 First, see `/docs/Building`
 
@@ -44,7 +44,7 @@ Compile the C code using Makefile.flash
 
 Makefile.flash passes everything through Alchemy's gcc, which is actually just a perl script. You'll want to modify gcc so it doesn't perform cleanup. Examine the script and it should be obvious what to comment out.
 
-Split the generated AS file into two files, the VM (everything before "// End of file scope inline assembly"), and the application. Do this if you want to edit the emitted application assemby without killing your IDE. (The resulting file is ~30MB.)
+Split the generated AS file into two files, the VM (everything before "// End of file scope inline assembly"), and the application. Do this if you want to edit the emitted application assembly without killing your IDE. (The resulting file is ~30MB.)
 
 Move these two files into `generated_as3/`.
  

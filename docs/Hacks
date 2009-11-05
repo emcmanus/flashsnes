@@ -18,4 +18,4 @@ Now the app built with the default Makefile. Next changed the makefile to output
 
 Broke up main() in unix.cpp to run iteratively.
 
-Tied the internal SNES9x display buffer to a BitmapData instance in the flash movie. Rather than marshalling entire frames to the Flash wrapper, we call the wrapper's update method with the memory address of the buffer. The wrapper enters the VM's byte array, slice()'s the frame bytes given the offset and length, and upcasts each pixel to RGB888.
+Tied the internal SNES9x display buffer to a BitmapData instance in the flash movie. Rather than marshaling entire frames to the Flash wrapper, we call the wrapper's update method with the memory address of the buffer. The wrapper enters the VM's byte array, slice()'s the frame bytes given the offset and length, and upcasts each pixel to RGB888.

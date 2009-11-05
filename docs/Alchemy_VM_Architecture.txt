@@ -26,7 +26,7 @@ CLASS CRunner
 ==========================
 
 Responsible for incrementing machine states, and yielding to the parent application if the current "thread" has
-been executing for more than 10 secods. (Alchemy checks this condition every 1,000 work iterations, so it's still 
+been executing for more than 10 seconds. (Alchemy checks this condition every 1,000 work iterations, so it's still 
 possible to hit the 15 second flash timeout if your C application consists of a few long-running methods.)
 
 It also means you should avoid calling long-running C methods on EnterFrame, as you could be queuing method calls
@@ -67,7 +67,7 @@ ds		//
 esp		// Stack pointer
 ebp		// Base pointer
 eax		// Method execution register -- when you "mov" a value into this register, you're telling the system what function it'll
- 		// execute next (we pass in the function's associated constant -- typically this is followed by a call to the VM signalling it 
+ 		// execute next (we pass in the function's associated constant -- typically this is followed by a call to the VM signaling it 
 		// should execute the specified function. On linux, you'd then call interrupt with the kernel value as an operand.) Of course, 
 		// Alchemy doesn't need to deal with these low-level details. Check the bodies of the defined methods to get an idea of what 
 		// Alchemy outputs.
@@ -81,7 +81,7 @@ cf		//
 INSTANCE gstaticInitter (Instance of Static Initter)
 ==========================
 
-Responsible for writting functions to memory
+Responsible for writing functions to memory
 
 Key Methods
 --------------------------
@@ -93,7 +93,7 @@ Getters/Setters of various types
 CLASS CProcTypemap
 ==========================
 
-Provides type mapping for C-AS3 marshalling
+Provides type mapping for C-AS3 marshaling
 
 
 Key Methods
@@ -265,7 +265,6 @@ Unwraps to this AS3:
 	state = 1                                                   // Move to next state
 	mstate.esp -= 4;                                            // Reset "executing state position" to neutral state
 	(mstate.funcs[_AS3_ArrayValue])()                           // Call _AS3_ArrayValue
-	
 	
 	
 	
