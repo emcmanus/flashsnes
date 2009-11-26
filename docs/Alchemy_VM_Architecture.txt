@@ -1,5 +1,8 @@
 Notes on the Alchemy VM Architecture
 
+Authored by Ed McManus and Zazzo9
+
+
 Alchemy is awesome! Hidden away in the source are a few undocumented gems, like almost-complete SDL support and a pretty awesome GDB client, which allows you to keep from breaking out of your standard C toolchain.
 
 Additionally, the C Virtual Machine (the Machine class in the AS source) is really clean. Very nice.
@@ -10,15 +13,17 @@ Some notes on the VM architecture:
 
 gstate is an instance of MState
 
+gstate.funcs contains a vector or array of exported Actionscript function objects. These are built by calls to regFunc. The unique numeric identifier of an exported Actionscript function is its index in gstate.funcs.
+
 gstate.syms contains a lookup of symbol names to their memory offsets. This lookup is built by calls to exportSym.
 
 AS3 functions are mapped to C by defining a const using a naming convention, such that AS3_Release, which returns an int, defines the constant i_AS3_Release like so:
 
 i_AS3_Release:int = exportSym("_AS3_Release", new CProcTypemap(CTypemap.VoidType, [CTypemap.PtrType])).createC(CTypeMap.AS3ValType.valueTracker.release)[0]);
 
-CProcTypemap is created by specifying, as parameters, the return type and an array of all argument types. createC, which is called on the resulting CProcTypemap process, returns the memory offset to the resulting function after it's registered.
+CProcTypemap is created by specifying, as parameters, the return type and an array of all argument types. createC, which is called on the resulting CProcTypemap process, returns a new unique numeric identifier for the resulting function after it's registered.
 
-C functions map directly to Machine sub-classes and all use the prefix FSM. (Alchemy operates as a group of concurrent finite state machines to simulate threading.) Before every class definition, Alchemy defines the original method name (without the FSM prefix) to be a constant int which points to the function offset in C memory.
+C functions map directly to Machine sub-classes and all use the prefix FSM. (Alchemy operates as a group of concurrent finite state machines to simulate threading.) Before every class definition, Alchemy defines the original method name (without the FSM prefix) to be a constant int containing a unique numeric identifier associated with the function that will start the finite state machine.
 
 
 
@@ -29,8 +34,8 @@ Responsible for incrementing machine states, and yielding to the parent applicat
 been executing for more than 10 seconds. (Alchemy checks this condition every 1,000 work iterations, so it's still 
 possible to hit the 15 second flash timeout if your C application consists of a few long-running methods.)
 
-It also means you should avoid calling long-running C methods on EnterFrame, as you could be queuing method calls
-faster than CRunner can pop them!
+It also means you should avoid calling long-running asynchronous C methods on EnterFrame, as you could be queuing method 
+calls faster than CRunner can pop them!
 
 
 Key Methods
@@ -56,24 +61,22 @@ init	// Instantiates the CRunner and begins execution
 INSTANCE mstate/gstate => extends MemUser
 ==========================
 
-Encapsulates the C Machine state.
+Encapsulates the C Virtual Machine state.
 
 
-Key Properties - most of these are register names -- look into x86 assembly to understand what's going on here
+Key Properties - You may recognize these as x86 ASM instructions.
+You can reference Wikipedia's entry on x86 instructions: http://en.wikipedia.org/wiki/X86
 --------------------------
-sp		// 
-ds		// 
-
-esp		// Stack pointer
-ebp		// Base pointer
-eax		// Method execution register -- when you "mov" a value into this register, you're telling the system what function it'll
- 		// execute next (we pass in the function's associated constant -- typically this is followed by a call to the VM signaling it 
-		// should execute the specified function. On linux, you'd then call interrupt with the kernel value as an operand.) Of course, 
-		// Alchemy doesn't need to deal with these low-level details. Check the bodies of the defined methods to get an idea of what 
-		// Alchemy outputs.
-edx		//
-st0		//
-cf		//
+sp		Stack Pointer
+ds		Data segment - Points to the active code segment
+esp		Extended Stack Pointer - Address of the bottom of stack memory. Pushing new values onto the stack requires
+			decrementing the Extended Stack Pointer and writing the value to the bottom of the stack.
+ebp		Extended Base Pointer - The address in the stack where the current function frame begins.  Local variables 
+			and arguments are worked with relative to the base pointer.
+eax		Extended Accumulator Register - This is mainly used for storing function return values.
+edx		Extended Data Register
+st(*)	Stack Registers - (Ex: st0, st1, st2 ...)
+cf		Carry Flag - Set when an operation causes an overflow (like add)
 
 
 
@@ -81,7 +84,9 @@ cf		//
 INSTANCE gstaticInitter (Instance of Static Initter)
 ==========================
 
-Responsible for writing functions to memory
+Responsible for writing static and global values to memory.  This is not optimized at all, and can cause large 
+slowdowns if a program has a lot of static data.
+
 
 Key Methods
 --------------------------
@@ -99,7 +104,7 @@ Provides type mapping for C-AS3 marshaling
 Key Methods
 --------------------------
 createC		// Registers the AS3 function in C memory, defines a lambda which is the AS3 representation of the
-			// C function and returns its memory address.
+			// C function and returns its unique identifier.
 fromC		// "Unboxes" C values for AS3 consumption
 
 
@@ -114,15 +119,19 @@ Most C functions follow a similar pattern.
 
 Set up the Finate State Machine (FSM):
 First we define the various states of the C VM. That's the __asm( push(state), switchjump( ... All the FSM states ... ) ).
+This is just an assembly representation of a gigantic switch statement.
 
 Define the various FSM states:
-We define an asm label with (for example) __asm(lbl("__Z10Flash_tickPvP8_AS3_Val_state0"))
+We define an asm label with, for example, __asm(lbl("__Z10Flash_tickPvP8_AS3_Val_state0")). This represents the 
+"case" targets one would see in an AS3 switch.
 
 
 Other
 
 RegFunc consists of:
 mstate.funcs.push()
+
+This pushes a function object onto the gstate.funcs array, and ensures that each AS3 function has a unique associated identifier -- its index in the array.
 
 Is there some way we can wrap these functions to allow direct (non-sampling) profiling?
 
@@ -151,15 +160,14 @@ The generated source (the important part, from line 27,126) for stringecho.c loo
 
 static AS3_Val echo(void* self, AS3_Val args)
 {
-	//initialize string to null
+	// Initialize string to null
 	char* val = NULL;
 	
-	//parse the arguments. Expect 1.
-	//pass in val to hold the first argument, which
-	//should be a string
+	// Parse the arguments. Expect 1.
+	// Pass in val to hold the first argument, which should be a string
 	AS3_ArrayValue( args, "StrType", &val );
 	
-	//if no argument is specified
+	// If no argument is specified
 	if(val == NULL)
 	{
 		char* nullString = "null";
@@ -167,7 +175,7 @@ static AS3_Val echo(void* self, AS3_Val args)
 		return AS3_String(nullString);
 	}
 	
-	//otherwise, return the string that was passed in
+	// Otherwise, return the string that was passed in
 	return AS3_String(val);
 }
 
@@ -247,8 +255,7 @@ public final class FSM_echo extends Machine {
 
 
 
-i0, i1, i2 are all variables to hold function parameters, as we see in the following code:
-
+i0, i1, i2 are all registers to hold local working values, including function parameters, as we see in the following code:
 
 C:
 	AS3_ArrayValue( args, "StrType", &val );
@@ -256,14 +263,20 @@ C:
 
 Unwraps to this AS3:
 
-	i0 =  ((__xasm<int>(push((mstate.ebp+12)), op(0x37))))      // Args from the C echo function -- vector of ints?
+	// Push arguments onto stack
+	
+	mstate.esp -= 12                                            // Make room on stack
+	i0 =  ((__xasm<int>(push((mstate.ebp+12)), op(0x37))))      // Args from the C echo function
 	i1 =  (__2E_str99)                                          // Constant string
 	i2 =  ((mstate.ebp+-4))                                     // Pointer to &val
 	__asm(push(i0), push(mstate.esp), op(0x3c))                 // set
 	__asm(push(i1), push((mstate.esp+4)), op(0x3c))             // set
 	__asm(push(i2), push((mstate.esp+8)), op(0x3c))             // set
+	
+	// Arguments have been pushed
+	
 	state = 1                                                   // Move to next state
-	mstate.esp -= 4;                                            // Reset "executing state position" to neutral state
+	mstate.esp -= 4;                                            // Push return address (unused)
 	(mstate.funcs[_AS3_ArrayValue])()                           // Call _AS3_ArrayValue
 	
 	
