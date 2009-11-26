@@ -1,8 +1,12 @@
 FlashSNES - Quick Guide
 =======================
-Port created by Ed McManus
+*Port created by Ed McManus.*
 
-*More documentation in `/docs`*
+*Follow me on Twitter!*
+
+[http://www.twitter.com/emcmanus](http://www.twitter.com/emcmanus)
+
+**More documentation in `/docs`**
 
 
 
