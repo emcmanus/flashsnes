@@ -3,7 +3,6 @@ package snesLib {
 	import cmodule.libSNES9x.CLibInit;
 	
 	import flash.display.DisplayObject;
-	import flash.events.Event;
 	import flash.utils.ByteArray;
 	
 	import snesLib.events.ListenerManager;
@@ -18,7 +17,7 @@ package snesLib {
 		protected var videoSurface:VideoSurface;
 		
 		/** @private */
-		protected var eventManager:ListenerManager;
+		public var eventManager:ListenerManager;
 		
 		/** @default 320 */
 		protected var SnesWidth:int = 320;
@@ -41,7 +40,7 @@ package snesLib {
 		/** @private */
 		private var romData:ByteArray;
 		
-		
+
 		/**
 		 * Constructor. Following construction, use getSurface() to build an SDL video surface,
 		 * and setEventTarget() to receive user input.
@@ -52,11 +51,19 @@ package snesLib {
 			
 			this.romData = romData;
 			
-			this.cLoader = new CLibInit();
-			this.cLoader.supplyFile( 'testrom', romData );
+			cLoader = new CLibInit();
+			cLoader.supplyFile( 'romfile', romData );
 			
-			this.cLib = cLoader.init();
-			this.cLib.setup();
+			cLib = cLoader.init();
+			cLib.setup();
+		}
+		
+		/**
+		 * Pause or unpause emulator
+		 */
+		public function set paused( paused:Boolean ):void
+		{
+			this.videoSurface.updateTimer.paused = paused;
 		}
 		
 		/**

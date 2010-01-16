@@ -346,6 +346,11 @@ void S9xPlaySample (int channel);
 void S9xFixEnvelope (int channel, uint8 gain, uint8 adsr1, uint8 adsr2);
 bool8 S9xOpenSoundDevice (int mode, bool8 stereo, int buffer_size);
 
+
+#ifdef __FLASH__
+EXTERN_C void Flash_S9xMixSamples( float *buffer, int sample_count, int offset );
+#endif
+
 EXTERN_C void S9xMixSamples (uint8 *buffer, int sample_count);
 EXTERN_C void S9xMixSamplesO (uint8 *buffer, int sample_count, int byte_offset);
 

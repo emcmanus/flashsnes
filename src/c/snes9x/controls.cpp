@@ -951,6 +951,9 @@ static int get_threshold(const char **ss){
     return i;
 }
 
+
+// Parse the string to build a s9xcommand_t object
+
 s9xcommand_t S9xGetCommandT(const char *name){
     s9xcommand_t cmd;
     int i, j;
@@ -1236,6 +1239,17 @@ void S9xUnmapID(uint32 id){
     keymap.erase(id);
 }
 
+
+/*
+
+Example call for flash's "x" mapping
+
+s9xcommand_t cmd;
+s9xMapButton( fromId, cmd = S9xGetCommandT('Joypad1 X'), false );
+
+*/
+
+// input key code, Snes9x key code built with S9xGetCommandT(), poll
 bool S9xMapButton(uint32 id, s9xcommand_t mapping, bool poll){
     int t;
 
@@ -1286,16 +1300,23 @@ bool S9xMapButton(uint32 id, s9xcommand_t mapping, bool poll){
 }
 
 void S9xReportButton(uint32 id, bool pressed){
-    if(keymap.count(id)==0) return;
-    if(keymap[id].type==S9xNoMapping) return;
+    if(keymap.count(id)==0) {
+      // fprintf(stderr,"[Rejecting key event] key code not found in keymap, don't know what to do!");
+      return;
+    }
+    if(keymap[id].type==S9xNoMapping) {
+      // fprintf(stderr,"[Rejecting key event] no mapping");
+      return;
+    }
     if(maptype(keymap[id].type)!=MAP_BUTTON){
-        S9xTracef( "STDERR: ERROR: S9xReportButton called on %s ID 0x%08x\n", maptypename(maptype(keymap[id].type)), id);
+        // fprintf(stderr, "STDERR: ERROR: S9xReportButton called on %s ID 0x%08x\n", maptypename(maptype(keymap[id].type)), id);
         return;
     }
 
 	if(keymap[id].type==S9xButtonCommand)        // skips the "already-pressed check" unless it's a command, as a hack to work around the following problem:
     if(keymap[id].button_norpt==pressed) return; // FIXME: this makes the controls "stick" after loading a savestate while recording a movie and holding any button
     keymap[id].button_norpt=pressed;
+    // fprintf(stderr,"[Applying key event] keymap[id], pressed: %i", pressed);
     S9xApplyCommand(keymap[id], pressed, 0);
 }
 

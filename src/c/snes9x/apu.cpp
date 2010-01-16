@@ -912,7 +912,7 @@ void S9xSetAPUTimer (uint16 Address, uint8 byte)
 }
 
 void S9xAPUExecute (void)
-{
+{ 
 	while ((CPU.Cycles << SNES_APU_ACCURACY) >= IAPU.NextAPUTimerPos)
 	{
 		// catch up the APU timers

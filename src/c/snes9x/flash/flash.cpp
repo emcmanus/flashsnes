@@ -29,15 +29,25 @@
 
 
 /*
- * Screen buffer copy
+ * Flash buffers - screen and sound
  */
 uint32 *FlashDisplayBuffer;
+float *FlashSoundBuffer;
+
+int bufferedSamples;  // equal to bytes available
 
 /*
  * Flash constants
  */
 AS3_Val FLASH_STATIC_PROFILER;
 AS3_Val FLASH_EMPTY_PARAMS;
+
+/*
+ * Flash Config
+ */
+int SAMPLE_THRESHOLD = 2048;
+int MAX_SAMPLES = 4096;
+
 
 /*
  * CLib Setup
@@ -50,10 +60,12 @@ int main (int argc, char **argv) {
 	AS3_Val quitApplicationMethod = AS3_Function(NULL, Flash_teardown);
 	AS3_Val getDisplayPointerMethod = AS3_Function(NULL, Flash_getDisplayPointer);
 	AS3_Val setEventManagerMethod = AS3_Function(NULL, Flash_setEventManager);
+  AS3_Val setMuteMethod = AS3_Function(NULL, Flash_setMute);
+  AS3_Val paintSoundMethod = AS3_Function(NULL, Flash_paintSound);
 	
-    AS3_Val libSNES = AS3_Object(
-		"setup:AS3ValType, tick:AS3ValType, getDisplayPointer:AS3ValType, quit:AS3ValType, setEventManager:AS3ValType", 
-		setupMethod, tickMethod, getDisplayPointerMethod, quitApplicationMethod, setEventManagerMethod
+  AS3_Val libSNES = AS3_Object(
+		"setup:AS3ValType, tick:AS3ValType, getDisplayPointer:AS3ValType, quit:AS3ValType, setEventManager:AS3ValType, setMute:AS3ValType, paintSound:AS3ValType", 
+		setupMethod, tickMethod, getDisplayPointerMethod, quitApplicationMethod, setEventManagerMethod, setMuteMethod, paintSoundMethod
 	);
     
 	AS3_Release( setupMethod );
@@ -61,8 +73,9 @@ int main (int argc, char **argv) {
 	AS3_Release( getDisplayPointerMethod );
 	AS3_Release( quitApplicationMethod );
 	AS3_Release( setEventManagerMethod );
+  AS3_Release( paintSoundMethod );
 	
-    AS3_LibInit(libSNES);
+  AS3_LibInit(libSNES);
 	
 	return (0);
 }
@@ -71,13 +84,51 @@ int main (int argc, char **argv) {
 /*
  * Flash Callbacks
  */
+ 	
+AS3_Val Flash_setMute(void *data, AS3_Val args) {
+  // Get Mute value
+  int mute;
+  AS3_ArrayValue( args, "IntType", &mute );
+  
+  if ( mute > 0  )
+  {
+    AS3_Trace(AS3_String("[from C] Muting"));
+    // Mute
+    Settings.APUEnabled = Settings.NextAPUEnabled = false;
+    Settings.SoundSkipMethod = 1;
+  }
+  else
+  {
+    AS3_Trace(AS3_String("[from C] Un-muting"));
+    // Unmute
+    Settings.APUEnabled = Settings.NextAPUEnabled = true;
+  }
+  return AS3_Int(0);
+}
+
+
+
 AS3_Val Flash_tick (void *data, AS3_Val args) {
-	if (!Settings.Paused){
-		S9xMainLoop();
-		// check for events here
-	}
+  
+  // In tick:
+  // Mix new samples
+  // Handle keyboard events
+  // Run main loop
+  
+  
+  // Unpack arguments
+	AS3_Val keyboardEvents;
+  int requestedSampleSize;
+	AS3_ArrayValue( args, "AS3ValType, IntType", &keyboardEvents, &requestedSampleSize );
+	
+  S9xMixNewSamples( requestedSampleSize );
+	
+	S9xProcessEvents( keyboardEvents );
+  S9xMainLoop();
+	
 	return AS3_Int(0);
 }
+
 
 AS3_Val Flash_setup (void *data, AS3_Val args) {
 
@@ -94,28 +145,34 @@ AS3_Val Flash_setup (void *data, AS3_Val args) {
 	// Clear the settings struct
 	ZeroMemory (&Settings, sizeof (Settings));
 	
-	// Recommended defaults
-	Settings.ShutdownMaster = false;
+	// General
+	Settings.ShutdownMaster = true; // Optimization -- Disable if this appears to cause any compatability issues -- it's known to for some games
 	Settings.BlockInvalidVRAMAccess = true;
 	Settings.HDMATimingHack = 100;
-	Settings.SoundPlaybackRate = 32000;
-	Settings.Stereo = true;
-	Settings.SixteenBitSound = true;
-	Settings.SoundEnvelopeHeightReading = true;
-	Settings.DisableSampleCaching = true;
-	Settings.InterpolatedSound = true;
 	Settings.Transparency = true;
 	Settings.SupportHiRes = false;
 	Settings.SDD1Pack = true;
 	
+	// Sound
+	Settings.SoundPlaybackRate = 44100;
+	Settings.Stereo = true;
+	Settings.SixteenBitSound = true;
+  Settings.DisableSoundEcho = true;
+	Settings.SoundEnvelopeHeightReading = true;
+	Settings.DisableSampleCaching = true;
+	Settings.InterpolatedSound = true;
+	
+	// Controllers
 	Settings.JoystickEnabled = false;
 	Settings.MouseMaster = false;
 	Settings.SuperScopeMaster = false;
 	Settings.MultiPlayer5Master = false;
 	Settings.JustifierMaster = false;
-	
-	Settings.APUEnabled = Settings.NextAPUEnabled = true;
-	Settings.Multi = false;
+  
+  // old settings
+  Settings.APUEnabled = Settings.NextAPUEnabled = true;
+  
+  Settings.Multi = false;
 	Settings.StopEmulation = true;
 	
 	// So listen, snes9x, we don't have any controllers. That's OK, yeah?
@@ -128,14 +185,14 @@ AS3_Val Flash_setup (void *data, AS3_Val args) {
 	Memory.PostRomInitFunc = S9xPostRomInit;
 	
 	// Further sound initialization
-	S9xInitSound (Settings.SoundPlaybackRate, Settings.Stereo, Settings.SoundBufferSize);
+	S9xInitSound(7, Settings.Stereo, Settings.SoundBufferSize); // The 7 is our "mode" and isn't really explained anywhere. 7 ensures that OpenSoundDevice is called.
 	
 	uint32 saved_flags = CPU.Flags;
 	
 	// Load test ROM
 	bool8 loaded;
 	AS3_Trace(AS3_String("About to call LoadROM"));
-	loaded = Memory.LoadROM( "testrom" );
+	loaded = Memory.LoadROM( "romfile" );
 	AS3_Trace(AS3_String("Returned from LoadROM"));
 	
 	Settings.StopEmulation = !loaded;
@@ -190,9 +247,98 @@ AS3_Val Flash_getDisplayPointer (void *data, AS3_Val args) {
 	return AS3_Ptr(FlashDisplayBuffer);
 }
 
+AS3_Val FLASH_EVENT_MANAGER_OBJECT;
+
 AS3_Val Flash_setEventManager (void *data, AS3_Val args) {
-	AS3_Trace(AS3_String("Flash_setEventManager"));
+	// Unpack args
+	AS3_Val eventManager;
+	AS3_ArrayValue( args, "AS3ValType", &eventManager );
+	
+	FLASH_EVENT_MANAGER_OBJECT = eventManager;
 	return AS3_Int(0);
+}
+
+
+/*
+ * Keyboard Input
+ */
+
+// int FLASH_mouseX, FLASH_mouseY;
+
+void S9xProcessEvents( AS3_Val keyboardEvents ) {
+ // S9xReportButton();
+ // Loop through all queued events
+ 	if (!FLASH_EMPTY_PARAMS)
+		FLASH_EMPTY_PARAMS = AS3_Array("");
+	
+	// Event Vars
+  // AS3_Val mouseEvent, mouseEvents, mousePosition, keyboardEvent, keyboardEvents;
+  AS3_Val keyboardEvent;//, keyboardEvents;
+	int rawKeyboardEvent, scanCode, keyState;
+  // SDL_keysym keysym;
+	
+  // mousePosition = AS3_CallS( "pumpMousePosition", FLASH_EVENT_MANAGER_OBJECT, FLASH_EMPTY_PARAMS );
+  // mouseEvents = AS3_CallS( "pumpMouseEvents", FLASH_EVENT_MANAGER_OBJECT, FLASH_EMPTY_PARAMS );
+  // keyboardEvents = AS3_CallS( "pumpKeyEvents", FLASH_EVENT_MANAGER_OBJECT, FLASH_EMPTY_PARAMS );
+	
+	// Mouse Position
+  // if (mousePosition) {
+  //  AS3_ObjectValue( mousePosition, "x:IntType, y:IntType", &FLASH_mouseX, &FLASH_mouseY ); 
+  //  SDL_PrivateMouseMotion( 0, 0, FLASH_mouseX, FLASH_mouseY );
+  // }
+	
+	// Mouse Click Events
+  // while( AS3_IntValue(AS3_GetS(mouseEvents, "size")) > 0 ) {
+  //  mouseEvent = AS3_CallS( "dequeue", mouseEvents, FLASH_EMPTY_PARAMS );
+  //  buttonState = AS3_IntValue( mouseEvent )? SDL_PRESSED: SDL_RELEASED;
+  //  SDL_PrivateMouseButton(buttonState, SDL_BUTTON_LEFT, FLASH_mouseX, FLASH_mouseY);
+  // }
+	
+	// Keyboard Events - OLD TECHNIQUE
+  // while( AS3_IntValue(AS3_GetS(keyboardEvents, "size")) > 0 ) {
+  //  keyboardEvent = AS3_CallS( "dequeue", keyboardEvents, FLASH_EMPTY_PARAMS );
+  //  rawKeyboardEvent = AS3_IntValue( keyboardEvent );
+  //  scanCode = rawKeyboardEvent & 0xFF;   // Packed event format: 9th bit for press/release, lower 8 bits for scan code
+  //  keyState = rawKeyboardEvent >> 8;
+  //     // fprintf(stderr,"[Reporting key event] code: %i state: %i", scanCode, keyState);
+  //     S9xReportButton( scanCode, keyState );
+  // }
+  
+  // Keyboard Events - Array Based
+  int numEvents = AS3_IntValue(AS3_GetS(keyboardEvents, "length"));
+  int i;
+  
+  for (i=0; i<numEvents; i++) {
+		keyboardEvent = AS3_CallS( "shift", keyboardEvents, FLASH_EMPTY_PARAMS );
+		rawKeyboardEvent = AS3_IntValue( keyboardEvent );
+		scanCode = rawKeyboardEvent & 0xFF;		// Packed event format: 9th bit for press/release, lower 8 bits for scan code
+		keyState = rawKeyboardEvent >> 8;
+    S9xReportButton( scanCode, keyState );
+	}
+}
+
+void S9xSetupDefaultKeymap()
+{	
+	S9xUnmapAllControls();
+	
+	// Build key map
+	s9xcommand_t cmd;
+	
+	S9xMapButton( 65, cmd = S9xGetCommandT("Joypad1 Left"), false );    // A
+	S9xMapButton( 68, cmd = S9xGetCommandT("Joypad1 Right"), false );   // D
+	S9xMapButton( 87, cmd = S9xGetCommandT("Joypad1 Up"), false );      // W
+	S9xMapButton( 83, cmd = S9xGetCommandT("Joypad1 Down"), false );    // S
+	
+	S9xMapButton( 79, cmd = S9xGetCommandT("Joypad1 X"), false );       // O
+	S9xMapButton( 80, cmd = S9xGetCommandT("Joypad1 Y"), false );       // P
+	S9xMapButton( 75, cmd = S9xGetCommandT("Joypad1 A"), false );       // K
+  S9xMapButton( 76, cmd = S9xGetCommandT("Joypad1 B"), false );       // L
+  
+  S9xMapButton( 88, cmd = S9xGetCommandT("Joypad1 L"), false );       // X
+  S9xMapButton( 77, cmd = S9xGetCommandT("Joypad1 R"), false );       // M
+  
+  S9xMapButton( 13, cmd = S9xGetCommandT("Joypad1 Start"), false );   // Enter
+  S9xMapButton( 16, cmd = S9xGetCommandT("Joypad1 Select"), false );  // Shift
 }
 
 
@@ -229,11 +375,6 @@ bool8 S9xDeinitUpdate (int width, int height) { // Screen has been rendered
 void S9xMessage (int type, int number, const char *message) {
 	AS3_Trace(AS3_String(">>>>>>>>>>>>>>>>>>>> EMULATOR MESSAGE >>>>>>>>>>>>>>>>>>>>"));
 	AS3_Trace(AS3_String(message));
-}
-
-bool8 S9xOpenSoundDevice (int mode, bool8 stereo, int buffer_size) {
-	AS3_Trace(AS3_String("S9xOpenSoundDevice"));
-	return true;
 }
 
 const char *S9xGetFilename (const char *extension, enum s9x_getdirtype dirtype) {
@@ -289,13 +430,103 @@ void S9xAutoSaveSRAM (void) {
 	AS3_Trace(AS3_String("S9xAutoSaveSRAM"));
 }
 
-void S9xGenerateSound (void) {
-	AS3_Trace(AS3_String("S9xGenerateSound"));
+
+/*
+  Sound API Start
+*/
+
+// NOTE Flash_S9xMixSamples paints samples as 32-bit floats rather than 16bit signed samples to eliminate an upcast buffer
+
+bool8 S9xOpenSoundDevice (int mode, bool8 stereo, int buffer_size)
+{
+  fprintf( stderr, "OPEN SOUND DEVICE!!" );
+  
+	// Allocate sound buffer
+  FlashSoundBuffer = (float *) malloc(sizeof(float) * MAX_SAMPLES << 1);  // Total bytes
+  memset(FlashSoundBuffer, 0, sizeof(float) * MAX_SAMPLES << 1);
+	
+  so.stereo         = Settings.Stereo;
+  so.encoded        = false;
+  so.playback_rate  = Settings.SoundPlaybackRate;
+  so.sixteen_bit    = Settings.SixteenBitSound;
+  so.buffer_size    = sizeof(float) * MAX_SAMPLES << 1;
+  
+  S9xSetPlaybackRate(so.playback_rate);
+  
+  so.mute_sound = false;
+  
+  // Debug
+  fprintf( stderr, "Rate: %d, Buffer size: %d, 16-bit: %s, Stereo: %s, Encoded: %s\n",
+    so.playback_rate, so.buffer_size, so.sixteen_bit ? "yes" : "no",
+    so.stereo ? "yes" : "no", so.encoded ? "yes" : "no");
+  
+	return true;
 }
 
-void S9xToggleSoundChannel (int c) {
-	AS3_Trace(AS3_String("S9xToggleSoundChannel"));
+// In the sound paint:
+// Check whether the local sample buffer > 4096
+// If it's not, let the sound complete and increase "n"
+
+void S9xMixNewSamples( int numSamples )
+{
+  // // Add samples to the local buffer
+  // if ( bufferedSamples + numSamples <= MAX_SAMPLES )
+  // {
+  //   Flash_S9xMixSamples( FlashSoundBuffer, numSamples << 1, bufferedSamples << 1 ); // MixSamples( buffer, total num of samples, offset using pointer arithmetic )
+  //   bufferedSamples += numSamples;
+  //   fprintf(stderr, "successful mix, now at %i samples", bufferedSamples);
+  // } else {
+  //   fprintf(stderr, "[ERROR] LOCAL BUFFER FULL! Buffered samples = %i, numSamples = %i, MAX_SAMPLES = %i", bufferedSamples, numSamples, MAX_SAMPLES);
+  // }
+  
+  if ( bufferedSamples + numSamples <= MAX_SAMPLES )
+  {
+    Flash_S9xMixSamples( FlashSoundBuffer, numSamples << 1, bufferedSamples << 1 );
+    bufferedSamples += numSamples;
+  }
 }
+
+void S9xGenerateSound (void)
+{
+  // AS3_Trace(AS3_String("S9xGenerateSound"));
+}
+
+void S9xToggleSoundChannel (int c)
+{
+  // AS3_Trace(AS3_String("S9xToggleSoundChannel"));
+}
+
+AS3_Val Flash_paintSound( void *data, AS3_Val args )
+{
+  // Unpack
+	AS3_Val soundStream;
+	AS3_ArrayValue( args, "AS3ValType", &soundStream );
+	
+  int minSamples = SAMPLE_THRESHOLD;  // 2048
+  
+	// Flush completely
+	if ( bufferedSamples < minSamples )
+	{
+	  // Get up to the threshold
+    Flash_S9xMixSamples( FlashSoundBuffer, (minSamples-bufferedSamples) << 1, bufferedSamples << 1 );
+    bufferedSamples = minSamples;
+	}
+	else if (bufferedSamples > MAX_SAMPLES)
+  {
+    bufferedSamples = MAX_SAMPLES;
+  }
+	
+	AS3_ByteArray_writeBytes( soundStream, FlashSoundBuffer, sizeof(float) * bufferedSamples << 1 ); // Bps * samples * channels
+	
+	// Zero buffer
+	memset(FlashSoundBuffer, 0, bufferedSamples * sizeof(float) << 1);
+	
+	bufferedSamples = 0;
+	
+  return AS3_Int(0);
+}
+
+
 
 void S9xSetPalette (void) {
 //	AS3_Trace(AS3_String("S9xSetPalette"));
@@ -363,7 +594,7 @@ void S9xSyncSpeed (void) {
 	/*
     else
     {
-        /* If we were behind the schedule, check how much it is *
+        // If we were behind the schedule, check how much it is
         if(timercmp(&next1, &now, <))
         {
             unsigned lag =
@@ -371,10 +602,10 @@ void S9xSyncSpeed (void) {
                + now.tv_usec - next1.tv_usec;
             if(lag >= 500000)
             {
-                /* More than a half-second behind means probably
-                 * pause. The next line prevents the magic
-                 * fast-forward effect.
-                 *
+                 // * More than a half-second behind means probably
+                 // * pause. The next line prevents the magic
+                 // * fast-forward effect.
+                 
                 next1 = now;
             }
         }
@@ -388,7 +619,7 @@ void S9xSyncSpeed (void) {
 
     /*while(timercmp(&next1, &now, >))
     {
-        /* If we're ahead of time, sleep a while *
+        // If we're ahead of time, sleep a while
         unsigned timeleft =
             (next1.tv_sec - now.tv_sec) * 1000000
            + next1.tv_usec - now.tv_usec;
@@ -398,9 +629,9 @@ void S9xSyncSpeed (void) {
         CHECK_SOUND(); S9xProcessEvents(FALSE);
 
         while (gettimeofday (&now, NULL) < 0) ;
-        /* Continue with a while-loop because usleep()
-         * could be interrupted by a signal
-         *
+        // Continue with a while-loop because usleep()
+        // could be interrupted by a signal
+         
     }*/
 
     /* Calculate the timestamp of the next frame. */
@@ -414,14 +645,6 @@ void S9xSyncSpeed (void) {
 
 void S9xLoadSDD1Data (void) {
 	AS3_Trace(AS3_String("S9xLoadSDD1Data"));
-}
-
-void S9xProcessEvents (bool8 block) {
-	;
-}
-
-void S9xSetupDefaultKeymap(){
-	S9xUnmapAllControls();
 }
 
 

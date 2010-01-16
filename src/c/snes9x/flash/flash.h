@@ -14,10 +14,13 @@ AS3_Val Flash_setup (void *data, AS3_Val args);
 AS3_Val Flash_teardown (void *data, AS3_Val args);
 AS3_Val Flash_getDisplayPointer (void *data, AS3_Val args);
 AS3_Val Flash_setEventManager (void *data, AS3_Val args);
+AS3_Val Flash_setMute(void *data, AS3_Val args);
+AS3_Val Flash_paintSound( void *data, AS3_Val args );
 
 void S9xPostRomInit();
 void S9xSetupDefaultKeymap();
-void S9xProcessEvents (bool8);
+void S9xProcessEvents( AS3_Val keyboardEvents );
+void S9xMixNewSamples( int numSamples );
 
 void Convert16To24 (int, int);
 void OutOfMemory (void);

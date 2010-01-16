@@ -223,17 +223,79 @@
 #define IMAGE_WIDTH					(Settings.SupportHiRes ? MAX_SNES_WIDTH : SNES_WIDTH)
 #define IMAGE_HEIGHT				(Settings.SupportHiRes ? MAX_SNES_HEIGHT : SNES_HEIGHT_EXTENDED)
 
-#define	NTSC_MASTER_CLOCK			21477272.0
-#define	PAL_MASTER_CLOCK			21281370.0
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+//
+// TESTING NEW TIMER SETTINGS (ed - hack)
+//
+
+// 0.5x Multiplier - Music is early
+// #define  NTSC_MASTER_CLOCK     10738636.0
+// #define  PAL_MASTER_CLOCK      10640685.0
+// // #define  SNES_APU_CLOCK        512000.0  // 0.5x
+// #define  SNES_APU_CLOCK        2048000.0    // 2.0x
+// #define SNES_APU_ACCURACY      5
+
+// 2.0x Multiplier - Music is very late
+// #define  NTSC_MASTER_CLOCK     42954544.0
+// #define  PAL_MASTER_CLOCK      42562740.0
+// #define  SNES_APU_CLOCK        2048000.0
+// #define SNES_APU_ACCURACY      20
+
+// ORIGINAL
+#define  NTSC_MASTER_CLOCK     21477272.0
+#define  PAL_MASTER_CLOCK      21281370.0
+#define  SNES_APU_CLOCK        1024000.0
+#define SNES_APU_ACCURACY      10
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+//
+// CYCLE RE-DEFINITION TESTS (ed - hack)
+//
+
+// 0.5x Multiplier
+// #define ONE_CYCLE          3
+// #define SLOW_ONE_CYCLE       4
+// #define TWO_CYCLES         6
+// #define  ONE_DOT_CYCLE       2
+
+// 2.0x Multiplier
+// #define ONE_CYCLE          12
+// #define SLOW_ONE_CYCLE       16
+// #define TWO_CYCLES         24
+// #define  ONE_DOT_CYCLE       8
+
+// Original
+#define ONE_CYCLE          6
+#define SLOW_ONE_CYCLE       8
+#define TWO_CYCLES         12
+#define  ONE_DOT_CYCLE       4
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+// Original Timers Below ...
+
+
+
+// #define  NTSC_MASTER_CLOCK     21477272.0
+// #define  PAL_MASTER_CLOCK      21281370.0
 
 #define SNES_MAX_NTSC_VCOUNTER		262
 #define SNES_MAX_PAL_VCOUNTER		312
 #define SNES_HCOUNTER_MAX			341
 
-#define ONE_CYCLE					6
-#define SLOW_ONE_CYCLE				8
-#define TWO_CYCLES					12
-#define	ONE_DOT_CYCLE				4
+// #define ONE_CYCLE          6
+// #define SLOW_ONE_CYCLE       8
+// #define TWO_CYCLES         12
+// #define  ONE_DOT_CYCLE       4
 
 #define SNES_CYCLES_PER_SCANLINE	(SNES_HCOUNTER_MAX * ONE_DOT_CYCLE)
 #define SNES_SCANLINE_TIME			(SNES_CYCLES_PER_SCANLINE / NTSC_MASTER_CLOCK)
@@ -248,8 +310,8 @@
 #define	SNES_HDMA_INIT_HC			20						// FIXME: not true
 #define	SNES_RENDER_START_HC		(48 * ONE_DOT_CYCLE)	// FIXME: Snes9x renders a line at a time.
 
-#define	SNES_APU_CLOCK				1024000.0				// 1026900.0?
-#define SNES_APU_ACCURACY			10
+// #define  SNES_APU_CLOCK        1024000.0       // 1026900.0?
+// #define SNES_APU_ACCURACY      10
 #define	SNES_APU_ONE_CYCLE_SCALED	((int32) (NTSC_MASTER_CLOCK / SNES_APU_CLOCK * (1 << SNES_APU_ACCURACY)))
 #define SNES_APUTIMER2_CYCLE_SCALED	((int32) (NTSC_MASTER_CLOCK / 64000.0 * (1 << SNES_APU_ACCURACY)))
 

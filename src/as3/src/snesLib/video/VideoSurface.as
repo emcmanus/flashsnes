@@ -17,7 +17,7 @@ package snesLib.video {
 		private var screenRectangle:Rectangle;
 		
 		private var videoSurfaceData:BitmapData;
-		private var updateTimer:UpdateTimer;
+		public var updateTimer:UpdateTimer;
 		private var domainMemory:ByteArray;	// The C virtual machine's RAM
 		
 		internal var libSDL:Snes9x;

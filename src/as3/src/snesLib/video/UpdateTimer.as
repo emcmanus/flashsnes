@@ -12,13 +12,31 @@ package snesLib.video
 		private var surface:VideoSurface;
 		private var bufferLocation:uint;
 		
-		public function UpdateTimer( surface:VideoSurface ){
+		public function set paused( paused:Boolean ):void
+		{
+			if (paused)
+			{
+				this.surface.removeEventListener( Event.ENTER_FRAME, onEnterFrame );
+			}
+			else
+			{
+				this.surface.addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			}
+		}
+		
+		
+		public function UpdateTimer( surface:VideoSurface )
+		{
 			this.surface = surface;
 			this.surface.addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
 		
-		private function onEnterFrame( e:Event ):void {
-			surface.libSDL.cLib.tick();
+		
+		private function onEnterFrame( e:Event ):void
+		{
+			surface.libSDL.cLib.tick( surface.libSDL.eventManager.pumpKeyEvents() );
+//			surface.libSDL.cLib.tick();
+			
 			if (!this.bufferLocation){
 				this.bufferLocation = surface.libSDL.cLib.getDisplayPointer();
 			}

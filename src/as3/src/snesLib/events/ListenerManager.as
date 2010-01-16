@@ -61,11 +61,11 @@ package snesLib.events
 		 */
 		
 		private function onMouseOver( e:MouseEvent ):void {
-			Mouse.hide();
+//			Mouse.hide();
 		}
 		
 		private function onMouseOut( e:MouseEvent ):void {
-			Mouse.show();
+//			Mouse.show();
 		}
 		
 		private function onMouseMove( e:MouseEvent ):void {

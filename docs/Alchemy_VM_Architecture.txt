@@ -11,11 +11,17 @@ Additionally, the C Virtual Machine (the Machine class in the AS source) is real
 
 Some notes on the VM architecture:
 
+
+GSTATE
+
 gstate is an instance of MState
 
 gstate.funcs contains a vector or array of exported Actionscript function objects. These are built by calls to regFunc. The unique numeric identifier of an exported Actionscript function is its index in gstate.funcs.
 
 gstate.syms contains a lookup of symbol names to their memory offsets. This lookup is built by calls to exportSym.
+
+
+HOW C FUNCTIONS ARE BUILT
 
 AS3 functions are mapped to C by defining a const using a naming convention, such that AS3_Release, which returns an int, defines the constant i_AS3_Release like so:
 
@@ -23,16 +29,17 @@ i_AS3_Release:int = exportSym("_AS3_Release", new CProcTypemap(CTypemap.VoidType
 
 CProcTypemap is created by specifying, as parameters, the return type and an array of all argument types. createC, which is called on the resulting CProcTypemap process, returns a new unique numeric identifier for the resulting function after it's registered.
 
-C functions map directly to Machine sub-classes and all use the prefix FSM. (Alchemy operates as a group of concurrent finite state machines to simulate threading.) Before every class definition, Alchemy defines the original method name (without the FSM prefix) to be a constant int containing a unique numeric identifier associated with the function that will start the finite state machine.
+C functions map directly to Machine sub-classes and all use the prefix FSM (Finite State Machine). (Alchemy operates as a group of concurrent finite state machines to simulate threading.) Before every class definition, Alchemy defines the original method name (without the FSM prefix) to be a constant int containing a unique numeric identifier associated with the function that will start the finite state machine.
 
 
 
-CLASS CRunner
+
+[CLASS] CRunner
 ==========================
 
 Responsible for incrementing machine states, and yielding to the parent application if the current "thread" has
 been executing for more than 10 seconds. (Alchemy checks this condition every 1,000 work iterations, so it's still 
-possible to hit the 15 second flash timeout if your C application consists of a few long-running methods.)
+possible to hit the 15 second flash timeout if your C application uses any long-running methods.)
 
 It also means you should avoid calling long-running asynchronous C methods on EnterFrame, as you could be queuing method 
 calls faster than CRunner can pop them!
@@ -45,7 +52,7 @@ work	// Executes queued worker methods until timing out or completing
 
 
 
-CLASS CLibInit
+[CLASS] CLibInit
 ==========================
 
 The main C interface. Contains the supplyFile, setEnv, and init methods which you call from you AS3 application.
@@ -58,15 +65,17 @@ init	// Instantiates the CRunner and begins execution
 
 
 
-INSTANCE mstate/gstate => extends MemUser
+[INSTANCE] mstate/gstate => extends MemUser
 ==========================
 
 Encapsulates the C Virtual Machine state.
 
 
-Key Properties - You may recognize these as x86 ASM instructions.
-You can reference Wikipedia's entry on x86 instructions: http://en.wikipedia.org/wiki/X86
+Key Properties
 --------------------------
+You may recognize these as x86 ASM instructions.
+You can reference Wikipedia's entry on x86 instructions: http://en.wikipedia.org/wiki/X86
+
 sp		Stack Pointer
 ds		Data segment - Points to the active code segment
 esp		Extended Stack Pointer - Address of the bottom of stack memory. Pushing new values onto the stack requires
@@ -81,10 +90,10 @@ cf		Carry Flag - Set when an operation causes an overflow (like add)
 
 
 
-INSTANCE gstaticInitter (Instance of Static Initter)
+[INSTANCE] gstaticInitter (Instance of Static Initter)
 ==========================
 
-Responsible for writing static and global values to memory.  This is not optimized at all, and can cause large 
+Responsible for writing static and global values to memory. This is not optimized at all, and can cause large 
 slowdowns if a program has a lot of static data.
 
 
@@ -95,7 +104,7 @@ Getters/Setters of various types
 
 
 
-CLASS CProcTypemap
+[CLASS] CProcTypemap
 ==========================
 
 Provides type mapping for C-AS3 marshaling
@@ -104,7 +113,7 @@ Provides type mapping for C-AS3 marshaling
 Key Methods
 --------------------------
 createC		// Registers the AS3 function in C memory, defines a lambda which is the AS3 representation of the
-			// C function and returns its unique identifier.
+			// C function, and returns its unique identifier.
 fromC		// "Unboxes" C values for AS3 consumption
 
 
@@ -133,7 +142,7 @@ mstate.funcs.push()
 
 This pushes a function object onto the gstate.funcs array, and ensures that each AS3 function has a unique associated identifier -- its index in the array.
 
-Is there some way we can wrap these functions to allow direct (non-sampling) profiling?
+We can wrap these functions to allow direct (non-sampling) profiling, although it significantly impacts application performance.
 
 
 
@@ -265,7 +274,7 @@ Unwraps to this AS3:
 
 	// Push arguments onto stack
 	
-	mstate.esp -= 12                                            // Make room on stack
+	mstate.esp -= 12                                            // Make room on stack - 12 bytes (3, 4-byte, values)
 	i0 =  ((__xasm<int>(push((mstate.ebp+12)), op(0x37))))      // Args from the C echo function
 	i1 =  (__2E_str99)                                          // Constant string
 	i2 =  ((mstate.ebp+-4))                                     // Pointer to &val

@@ -2383,12 +2383,12 @@ s9xcommand_t S9xGetPortCommandT(const char *n){
     cmd.port[1]=0;
     cmd.port[2]=0;
     cmd.port[3]=0;
-    if(!strncmp(n, "JS", 2) && n[2]>='1' && n[2]<='8'){
-        if(!strncmp(n+3, " Meta", 5) && n[8]>='1' && n[8]<='8' && n[9]=='\0'){
+    if(!strncmp(n, "JS", 2) && n[2]>='1' && n[2]<='8'){ // Not a joystick and controller between 1-8
+        if(!strncmp(n+3, " Meta", 5) && n[8]>='1' && n[8]<='8' && n[9]=='\0'){  // If it's not a meta key, between players 1-8, and that's the end of the string
             cmd.type=S9xButtonPort;
             cmd.port[1]=0;
-            cmd.port[2]=n[2]-'1';
-            cmd.port[3]=1<<(n[8]-'1');
+            cmd.port[2]=n[2]-'1'; // controller num
+            cmd.port[3]=1<<(n[8]-'1'); // controller num bit-mask? not really sure what n[8] is for
             return cmd;
         } else if(!strncmp(n+3, " ToggleMeta", 11) && n[14]>='1' && n[14]<='8' && n[15]=='\0'){
             cmd.type=S9xButtonPort;
@@ -2399,7 +2399,7 @@ s9xcommand_t S9xGetPortCommandT(const char *n){
         }
     }
 
-    return S9xGetDisplayCommandT(n);
+    return S9xGetDisplayCommandT(n);  // For special cases, like fullscreen enter/exit
 }
 
 char *S9xGetPortCommandName(s9xcommand_t cmd){

@@ -193,8 +193,8 @@ void S9xSetupDefaultKeymap(void)
 {
 	s9xcommand_t	cmd;
 
-	ASSIGN_BUTTONf(kMacCMapPad1PX,         "Joypad1 X");
-	ASSIGN_BUTTONf(kMacCMapPad1PA,         "Joypad1 A");
+	ASSIGN_BUTTONf(kMacCMapPad1PX,         "Joypad1 X");  // expands to:  S9xMapButton( kMacCMapPad1PX, cmd = S9xGetCommandT('Joypad1 X'), false)
+	ASSIGN_BUTTONf(kMacCMapPad1PA,         "Joypad1 A");  // which expands to: S9xMapButton( (k_HD|k_BT|k_JP|k_C1), cmd = S9xGetCommandT('Joypad1 X'), false)
 	ASSIGN_BUTTONf(kMacCMapPad1PB,         "Joypad1 B");
 	ASSIGN_BUTTONf(kMacCMapPad1PY,         "Joypad1 Y");
 	ASSIGN_BUTTONf(kMacCMapPad1PL,         "Joypad1 L");

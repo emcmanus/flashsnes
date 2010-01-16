@@ -1128,7 +1128,10 @@ void MixStereo (int sample_count)
 
 	int32 noise_index = 0;
 	int32 noise_count = 0;
-
+  
+  // int debugstp = 0;
+  // fprintf(stderr,"\t[DEBUG] %i", debugstp++ );
+  
 	if (APU.DSP[APU_NON])
 	{
 		noise_count = SoundData.noise_count;
@@ -1145,9 +1148,16 @@ void MixStereo (int sample_count)
 			}
 		}
 	}
-
+	
+  // fprintf(stderr,"\t[DEBUG] %i", debugstp++ );
+	
+  // fprintf(stderr,"\t[DEBUG] NUM_CHANNELS = %i", NUM_CHANNELS );
+  
 	for (uint32 J = 0; J < NUM_CHANNELS; J++)
 	{
+	  
+    // fprintf(stderr,"\t\t[DEBUG] Channel loop");
+
 		Channel *ch = &SoundData.channels[J];
 		uint32 freq = ch->frequency;
 
@@ -1167,17 +1177,28 @@ void MixStereo (int sample_count)
 
 		if (ch->needs_decode)
 		{
+      // fprintf(stderr,"\t\t[DEBUG] Needs decode" );
+      
 			DecodeBlock(ch);
 			ch->needs_decode = FALSE;
 			ch->sample = ch->block[0];
 			ch->sample_pointer = 0;
 		}
-
+        
+    // fprintf(stderr,"\t\t[DEBUG] (uint32) sample_count = %i", (uint32) sample_count );
+    // fprintf(stderr,"\t\t[DEBUG] Entering sample loop");
+    
 		for (uint32 I = 0; I < (uint32) sample_count; I += 2)
 		{
+		  
+      // fprintf(stderr,"\t\t\t[DEBUG] iteration %i", I );
+		  
 			switch (ch->state)
 			{
 				case SOUND_ATTACK:
+				  
+          // fprintf(stderr,"\t\t\t\t[DEBUG] sound attack");
+				  
 					if (ch->xenv_rate == env_counter_max_master)
 						ch->xenvx += (ENV_RANGE >> 1); // FIXME
 					else
@@ -1209,30 +1230,48 @@ void MixStereo (int sample_count)
 					break;
 
 				case SOUND_DECAY:
-					ch->xenv_count -= ch->xenv_rate;
+					
+          // fprintf(stderr,"\t\t\t\t[DEBUG] sound decay");
+          
+          ch->xenv_count -= ch->xenv_rate;
+          
+          // fprintf(stderr, "\t\t\t\t[DEBUG] env_counter_max = %i, ch->xenv_rate = %i, ch->xenv_count = %i", env_counter_max, ch->xenv_rate, ch->xenv_count);
+          
 					while (ch->xenv_count <= 0)
 					{
+            // fprintf(stderr,"\t\t\t\t\t[DEBUG] ch->xenv_count = %i", ch->xenv_count);
 						ch->xenvx -= ((ch->xenvx - 1) >> 8) + 1; // 1 - 1/256
+            // fprintf(stderr, "\t\t\t\t\t[DEBUG] ch->xenv_count += env_counter_max; -> %i += %i", ch->xenv_count, env_counter_max);
 						ch->xenv_count += env_counter_max;
+            // fprintf(stderr, "\t\t\t\t\tresult: %i", ch->xenv_count);
 					}
+					
+          // fprintf(stderr, "\t\t\t\t\t[DEBUG] Exited loop of death!");
 
 					if (ch->xenvx <= ch->xenvx_target)
 					{
 						if (ch->xenvx <= 0)
 						{
+              // fprintf(stderr,"\t\t\t\t\t[DEBUG] entering end of sample");
 							S9xAPUSetEndOfSample (J, ch);
+              // fprintf(stderr,"\t\t\t\t\t[DEBUG] exiting end of sample");
 							goto stereo_exit;
 						}
 						else
 						{
 							ch->state = SOUND_SUSTAIN;
+              // fprintf(stderr,"\t\t\t\t\t[DEBUG] entering setEnvRate");
 							S9xSetEnvRate (ch, ch->xsustain_rate, 0);
+              // fprintf(stderr,"\t\t\t\t\t[DEBUG] exiting setEnvRate");
 						}
 					}
 
 					break;
 
 				case SOUND_SUSTAIN:
+				  
+          // fprintf(stderr,"\t\t\t\t[DEBUG] sound sustain");
+          
 					ch->xenv_count -= ch->xenv_rate;
 					while (ch->xenv_count <= 0)
 					{
@@ -1249,6 +1288,9 @@ void MixStereo (int sample_count)
 					break;
 
 				case SOUND_RELEASE:
+					
+          // fprintf(stderr,"\t\t\t\t[DEBUG] sound release");
+          
 					ch->xenv_count -= env_counter_max;
 					while (ch->xenv_count <= 0)
 					{
@@ -1265,6 +1307,9 @@ void MixStereo (int sample_count)
 					break;
 
 				case SOUND_INCREASE_LINEAR:
+					
+          // fprintf(stderr,"\t\t\t\t[DEBUG] sound increase linear");
+          
 					ch->xenv_count -= ch->xenv_rate;
 					while (ch->xenv_count <= 0)
 					{
@@ -1283,6 +1328,9 @@ void MixStereo (int sample_count)
 					break;
 
 				case SOUND_INCREASE_BENT_LINE:
+          
+          // fprintf(stderr,"\t\t\t\t[DEBUG] sound bent_line");
+          
 					ch->xenv_count -= ch->xenv_rate;
 					while (ch->xenv_count <= 0)
 					{
@@ -1305,6 +1353,9 @@ void MixStereo (int sample_count)
 					break;
 
 				case SOUND_DECREASE_LINEAR:
+					
+          // fprintf(stderr,"\t\t\t\t[DEBUG] sound decrease linear");
+          
 					ch->xenv_count -= ch->xenv_rate;
 					while (ch->xenv_count <= 0)
 					{
@@ -1321,6 +1372,9 @@ void MixStereo (int sample_count)
 					break;
 
 				case SOUND_DECREASE_EXPONENTIAL:
+          
+          // fprintf(stderr,"\t\t\t\t[DEBUG] sound decrease exponential");
+          
 					ch->xenv_count -= ch->xenv_rate;
 					while (ch->xenv_count <= 0)
 					{
@@ -1337,13 +1391,20 @@ void MixStereo (int sample_count)
 					break;
 
 				case SOUND_GAIN:
+					
+          // fprintf(stderr,"\t\t\t\t[DEBUG] sound gain");
+          
 					S9xSetEnvRate (ch, 0, 0);
 
 					break;
 			}
+      
+      // fprintf(stderr,"\t\t\t\t[DEBUG] Exited switch");
 
 			ch->xsmp_count += mod1 ? (((int64) freq * (32768 + wave[I >> 1])) >> 15) : freq;
-
+      
+      // fprintf(stderr,"\t\t\t\t[DEBUG] entering loop: ch->xsmp_count >= 0");
+      
 			while (ch->xsmp_count >= 0)
 			{
 				ch->xsmp_count -= FIXED_POINT;
@@ -1385,7 +1446,9 @@ void MixStereo (int sample_count)
 
 				ch->sample = ch->block[ch->sample_pointer];
 			}
-
+      
+      // fprintf(stderr,"\t\t\t\t[DEBUG] EXITING loop: ch->xsmp_count >= 0");
+      
 			int32 outx, d;
 
 			if (ch->type == SOUND_SAMPLE)
@@ -1431,12 +1494,19 @@ void MixStereo (int sample_count)
 			MixBuffer[I + (1 ^ Settings.ReverseStereo)] += VR;
 			ch->echo_buf_ptr[I      ^ Settings.ReverseStereo ] += VL;
 			ch->echo_buf_ptr[I + (1 ^ Settings.ReverseStereo)] += VR;
+			
+      // fprintf(stderr,"\t\t\t\t[DEBUG] finished iteration %i", I);
+      
 		}
+		
+    // fprintf(stderr,"\t\t[DEBUG] Finished sample loop");
 
 	stereo_exit: ;
 	}
 	DoFakeMute=FALSE;
-
+  
+  // fprintf(stderr,"\t[DEBUG] %i", debugstp++ );
+  
 	if (APU.DSP[APU_NON])
 		SoundData.noise_count = noise_count;
 }
@@ -1784,6 +1854,63 @@ void S9xMixSamplesO (uint8 *buffer, int sample_count, int byte_offset)
 END_OF_FUNCTION(S9xMixSamplesO);
 #endif
 
+
+// Flash-specific Mixer
+#ifdef __FLASH__
+void Flash_S9xMixSamples( float *buffer, int sample_count, int offset )
+{
+  // fprintf(stderr, "\t[DEBUG] Entering FlashMixSamples");
+  
+  int I, J;
+  
+  if (!so.mute_sound)
+	{
+    // fprintf(stderr,"[ENTER]\tmemset");
+    memset (MixBuffer, 0, sample_count * sizeof (MixBuffer[0]));
+    // fprintf(stderr,"[RETURN]\tmemset");
+		if (so.stereo)
+		{
+      // fprintf(stderr,"[ENTER]\tMixStereo");
+			MixStereo (sample_count);
+      // fprintf(stderr,"[RETURN]\tMixStereo");
+		}
+		else
+		{
+			MixMono (sample_count);
+		}
+	}
+	
+	/* Mix and convert waveforms */
+	if (so.sixteen_bit)
+	{
+    // fprintf(stderr, "\t\t[DEBUG] sixteen_bit");
+	  
+		// 16-bit sound
+		if (so.mute_sound)
+		{
+      // fprintf(stderr, "\t\t[DEBUG] mute_sound");
+			memset (buffer, offset, sample_count * sizeof(buffer[0]));
+		}
+		else
+		{
+      // fprintf(stderr,"\t\t[DEBUG]\tCast Loop, sample_count = %i", sample_count);
+      
+	    // 16-bit mono or stereo sound, no echo
+			for (J = 0; J < sample_count; J++)
+			{
+        // fprintf(stderr,"\t\t\t[DEBUG]\tCast Iteration %i", J);
+				I = (MixBuffer[J] * SoundData.master_volume[J & 1]) >> 7;
+				CLIP16(I);
+				((float *) buffer) [J + offset] = I/32768.0f;  // Bound the signed short to [0-1]
+			}
+      // fprintf(stderr,"[EXIT]\tCast Loop");
+		}
+	}
+}
+#endif
+
+
+
 void S9xMixSamples (uint8 *buffer, int sample_count)
 {
 	int I, J;
@@ -1958,7 +2085,12 @@ void S9xMixSamples (uint8 *buffer, int sample_count)
 				{
 					I = (MixBuffer[J] * SoundData.master_volume[J & 1]) >> 7;
 					CLIP16(I);
+					#ifndef FLASH
 					((int16 *) buffer) [J] = I;
+					#elif
+					// Flash mixing only! Eliminates a casting buffer
+					((float *) buffer) [J] = I/32768.0f;  // Does this need to be a value from 0-1? Currently we're bounding between -1 and 1.
+					#endif
 				}
 			}
 		}
@@ -2270,7 +2402,9 @@ bool8 S9xInitSound (int mode, bool8 stereo, int buffer_size)
 	S9xResetSound (TRUE);
 
 	if (!(mode & 7))
+	{
 		return (1);
+	}
 
 	S9xSetSoundMute (TRUE);
 	if (!S9xOpenSoundDevice (mode, stereo, buffer_size))

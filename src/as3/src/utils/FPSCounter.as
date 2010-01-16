@@ -11,6 +11,9 @@ package utils {
 		private var _tf:TextField;
 		private var _fmt:TextFormat;
 		
+		private var ticks:Number = 0;
+		
+		private var startTime:Number;
 		private var lastTime:Number;
 		
 		public function FPSCounter() {
@@ -21,6 +24,10 @@ package utils {
 		private function init():void {
 			_tf = createText();
 			addChild(_tf);
+			
+			ticks = 0;
+			startTime = new Date().time;
+			
 			this.addEventListener(Event.ENTER_FRAME, onTick, false, 0, true);
 		}
 		
@@ -28,8 +35,10 @@ package utils {
 		private function onTick( e:Event ):void {
 			var currentTime:Number = new Date().time;
 			var fps:Number = Math.floor(1000/(currentTime - lastTime));
+			ticks++;
+			var lifetimeAvg:int = Math.round(ticks/((currentTime - startTime)/1000));
 			if (!lastTime) lastTime = currentTime;
-			_tf.text = "fps = \t" + fps.toString() + "\t " + Math.floor(100*fps/24).toString() + "%";
+			_tf.htmlText = "fps = \t" + fps.toString() + "<br/>" + Math.floor(100*fps/50).toString() + "%<br/>avg = " + lifetimeAvg;
 			lastTime = currentTime;
 		}
 		
@@ -40,6 +49,7 @@ package utils {
 			t.autoSize = TextFieldAutoSize.LEFT;
 			t.selectable = false;
 			t.defaultTextFormat = _fmt;
+			t.multiline = true;
 			return t;
 		}
 		
