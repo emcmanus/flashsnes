@@ -1,4 +1,4 @@
-package core
+package gui
 {
 	import flash.display.Sprite;
 	import flash.display.StageDisplayState;
@@ -6,8 +6,9 @@ package core
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
+	import core.Emulator;
 	
-	public class EmulatorControl extends Sprite
+	public class PlayerControls extends Sprite
 	{
 		// External References
 		private var snes9x:Emulator;
@@ -28,7 +29,7 @@ package core
 		
 		private var fullscreenButton:Sprite;
 		
-		public function EmulatorControl( snes9x:Emulator )
+		public function PlayerControls( snes9x:Emulator )
 		{
 			super();
 			

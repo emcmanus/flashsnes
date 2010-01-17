@@ -14,7 +14,7 @@ package core
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
 
-	public class Emulator implements IEmulator
+	public class Emulator
 	{
 		// Public
 		public var screen:Bitmap;
@@ -100,6 +100,7 @@ package core
 		public function set muted( muted:Boolean ):void
 		{
 			mute = muted;
+			cLib.setMute( muted as int );
 		}
 		public function get muted():Boolean
 		{

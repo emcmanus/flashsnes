@@ -85,6 +85,8 @@ package core
 		
 		private function updateEmulatorSettings():void
 		{
+			// Sound
+			
 			if ( !muted )
 			{
 				// Sound sampling adapter
@@ -101,6 +103,9 @@ package core
 					// TODO user notification
 				}
 			}
+			
+			// Hi Res
+			// ...
 		}
 		
 		
