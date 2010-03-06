@@ -339,6 +339,26 @@ void S9xSetupDefaultKeymap()
   
   S9xMapButton( 13, cmd = S9xGetCommandT("Joypad1 Start"), false );   // Enter
   S9xMapButton( 16, cmd = S9xGetCommandT("Joypad1 Select"), false );  // Shift
+  
+  
+  
+  // cmd=S9xGetPortCommandT(i->second.c_str());
+  //   if(cmd.type==S9xBadMapping){
+        // cmd=S9xGetCommandT(i->second.c_str());
+  //       if(cmd.type==S9xBadMapping){
+  //           std::string s("Unrecognized command '");
+  //           s+=i->second + "'";
+  //           S9xMessage(S9X_CONFIG_INFO, S9X_ERROR, s.c_str());
+  //           continue;
+  //       }
+  //   }
+    // if(!S9xMapInput(i->first.c_str(), &cmd)){
+  //       std::string s("Could not map '");
+  //       s+=i->second + "' to '" + i->first + "'";
+  //       S9xMessage(S9X_CONFIG_INFO, S9X_ERROR, s.c_str());
+  //       continue;
+  //   }
+  
 }
 
 

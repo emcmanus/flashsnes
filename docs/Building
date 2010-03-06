@@ -43,7 +43,7 @@ BUILD USING GENERATED MAKEFILE:
 make clean; make;
 
 BUILD WITH EXISTING MAKEFILE (RECOMMENDED):
-make -f Makefile.flash clean; make -f Makefile.flash all;
+FORCESYNC=1 make -f Makefile.flash clean; make -f Makefile.flash all;
 
 
 * ==============================================

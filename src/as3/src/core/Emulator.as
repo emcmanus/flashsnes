@@ -169,6 +169,11 @@ package core
 				return;
 			}
 			
+//			Do not build.
+				
+//				This contains the four ticks below, and also disabled all keymaps in the swc. Solve the problem with the key maps, first. It's related to 10.1 B3.
+			
+			
 			// General
 			cLib.tick( keyEvents, requestedSamples );
 			keyEvents.length = 0;

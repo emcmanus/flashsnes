@@ -97,7 +97,7 @@ package
 			// Show
 			addChild( screen );
 			addChild( performance );
-			addChild( playerControls );
+//			addChild( playerControls );
 			
 			onResize();
 		}
