@@ -8,14 +8,14 @@ First attempt to build snes9x was to enter the source directory, add alchemy to 
 
 Obviously this didn't work. I redirected ./configure --help into a local file and searched for any optional components which can be disabled. Disabled all assembly, joystick support, sdd1/jma decompression, screenshot support, sound, png support, and zlib support (but it turns out zlib isn't optional so I later compiled zlib to $alchemy/usr/local).
 
-Configure isn't noticing that memory.h doesn't exist, so I manually disabled that by setting HAVE_MEMORY_H=0, and exported.
+Configure isn't noticing that memory.h isn't available, so I manually disabled that by setting HAVE_MEMORY_H=0, and export.
 
 Dependency failures. Added avm2-libc/include & lib as compiler params. More failures. Added $alchemy/usr/local include & lib to the path, after building zlib. Yet more failures. Noticed that gcc wasn't getting the -DOSX param, so I specified that in --with-extra-opt. More problems with iso C and type long long, so I removed the "pedantic" switch by adding another IF to configure, and exported DISABLE_PEDANTIC=1 before configuring. At some point I cleared ./dependencies.
 
-Now the app built further, but still failed when we got to x11.cpp. As expected. Added some preprocessor directives to remove the bodies of all methods in x11.cpp.
+Now the app built further, but still failed when we got to x11.cpp. As expected. Added some preprocessor directives to remove all function bodies in x11.cpp.
 
-Now the app built with the default Makefile. Next changed the makefile to output the app as an SWC.
+Now the app built with the default Makefile. Next, change the makefile to output the app as an SWC.
 
-Broke up main() in unix.cpp to run iteratively.
+Broke up main() in unix.cpp to run iteratively (on every enter_frame).
 
-Tied the internal SNES9x display buffer to a BitmapData instance in the flash movie. Rather than marshaling entire frames to the Flash wrapper, we call the wrapper's update method with the memory address of the buffer. The wrapper enters the VM's byte array, slice()'s the frame bytes given the offset and length, and upcasts each pixel to RGB888.
+Tied the internal SNES9x display buffer to a BitmapData instance in Flash. Rather than marshaling entire frames to the Flash wrapper, we call the wrapper's update method with the memory address of the buffer. The wrapper enters the VM's byte array, slice()'s the frame bytes given the offset and length, and upcasts each pixel to RGB888.

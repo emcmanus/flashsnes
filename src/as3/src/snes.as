@@ -3,8 +3,6 @@ package
 	import core.Emulator;
 	import core.PerformanceAdapter;
 	
-	import gui.PlayerControls;
-	
 	import debug.Performance;
 	
 	import flash.display.Bitmap;
@@ -18,13 +16,17 @@ package
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	
+	import gui.PlayerControls;
+	
 	[SWF(frameRate="50",backgroundColor="0x000000")]
 	public class Snes extends Sprite
 	{
 		// Config
-		private const ROM_PREFIX:String = "http://localhost/test_roms/snes/";
+		private const ROM_PREFIX:String = "http://localhost/test_roms/snes/";	// Only used if USE_LOCAL_ROM == true
 		private const ORIGINAL_SURFACE_WIDTH:int = 256;
 		private const ORIGINAL_SURFACE_HEIGHT:int = 224;
+		
+		private const USE_LOCAL_ROM:Boolean = false;
 		
 		private var integerScale:Boolean = true;
 		
@@ -70,7 +72,14 @@ package
 			// Check rom location
 			if ( verifyRomPath(romLocation) )
 			{
-				romLoader.load(new URLRequest( ROM_PREFIX + romLocation ));
+				if ( USE_LOCAL_ROM )
+				{
+					romLoader.load(new URLRequest( ROM_PREFIX + romLocation ));
+				}
+				else
+				{
+					romLoader.load(new URLRequest( romLocation ));
+				}
 			}
 			else	// TODO Report error in GUI -- call home?
 			{

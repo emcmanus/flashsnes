@@ -1,0 +1,45 @@
+
+General Porting Tips (2/6/2010)
+
+By Ed McManus
+
+
+[About]
+
+This guide is written for users on unix-like platforms.
+
+
+[Systems I've Ported]
+
+This advice comes from porting the following systems:
+
+zLib, libJPEG, MuPDF, Freetype2, mesa3d, FCE Ultra, nesemu, nestopia, quake 3, SDL, SNES9x
+
+
+[Custom Build Systems]
+
+Most of your time will be spent dealing with the various build systems used by open source projects. Don't be afaid to rip out those systems and replace them with ones you know to be alchemy-friendly. For example, many projects use some form of half-standard, half-hacked library build script to determine the capabilities of your system. Well, you don't need all that stuff. Just `ar rc $output_name $source_object_files` instead.
+
+The hard part is often determining the dependencies for various libraries and application files. To speed up this process, do something like `make -n > make_script`, which will write -- but not execute -- the build operation to the file make_script. Then open up this file in your favorite editor, and do some sluthing. You can even just turn that file into a true bash script, hand-editing the calls you know need editing.
+
+
+[Configuring]
+
+In general, you'll want to at least *try* (especially libraries, for which this often works) do a compile with the standard build steps. `./configure --prefix=$ALCHEMY_HOME/usr/local/ && make && make install`
+
+If you're lucky, you'll end up with an *.a file in your alchemy lib directory ($ALCHEMY_HOME/usr/local/lib). Due to some Alchemy Magic™, the library file you actually care about, *.l.bc (the llvm bitcode version of the library) will be left behind in your build folder. Do a search (in your project directory: `find . -name "*.l.bc"`) and copy the file manaually.
+
+Note: this pretty much never works. You'll have to go back and re-run configure with new parameters, build, examine the errors, tweak the configure parameters, and re-build. At a certain point you usually have to edit the generated Makefile by hand, so do a `cp Makefile Makefile.flash`, edit the file, and then use `make -f Makefile.flash` for future builds.
+
+
+[Common Pitfalls]
+
+Be sure to disable all assembly. This usually means looking at the options available in configure (`./configure --help`) and finding the right config parameter, but sometimes you'll need to do this manually (look for calls to asm() and the like).
+
+Don't specify any C standard (Alchemy does this for you in a general header include) and don't require ansi-C or use the pedantic flag.
+
+I've seen plenty of builds fail because the LLVM optimization level was too high. Use the highest level that doesn't break things.
+
+Configure isn't always right. It's just nice to not have to specify little things like whether to include memory.h, etc. Don't be afraid of a little hacking!
+
+

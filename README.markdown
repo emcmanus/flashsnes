@@ -9,6 +9,10 @@ FlashSNES - Quick Guide
 **More documentation in `/docs`**
 
 
+## Demo ##
+
+[https://s3.amazonaws.com/flashsnes/snes.html](https://s3.amazonaws.com/flashsnes/snes.html)
+
 
 ## License ##
 
@@ -17,7 +21,7 @@ This is a Flash port of SNES9x released under the same license (a GPL, LGPL, non
 
 ## Performance ##
 
-This port does not currently support input or audio, and runs at half real-time (~10fps) on a Flash 10 release player. Using a current release player on Windows will give better performance.
+Use a current release player on Windows for the best performance.
 
 
 ## Important Locations ##

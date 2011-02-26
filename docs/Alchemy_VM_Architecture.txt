@@ -1,6 +1,8 @@
 Notes on the Alchemy VM Architecture
 
-Authored by Ed McManus and Zazzo9
+Authored by Ed McManus
+With contributions from:
+Zazzo9
 
 
 Alchemy is awesome! Hidden away in the source are a few undocumented gems, like almost-complete SDL support and a pretty awesome GDB client, which allows you to keep from breaking out of your standard C toolchain.
