@@ -97,7 +97,7 @@ package core
 				if ( movingAvg < MIN_AUDIO_FPS )
 				{
 					// Mute
-					this.emulator.muted = true;
+					this.emulator.setMute( true );
 					muted = true;
 					
 					// TODO user notification

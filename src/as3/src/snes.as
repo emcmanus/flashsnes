@@ -67,7 +67,7 @@ package
 			stage.addEventListener(Event.RESIZE, onResize);
 			stage.align = StageAlign.TOP_LEFT;
 			stage.quality = StageQuality.BEST;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.scaleMode = StageScaleMode.NO_SCALE;		// We'll scale up in the onResize listener below
 			
 			// Check rom location
 			if ( verifyRomPath(romLocation) )
@@ -81,11 +81,6 @@ package
 					romLoader.load(new URLRequest( romLocation ));
 				}
 			}
-			else	// TODO Report error in GUI -- call home?
-			{
-				throw new Error( "Invalid ROM path. Nice try, hacker!" );
-			}
-			
 		}
 		
 		
@@ -105,7 +100,7 @@ package
 			
 			// Show
 			addChild( screen );
-			addChild( performance );
+//			addChild( performance );
 //			addChild( playerControls );
 			
 			onResize();

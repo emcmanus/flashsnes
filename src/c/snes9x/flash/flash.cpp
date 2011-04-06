@@ -324,41 +324,128 @@ void S9xSetupDefaultKeymap()
 	// Build key map
 	s9xcommand_t cmd;
 	
-	S9xMapButton( 65, cmd = S9xGetCommandT("Joypad1 Left"), false );    // A
-	S9xMapButton( 68, cmd = S9xGetCommandT("Joypad1 Right"), false );   // D
-	S9xMapButton( 87, cmd = S9xGetCommandT("Joypad1 Up"), false );      // W
-	S9xMapButton( 83, cmd = S9xGetCommandT("Joypad1 Down"), false );    // S
+    // Player 1
+
+    S9xMapButton( 65, cmd = S9xGetCommandT("Joypad1 Left"), false );    // A
+    S9xMapButton( 68, cmd = S9xGetCommandT("Joypad1 Right"), false );   // D
+    S9xMapButton( 87, cmd = S9xGetCommandT("Joypad1 Up"), false );      // W
+    S9xMapButton( 83, cmd = S9xGetCommandT("Joypad1 Down"), false );    // S
+
+    S9xMapButton( 79, cmd = S9xGetCommandT("Joypad1 X"), false );       // O
+    S9xMapButton( 80, cmd = S9xGetCommandT("Joypad1 Y"), false );       // P
+    S9xMapButton( 75, cmd = S9xGetCommandT("Joypad1 A"), false );       // K
+    S9xMapButton( 76, cmd = S9xGetCommandT("Joypad1 B"), false );       // L
+
+    S9xMapButton( 88, cmd = S9xGetCommandT("Joypad1 L"), false );       // X
+    S9xMapButton( 77, cmd = S9xGetCommandT("Joypad1 R"), false );       // M
+
+    S9xMapButton( 13, cmd = S9xGetCommandT("Joypad1 Start"), false );   // Enter
+    S9xMapButton( 16, cmd = S9xGetCommandT("Joypad1 Select"), false );  // Shift
+
+    // Player 2
+
+    S9xMapButton( 70, cmd = S9xGetCommandT("Joypad2 Left"), false );    // F
+    S9xMapButton( 72, cmd = S9xGetCommandT("Joypad2 Right"), false );   // H
+    S9xMapButton( 84, cmd = S9xGetCommandT("Joypad2 Up"), false );      // T
+    S9xMapButton( 71, cmd = S9xGetCommandT("Joypad2 Down"), false );    // G
+
+    S9xMapButton( 67, cmd = S9xGetCommandT("Joypad2 X"), false );       // C
+    S9xMapButton( 86, cmd = S9xGetCommandT("Joypad2 Y"), false );       // V
+    S9xMapButton( 66, cmd = S9xGetCommandT("Joypad2 A"), false );       // B
+    S9xMapButton( 78, cmd = S9xGetCommandT("Joypad2 B"), false );       // N
+
+    S9xMapButton( 89, cmd = S9xGetCommandT("Joypad2 L"), false );       // Y
+    S9xMapButton( 85, cmd = S9xGetCommandT("Joypad2 R"), false );       // U
+
+    S9xMapButton( 81, cmd = S9xGetCommandT("Joypad2 Start"), false );   // Q
+    S9xMapButton( 69, cmd = S9xGetCommandT("Joypad2 Select"), false );  // E
+
+
+    case "joypad1 down":
+    break;
+				
+    case "joypad1 x":
+    break;
+
+    case "joypad1 y":
+    break;
+
+    case "joypad1 a":
+    break;
+
+    case "joypad1 b":
+    break;
+				
+    case "joypad1 l":
+    break;
+    
+    case "joypad1 r":
+    break;
+				
+    case "joypad1 start":
+    break;
 	
-	S9xMapButton( 79, cmd = S9xGetCommandT("Joypad1 X"), false );       // O
-	S9xMapButton( 80, cmd = S9xGetCommandT("Joypad1 Y"), false );       // P
-	S9xMapButton( 75, cmd = S9xGetCommandT("Joypad1 A"), false );       // K
-  S9xMapButton( 76, cmd = S9xGetCommandT("Joypad1 B"), false );       // L
-  
-  S9xMapButton( 88, cmd = S9xGetCommandT("Joypad1 L"), false );       // X
-  S9xMapButton( 77, cmd = S9xGetCommandT("Joypad1 R"), false );       // M
-  
-  S9xMapButton( 13, cmd = S9xGetCommandT("Joypad1 Start"), false );   // Enter
-  S9xMapButton( 16, cmd = S9xGetCommandT("Joypad1 Select"), false );  // Shift
-  
-  
-  
-  // cmd=S9xGetPortCommandT(i->second.c_str());
-  //   if(cmd.type==S9xBadMapping){
-        // cmd=S9xGetCommandT(i->second.c_str());
-  //       if(cmd.type==S9xBadMapping){
-  //           std::string s("Unrecognized command '");
-  //           s+=i->second + "'";
-  //           S9xMessage(S9X_CONFIG_INFO, S9X_ERROR, s.c_str());
-  //           continue;
-  //       }
-  //   }
+    case "joypad1 select"
+    break;
+				
+				// player 2
+				
+    case "joypad2 left":
+    break;
+
+    case "joypad2 right":
+    break;
+
+    case "joypad2 up":
+    break;
+
+    case "joypad2 down":
+    break;
+				
+    case "joypad2 x":
+    break;
+
+    case "joypad2 y":
+    break;
+	
+    case "joypad2 a":
+    break;
+
+    case "joypad2 b":
+    break;
+				
+    case "joypad2 l":
+    break;
+
+    case "joypad2 r":
+    break;
+				
+    case "joypad2 start":
+    break;
+
+    case "joypad2 select":
+    break;
+    
+
+
+
+    // cmd=S9xGetPortCommandT(i->second.c_str());
+    //   if(cmd.type==S9xBadMapping){
+    // cmd=S9xGetCommandT(i->second.c_str());
+    //       if(cmd.type==S9xBadMapping){
+    //           std::string s("Unrecognized command '");
+    //           s+=i->second + "'";
+    //           S9xMessage(S9X_CONFIG_INFO, S9X_ERROR, s.c_str());
+    //           continue;
+    //       }
+    //   }
     // if(!S9xMapInput(i->first.c_str(), &cmd)){
-  //       std::string s("Could not map '");
-  //       s+=i->second + "' to '" + i->first + "'";
-  //       S9xMessage(S9X_CONFIG_INFO, S9X_ERROR, s.c_str());
-  //       continue;
-  //   }
-  
+    //       std::string s("Could not map '");
+    //       s+=i->second + "' to '" + i->first + "'";
+    //       S9xMessage(S9X_CONFIG_INFO, S9X_ERROR, s.c_str());
+    //       continue;
+    //   }
+
 }
 
 
@@ -367,8 +454,8 @@ void S9xSetupDefaultKeymap()
  * Required interface methods specified in Porting.html
  */
 bool8 S9xOpenSnapshotFile (const char *filepath, bool8 read_only, STREAM *file) {
-	AS3_Trace(AS3_String("S9xOpenSnapshotFile"));
-	return false;
+    AS3_Trace(AS3_String("S9xOpenSnapshotFile"));
+    return false;
 }
 
 void S9xClosesnapshotFile (STREAM file) {
