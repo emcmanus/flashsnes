@@ -24,13 +24,16 @@ This is a Flash port of SNES9x released under the same license (a GPL, LGPL, non
 Use a current release player on Windows for the best performance.
 
 
-## Important Locations ##
+## Important File Locations ##
+
+Read this. It will save you a lot of time!
 
   - `/bin` contains some utils to check for ROM corruption and to find correct checksums
   - `/libs` contains the SWC resulting from the make-swc target
   - `/src/as3/generated_as3` contains the emitted AS3 files (the Alchemy VM and Application -- currently this requires some manual labor to generate!)
   - `/src/c/snes9x/flash` contains the Flash drivers
   - `/src/c/snes9x/flash/flash.cpp` is the C interface for the Flash application
+  - `/src/c/snes9x/soundux.cpp` contains the flash-specific audio mixer
   - `/src/c/snes9x/Markedup_SNES9x.as` details my attempt to understand Alchemy's C VM
   - `/src/c/snes9x/port.h` defines port-specific directives
   - `/docs/snes9x/porting.html` helpful doc detailing important preprocessor directives
