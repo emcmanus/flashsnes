@@ -60,3 +60,5 @@ Build the Actionscript project in FlexBuilder. The resulting libSNES9x.swc is so
 -XX:PermSize=64m
 
 If you're just using the FlexBuilder plugin (with Eclipse), you may need to save the file in the root Eclipse directory as Eclipse.ini.
+
+Import the project into FlexBuilder. Right-click on the file drawer and select import, then general > existing projects into workspace. Navigate to, and pick flashsnes/src/as3 as the root project directory.
