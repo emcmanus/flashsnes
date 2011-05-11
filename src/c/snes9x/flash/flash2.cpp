@@ -5,6 +5,10 @@
  *  Created by Ed McManus on 12/26/08.
  *  Copyright 2008. All rights reserved.
  *
+ *
+ *   THIS FILE IS DEPRECATED.
+ *
+ * 
  */
 
 #include "AS3.h"
@@ -45,7 +49,7 @@ int main (int argc, char **argv) {
 	AS3_Val getDisplayPointerMethod = AS3_Function(NULL, Flash_getDisplayPointer);
 	AS3_Val setEventManagerMethod = AS3_Function(NULL, Flash_setEventManager);
 	
-    AS3_Val libSDL = AS3_Object(
+	AS3_Val libSDL = AS3_Object(
 		"setup:AS3ValType, tick:AS3ValType, getDisplayPointer:AS3ValType, quit:AS3ValType, setEventManager:AS3ValType", 
 		setupMethod, tickMethod, getDisplayPointerMethod, quitApplicationMethod, setEventManagerMethod
 	);
@@ -56,7 +60,7 @@ int main (int argc, char **argv) {
 	AS3_Release( quitApplicationMethod );
 	AS3_Release( setEventManagerMethod );
 	
-    AS3_LibInit(libSDL);
+	AS3_LibInit(libSDL);
 	
 	return (0);
 }
@@ -136,17 +140,17 @@ const char *S9xGetFilename (const char *extension, enum s9x_getdirtype dirtype) 
 	AS3_Trace(AS3_String("*S9xGetFilename"));
 	
 	static char filename [PATH_MAX + 1];
-    char dir [_MAX_DIR + 1];
-    char drive [_MAX_DRIVE + 1];
-    char fname [_MAX_FNAME + 1];
-    char ext [_MAX_EXT + 1];
+	char dir [_MAX_DIR + 1];
+	char drive [_MAX_DRIVE + 1];
+	char fname [_MAX_FNAME + 1];
+	char ext [_MAX_EXT + 1];
 	_splitpath (Memory.ROMFilename, drive, dir, fname, ext);
-    snprintf(filename, sizeof(filename), "%s" SLASH_STR "%s%s",
-             S9xGetDirectory(dirtype), fname, extension);
+	snprintf(filename, sizeof(filename), "%s" SLASH_STR "%s%s",
+		S9xGetDirectory(dirtype), fname, extension);
 			 
 	AS3_Trace(AS3_String(filename));
 	
-    return (filename);
+	return (filename);
 }
 
 const char *S9xGetFilenameInc (const char *extension, enum s9x_getdirtype dirtype) {
