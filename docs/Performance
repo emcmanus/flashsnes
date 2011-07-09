@@ -1,0 +1,286 @@
+
+ALCHEMY PERFORMANCE TIPS
+
+========================================================================================================================
+
+
+[GCC] FORCESYNC
+
+If you have a reasonable assurance that your application will not hit the 15 second timeout, you can compile with the environment variable FORCESYNC set to 1.
+
+This forces Alchemy to compile without finite state machines, which can be a big win for long and frequently called functions.
+
+Quick tests show this gives a performance boost somewhere between 10-20%.
+
+
+
+[GCC] NOMEMUSER
+
+Never set this to 1. (Don't worry, it's 0 by default.)
+
+In a quick test, performance dropped by 90%!
+
+
+
+[General] Avoid Marshalling
+
+Reduce the number of calls across the C boundary to avoid the overhead of marshalling. A few cross-boundary calls are fine, but never do this in frequently called methods.
+
+
+
+[General] Avoid Return Values
+
+UNTESTED - Instead of returning an AS3_Val for all of your methods, try returning void. This keeps Alchemy from parsing and casting your return value as a Flash object via cproctypemap, which might provide a small savings for frequently called methods.
+
+
+
+[General] Use Doubles
+
+Using doubles is reported to give you a performance boost, since that's the Flash player's internal representation of numbers. But my own tests couldn't find much of a difference.
+
+
+
+[General] Do Not Trace
+
+Tracing is terribly slow. Even tracing once in every frame noticably degrades performance. While this only affects debug players, Flash developers will often be the first to look at your work.
+
+
+
+[Ineffective]
+
+-avm2-eager-dispatch
+
+-avm2-machine-pooling
+
+These flags are listed in the help output of llc. But they're most likely not honored by the compiler.
+
+In a quick test their values did not affect the emitted code of a large application. (MD5's matched.)
+
+
+
+
+[LLVM] Optimization Passes
+
+In addition to -O0-O5, you can use the following optimization flags:
+
+./llvm-ld
+
+    -argpromotion                         - Promote 'by reference' arguments to scalars
+    -basicaa                              - Basic Alias Analysis (default AA impl)
+    -basiccg                              - Basic CallGraph Construction
+    -break-crit-edges                     - Break critical edges in CFG
+    -constmerge                           - Merge Duplicate Global Constants
+    -dce                                  - Dead Code Elimination
+    -deadargelim                          - Dead Argument Elimination
+    -deadarghaX0r                         - Dead Argument Hacking (BUGPOINT USE ONLY; DO NOT USE)
+    -die                                  - Dead Instruction Elimination
+    -domfrontier                          - Dominance Frontier Construction
+    -domtree                              - Dominator Tree Construction
+    -dse                                  - Dead Store Elimination
+    -globaldce                            - Dead Global Elimination
+    -globalopt                            - Global Variable Optimizer
+    -globalsmodref-aa                     - Simple mod/ref analysis for globals
+    -gvn                                  - Global Value Numbering
+    -inline                               - Function Integration/Inlining
+    -instcombine                          - Combine redundant instructions
+    -internalize                          - Internalize Global Symbols
+    -ipsccp                               - Interprocedural Sparse Conditional Constant Propagation
+    -lcssa                                - Loop-Closed SSA Form Pass
+    -licm                                 - Loop Invariant Code Motion
+    -loops                                - Natural Loop Construction
+    -loopsimplify                         - Canonicalize natural loops
+    -memdep                               - Memory Dependence Analysis
+    -no-aa                                - No Alias Analysis (always returns 'may' alias)
+    -print                                - Print function to stderr
+    -print-alias-sets                     - Alias Set Printer
+    -printm                               - Print module to stderr
+    -prune-eh                             - Remove unused exception handling info
+    -scalar-evolution                     - Scalar Evolution Analysis
+    -scalarrepl                           - Scalar Replacement of Aggregates
+    -sccp                                 - Sparse Conditional Constant Propagation
+    -simplifycfg                          - Simplify the CFG
+    -strip                                - Strip all symbols from a module
+    -targetdata                           - Target Data Layout
+    -verify                               - Module Verifier
+
+./opt
+
+(You'll have to step out of the standard Alchemy gcc process.)
+
+-aa-eval                              - Exhaustive Alias Analysis Precision Evaluator
+-adce                                 - Aggressive Dead Code Elimination
+-anders-aa                            - Andersen's Interprocedural Alias Analysis
+-argpromotion                         - Promote 'by reference' arguments to scalars
+-basicaa                              - Basic Alias Analysis (default AA impl)
+-basiccg                              - Basic CallGraph Construction
+-basicvn                              - Basic Value Numbering (default GVN impl)
+-block-placement                      - Profile Guided Basic Block Placement
+-break-crit-edges                     - Break critical edges in CFG
+-callgraph                            - Print a call graph
+-callscc                              - Print SCCs of the Call Graph
+-cee                                  - Correlated Expression Elimination
+-cfgscc                               - Print SCCs of each function CFG
+-codegenprepare                       - Optimize for code generation
+-condprop                             - Conditional Propagation
+-constmerge                           - Merge Duplicate Global Constants
+-constprop                            - Simple constant propagation
+-count-aa                             - Count Alias Analysis Query Responses
+-dce                                  - Dead Code Elimination
+-deadargelim                          - Dead Argument Elimination
+-deadarghaX0r                         - Dead Argument Hacking (BUGPOINT USE ONLY; DO NOT USE)
+-deadtypeelim                         - Dead Type Elimination
+-debug-aa                             - AA use debugger
+-die                                  - Dead Instruction Elimination
+-domfrontier                          - Dominance Frontier Construction
+-domtree                              - Dominator Tree Construction
+-dse                                  - Dead Store Elimination
+-emitbitcode                          - Bitcode Writer
+-externalfnconstants                  - Print external fn callsites passed constants
+-extract-blocks                       - Extract Basic Blocks From Module (for bugpoint use)
+-gcse                                 - Global Common Subexpression Elimination
+-globaldce                            - Dead Global Elimination
+-globalopt                            - Global Variable Optimizer
+-globalsmodref-aa                     - Simple mod/ref analysis for globals
+-gvn                                  - Global Value Numbering
+-gvnpre                               - Global Value Numbering/Partial Redundancy Elimination
+-indmemrem                            - Indirect Malloc and Free Removal
+-indvars                              - Canonicalize Induction Variables
+-inline                               - Function Integration/Inlining
+-insert-block-profiling               - Insert instrumentation for block profiling
+-insert-edge-profiling                - Insert instrumentation for edge profiling
+-insert-function-profiling            - Insert instrumentation for function profiling
+-insert-null-profiling-rs             - Measure profiling framework overhead
+-insert-rs-profiling-framework        - Insert random sampling instrumentation framework
+-instcombine                          - Combine redundant instructions
+-instcount                            - Counts the various types of Instructions
+-internalize                          - Internalize Global Symbols
+-intervals                            - Interval Partition Construction
+-ipconstprop                          - Interprocedural constant propagation
+-ipsccp                               - Interprocedural Sparse Conditional Constant Propagation
+-lcssa                                - Loop-Closed SSA Form Pass
+-licm                                 - Loop Invariant Code Motion
+-load-vn                              - Load Value Numbering
+-loop-extract                         - Extract loops into new functions
+-loop-extract-single                  - Extract at most one loop into a new function
+-loop-index-split                     - Index Split Loops
+-loop-reduce                          - Loop Strength Reduction
+-loop-rotate                          - Rotate Loops
+-loop-unroll                          - Unroll loops
+-loop-unswitch                        - Unswitch loops
+-loops                                - Natural Loop Construction
+-loopsimplify                         - Canonicalize natural loops
+-lower-packed                         - lowers packed operations to operations on smaller packed datatypes
+-lowerallocs                          - Lower allocations from instructions to calls
+-lowergc                              - Lower GC intrinsics, for GCless code generators
+-lowerinvoke                          - Lower invoke and unwind, for unwindless code generators
+-lowerselect                          - Lower select instructions to branches
+-lowersetjmp                          - Lower Set Jump
+-lowerswitch                          - Lower SwitchInst's to branches
+-mem2reg                              - Promote Memory to Register
+-memdep                               - Memory Dependence Analysis
+-mergereturn                          - Unify function exit nodes
+-no-aa                                - No Alias Analysis (always returns 'may' alias)
+-no-profile                           - No Profile Information
+-postdomfrontier                      - Post-Dominance Frontier Construction
+-postdomtree                          - Post-Dominator Tree Construction
+-predsimplify                         - Predicate Simplifier
+-print                                - Print function to stderr
+-print-alias-sets                     - Alias Set Printer
+-print-callgraph                      - Print Call Graph to 'dot' file
+-print-cfg                            - Print CFG of function to 'dot' file
+-print-cfg-only                       - Print CFG of function to 'dot' file (with no function bodies)
+-printm                               - Print module to stderr
+-printusedtypes                       - Find Used Types
+-profile-loader                       - Load profile information from llvmprof.out
+-prune-eh                             - Remove unused exception handling info
+-raiseallocs                          - Raise allocations from calls to instructions
+-reassociate                          - Reassociate expressions
+-reg2mem                              - Demote all values to stack slots
+-rle                                  - Redundant Load Elimination
+-scalar-evolution                     - Scalar Evolution Analysis
+-scalarrepl                           - Scalar Replacement of Aggregates
+-sccp                                 - Sparse Conditional Constant Propagation
+-simplify-libcalls                    - Simplify well-known library calls
+-simplifycfg                          - Simplify the CFG
+-strip                                - Strip all symbols from a module
+-tailcallelim                         - Tail Call Elimination
+-tailduplicate                        - Tail Duplication
+-targetdata                           - Target Data Layout
+-verify                               - Module Verifier
+-view-cfg                             - View CFG of function
+-view-cfg-only                        - View CFG of function (with no function bodies)
+
+
+
+
+
+
+
+
+
+
+
+[Other]
+
+
+`llc --help` prints:
+
+-avm2-dummy-class-name=<string>       - (AVM2) Specify a name for a 'dummy' class that extends Sprite
+-avm2-eager-dispatch                  - [Ed: Not honored.] (AVM2) Don't return to dispatch loop on function entry
+-avm2-force-sync                      - (AVM2) Force synchronous code generation
+-avm2-generate-struct-wrappers        - (AVM2) Generate structure wrapper classes (instead of code)
+-avm2-machine-basics-package=<string> - (AVM2) Specify the package containing basic machine definitions
+-avm2-machine-pooling                 - [Ed: Not honored.] (AVM2) Generate machine pooling code
+-avm2-package-name=<string>           - (AVM2) Specify the package name for this module
+-avm2-use-memuser                     - (AVM2) Access memory through MemUser interface
+
+
+Searching the help output of Alchemy's binaries:
+
+"-" means no interesting flags.
+
+lli 						-
+llvm-ar						-
+ExplSWF.pl					-
+llvm2cpp					-
+GetABC2.pl					-
+ShrSWF.pl					-
+llvmc						-
+ImplSWF.pl					-
+V10SWF.pl					-
+llvm-as						-
+llvm-ld						Optimization flags listed in "Optimization Passes."
+opt							Optimization flags listed in "Optimization Passes."
+alc-util					-
+llvm-bcanalyzer				-
+llvm-link					-
+swfbridge					-
+asc.jar						Maybe, didn't take the time to check this.
+llvm-config					-
+llvm-nm						-
+zpipe						-
+gccas						-
+llvm-db						-
+llvm-prof					-
+zpipe.pl					-
+PutABC2.pl					-
+gccld						-
+llvm-dis					-
+llvm-ranlib					-
+PutBIN.pl					-
+gluegen						-
+llvm-extract				-
+llvm-stub					-
+llc							Yes, listed above.
+llvm-upgrade				-
+
+It might be reasonable to whether LLVM binaries marked with a "-" are not customized for Alchemy and can be upgraded. 
+
+
+
+Searching the perl script headers:
+
+TODO
+...
+
+
